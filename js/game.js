@@ -5,10 +5,11 @@ $(document).ready(function() {
 
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
-    
-    tickCounter = 0
 	
     
+    tickCounter = 0
+	menuReady = false
+    testMonster = {name:"Charmander", hp:40, maxhp:40, defense:25}
 	currentLevelCols = 0;
 	currentLevelRows = 0;
 	playerCol = 0;
@@ -24,7 +25,12 @@ $(document).ready(function() {
 	playerCanMove = true
 	LoadLevel();
 	
-	currentMonsters = {1:{name:"bulbasaur", hp:30, maxhp:30}}
+	currentMonsters = {1:{name:"Bulbasaur", hp:30, maxhp:30, attacks:{
+						1:{name:"Vine Whip", type:"grass", damage:5, accuracy:100, effect:null},
+						2:{name:"Slam", type:"normal", damage:60, accuracy:100, effect:null},
+						3:{name:"Leaf Blade", type:"grass", damage:100, accuracy:50, effect:null},
+						4:{name:"Confusion", type:"psychic", damage:90, accuracy:80, effect:null}},
+						attack:80, defense:50, speed:100, effects:null}}
 	
 	
 	sprites = {0 : grassSprite, 1:longGrassSprite, 2:bushSprite, 3:treeTopSprite, 4:treeMiddleSprite, 5:treeBottomSprite, 6:lampTopLeftSprite,
@@ -58,6 +64,7 @@ $(document).ready(function() {
 	xDown = false;
 	cDown = false;
 	vDown = false
+	escDown = false
     document.addEventListener("keydown", function(key) {
         switch (key.keyCode) {
 			case 87:
@@ -83,6 +90,9 @@ $(document).ready(function() {
                 break;
 			case 86:
                 vDown = true;
+                break;
+			case 27:
+                escDown = true;
                 break;
         }
     });
@@ -111,6 +121,9 @@ $(document).ready(function() {
                 break;
 			case 86:
                 vDown = false;
+                break;
+			case 27:
+                escDown = false;
                 break;
         }
     });
@@ -200,7 +213,6 @@ $(document).ready(function() {
 		}
 		
 		events();
-		
 		playerXTile = Math.round(playerXPos / 16);
 		playerYTile = Math.round(playerYPos / 16);
 		//console.log(playerXTile, playerYTile)
