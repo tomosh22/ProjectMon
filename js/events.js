@@ -1,5 +1,5 @@
 currentBattleMenu = "main"
-firstBattle = {"ready":true, "running":false, "done":[false,false,false], "points":[[4,6], [2,6]]}
+firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], "points":[[4,6], [2,6]]}
 function events(){
 	
 	if (firstBattle["ready"] && currentLevel == house0){
@@ -38,13 +38,7 @@ function events(){
 			else{
 				if(firstBattle["done"][0]){ 
 					firstBattle["done"][1] = true
-					//playerCanMove = true
-					//console.log(friendXTile, friendYTile)
 					house0[friendYTile][friendXTile] = [89, 55]
-					//console.log(house0)
-					//firstBattle["ready"] = false
-					//firstBattle["running"] = false
-					//console.log(friendXTile, friendYTile)
 				}
 			}
 			
@@ -57,21 +51,31 @@ function events(){
 						firstBattle["done"][2] = 2
 					}
 			}
-			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2]){
+			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && !firstBattle["done"][3]){
 				canvas.width = 176
 				canvas.height = 144
-				LoadBattle(currentMonsters[1], testMonster);
+				if(!LoadBattle(currentMonsters[1], testMonster)){
+					firstBattle["done"][3] = true
+				}
 			}
-
+			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && firstBattle["done"][3]){
+				playerCanMove = true
+				firstBattle["ready"] = false								//ends the event and the game continues as normal
+				firstBattle["running"] = false
+			}
 		}
 		
 		
 	}
 }
-
+hit = ""
+effect = ""
 function LoadBattle(playerMonster, enemyMonster){
 	
-	context.clearRect(0,0,canvas.width, canvas.height);
+	drawMonsters(playerMonster, enemyMonster);
+	context.font = "9px Verdana"
+	console.log(currentBattleMenu, menuReady)
+	
 	switch(currentBattleMenu){
 		case "main":
 			drawControls();
@@ -79,28 +83,78 @@ function LoadBattle(playerMonster, enemyMonster){
 		case "attack":
 			//Z1 C2 V3 X4
 			drawAttacks(playerMonster);
-			
-			if (!zDown){
-				menuReady = true
-			}
 			if(zDown && menuReady){
-				useAttack(playerMonster["attacks"][1],playerMonster, enemyMonster)
+				currentBattleMenu = "message"
+				message = useAttack(playerMonster["attacks"][1],playerMonster, enemyMonster)
+				if (menuReady){currentBattleMenu = "main"}
 				
+			}
+			if(xDown && menuReady){
+				currentBattleMenu = "message"
+				message = useAttack(playerMonster["attacks"][4],playerMonster, enemyMonster)
+				if (menuReady){currentBattleMenu = "main"}
+			}
+			if(cDown && menuReady){
+				currentBattleMenu = "message"
+				hit,effect = useAttack(playerMonster["attacks"][2],playerMonster, enemyMonster)
+				if (menuReady){currentBattleMenu = "main"}
+			}
+			if(vDown && menuReady){
+				currentBattleMenu = "message"
+				message = useAttack(playerMonster["attacks"][3],playerMonster, enemyMonster)
+				if (menuReady){currentBattleMenu = "main"}
+				
+			}
+			
+			break;
+		case "message":
+		displayBattleMessage(hit,effect)
+			if (!(zDown||xDown||cDown||vDown)){
+				menuReady = true
+	}
+			if ((zDown||xDown||cDown||vDown) && menuReady){
+				currentBattleMenu = "main"
 				menuReady = false
 			}
+			break;
+	}
+	if (!(zDown||xDown||cDown||vDown)){								//workaround for the cross tick button holding problem
+				menuReady = true
 	}
 	
-	drawMonsters(playerMonster, enemyMonster);
-	if(escDown){
-		currentBattleMenu = "main"
+	if (menuReady){
+		if(escDown){
+			currentBattleMenu = "main"
+			menuReady = false
+		}
+		if(zDown){
+			currentBattleMenu = "attack"
+			menuReady = false
+		}
+		if(vDown){
+			return false
+		}
 	}
-	if(zDown){
-		currentBattleMenu = "attack"
-	}
+	return true
 }
 
+function displayBattleMessage(hit,effect){
+	//context.clearRect(0,0,canvas.width, canvas.height);
+	currentBattleMenu = "message"
+	//menuReady = false
+	context.beginPath();
+	context.lineWidth=1;
+	context.strokeStyle="#000000";
+	context.rect(0, canvas.height - 40, canvas.width, 39);
+	context.stroke();
+	context.fillStyle = "#000000"
+	context.fillText(hit, 10, canvas.height - 30)
+	context.fillText(effect, 10, canvas.height - 20)
+	//context.fillRect(0,0,canvas.height, canvas.width)
+}
 function useAttack(attack, user, target){
-	console.log(attack)
+	menuReady = false
+	console.log("using attack")
 	if (user["effect"] != null){
 		if (Math.random() < 0.1){
 			user["effect"] = null
@@ -117,24 +171,30 @@ function useAttack(attack, user, target){
 		// damage = attack["damage"] *= 0.5
 	// }
 
-		
+	hit = ""
 	chance = Math.random()
 	if (chance < attack["accuracy"] / 100) {
 		target["hp"] -= Math.round(attack["damage"] * user["attack"] / target["defense"])
-		console.log(user["attack"] / target["defense"])
-		console.log("attack hit")
+		hit = "Attack landed"
 	}
-	else{console.log("attack missed")}
+	else{
+		hit = "Attack missed"
+		}
 	if (target["hp"] <= 0){
 		target["hp"] = 0
 		
 	}
+	effect = ""
 	if (attack["effect"] != null) {
 		if (Math.random() <= attack["effect"][1] / 100){					
-		target["effect"] = attack["effect"][0]
+			target["effect"] = attack["effect"][0]
+			effect = "Added effect ," + attack["effect"]
 		}
-	}	
-	
+		else{effect = "Failed to apply effect"
+		}
+	}
+	else{effect = "Attack has no extra effect"}
+	return hit,effect
 }
 function eventRender() {
 			for (y = 0; y < currentLevelRows; y++) {

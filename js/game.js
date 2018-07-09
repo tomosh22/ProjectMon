@@ -21,15 +21,15 @@ $(document).ready(function() {
     playerXSpeed = 0;
     playerYSpeed = 0;
 	maps = {0:house0, 1:town0}
-    currentLevel = maps[0];
+    currentLevel = maps[1];
 	playerCanMove = true
 	LoadLevel();
 	
 	currentMonsters = {1:{name:"Bulbasaur", hp:30, maxhp:30, attacks:{
 						1:{name:"Vine Whip", type:"grass", damage:5, accuracy:100, effect:null},
-						2:{name:"Slam", type:"normal", damage:60, accuracy:100, effect:null},
-						3:{name:"Leaf Blade", type:"grass", damage:100, accuracy:50, effect:null},
-						4:{name:"Confusion", type:"psychic", damage:90, accuracy:80, effect:null}},
+						2:{name:"Slam", type:"normal", damage:5, accuracy:100, effect:null},
+						3:{name:"Leaf Blade", type:"grass", damage:10, accuracy:50, effect:null},
+						4:{name:"Confusion", type:"psychic", damage:8, accuracy:80, effect:null}},
 						attack:80, defense:50, speed:100, effects:null}}
 	
 	
@@ -50,7 +50,7 @@ $(document).ready(function() {
 					78:blueStoolSprite, 79:blueCushionSprite, 80:blueRug1Sprite,81:blueRug2Sprite,82:blueRug3Sprite,83:blueRug4Sprite,84:blueRug5Sprite,
 					85:blueRug6Sprite,86:blueRug7Sprite,87:blueRug8Sprite,88:blueRug9Sprite, 89:friendSprite}
 					
-	nocollision = [0,1,44, 39, 55, 62, 63, 79]
+	nocollision = [0,1,44, 39, 55, 62, 63, 79,80,81,82,83,84,85,86,87,88,78]
 	
     //playerYPos = playerRow * 16;
     //playerXPos = playerCol * 16;
