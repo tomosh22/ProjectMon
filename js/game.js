@@ -9,7 +9,12 @@ $(document).ready(function() {
     
     tickCounter = 0
 	menuReady = false
-    testMonster = {name:"Charmander", hp:40, maxhp:40, defense:25}
+    testMonster = {name:"Charmander", hp:40, maxhp:40, defense:25, attack:35, attacks:{
+						1:{name:"Fire Punch", type:"fire", damage:5, accuracy:100, effect:null},
+						2:{name:"Slam", type:"normal", damage:5, accuracy:100, effect:null},
+						3:{name:"Flamethrower", type:"fire", damage:10, accuracy:50, effect:null},
+						4:{name:"High Kick", type:"fighting", damage:8, accuracy:80, effect:null}}}
+						
 	currentLevelCols = 0;
 	currentLevelRows = 0;
 	playerCol = 0;
@@ -20,7 +25,7 @@ $(document).ready(function() {
     movementSpeed = 1;
     playerXSpeed = 0;
     playerYSpeed = 0;
-	maps = {0:house0, 1:town0}
+	maps = {0:house0, 1:town0, 2:town1}
     currentLevel = maps[1];
 	playerCanMove = true
 	LoadLevel();
@@ -30,27 +35,12 @@ $(document).ready(function() {
 						2:{name:"Slam", type:"normal", damage:5, accuracy:100, effect:null},
 						3:{name:"Leaf Blade", type:"grass", damage:10, accuracy:50, effect:null},
 						4:{name:"Confusion", type:"psychic", damage:8, accuracy:80, effect:null}},
-						attack:80, defense:50, speed:100, effects:null}}
+						attack:30, defense:50, speed:100, effects:null}}
 	
 	
-	sprites = {0 : grassSprite, 1:longGrassSprite, 2:bushSprite, 3:treeTopSprite, 4:treeMiddleSprite, 5:treeBottomSprite, 6:lampTopLeftSprite,
-				   7:lampMiddleLeftSprite, 8:lampBottomLeftSprite, 9:lampTopRightSprite, 10:lampMiddleRightSprite, 11:lampBottomRightSprite,
-					12:flowerSprite, 13:woodFenceBottomLeftSprite, 14:woodFenceMiddleLeftSprite, 15:woodFenceTopLeftSprite, 
-					16:woodFenceTopRightSprite, 17:woodFenceTopSprite, 18:woodFenceMiddleRightSprite, 19:woodFenceBottomRightSprite, 20:waterTopLeftSprite
-					,21:waterMiddleLeftSprite, 22:waterBottomLeftSprite, 23:house00Sprite, 24:house01Sprite, 25:house02Sprite,
-					26:house03Sprite, 27:house04Sprite, 28:house05Sprite, 29:house06Sprite, 30:house07Sprite, 31:house08Sprite,
-					32:house09Sprite, 33:house010Sprite, 34:house011Sprite, 35:house012Sprite,36:house013Sprite,37:house014Sprite,
-					38:house015Sprite,39:house016Sprite,40:house017Sprite,41:house018Sprite,42:house019Sprite,43:house020Sprite,
-					44:house021Sprite,45:house022Sprite,46:house023Sprite,47:house024Sprite, 48:waterBottomRightSprite,
-					49:waterMiddleRightSprite, 50:waterBottomMiddleSprite, 51:waterSprite, 52:waterTopSprite, 53:waterTopRightSprite, 54:gym1Sprite,
-					55:woodFloorSprite, 56:woodWallBottomLeftSprite, 57:woodWallBottomMiddleSprite, 58:woodWallBottomRightSprite,
-					59:woodWallTopLeftSprite, 60:woodWallTopMiddleSprite, 61:woodWallTopRightSprite, 62:redRug1Sprite, 63:redRug2Sprite, 64:woodTable1Sprite,
-					65:woodTable2Sprite,66:woodTable3Sprite,67:woodTable4Sprite,68:woodTable5Sprite,69:woodTable6Sprite, 
-					70:curtain1Sprite,71:curtain2Sprite,72:curtain3Sprite,73:curtain4Sprite,74:tv1Sprite,75:tv2Sprite,76:tv3Sprite,77:tv4Sprite,
-					78:blueStoolSprite, 79:blueCushionSprite, 80:blueRug1Sprite,81:blueRug2Sprite,82:blueRug3Sprite,83:blueRug4Sprite,84:blueRug5Sprite,
-					85:blueRug6Sprite,86:blueRug7Sprite,87:blueRug8Sprite,88:blueRug9Sprite, 89:friendSprite}
+	sprites = {0 : grassSprite, 1:longGrassSprite, 2:bushSprite, 3:treeTopSprite, 4:treeMiddleSprite, 5:treeBottomSprite, 6:lampTopLeftSprite,7:lampMiddleLeftSprite, 8:lampBottomLeftSprite, 9:lampTopRightSprite, 10:lampMiddleRightSprite, 11:lampBottomRightSprite,12:flowerSprite, 13:woodFenceBottomLeftSprite, 14:woodFenceMiddleLeftSprite, 15:woodFenceTopLeftSprite, 16:woodFenceTopRightSprite, 17:woodFenceTopSprite, 18:woodFenceMiddleRightSprite, 19:woodFenceBottomRightSprite, 20:waterTopLeftSprite,21:waterMiddleLeftSprite, 22:waterBottomLeftSprite, 23:house00Sprite, 24:house01Sprite, 25:house02Sprite,26:house03Sprite, 27:house04Sprite, 28:house05Sprite, 29:house06Sprite, 30:house07Sprite, 31:house08Sprite,32:house09Sprite, 33:house010Sprite, 34:house011Sprite, 35:house012Sprite,36:house013Sprite,37:house014Sprite,38:house015Sprite,39:house016Sprite,40:house017Sprite,41:house018Sprite,42:house019Sprite,43:house020Sprite,44:house021Sprite,45:house022Sprite,46:house023Sprite,47:house024Sprite, 48:waterBottomRightSprite,49:waterMiddleRightSprite, 50:waterBottomMiddleSprite, 51:waterSprite, 52:waterTopSprite, 53:waterTopRightSprite, 55:woodFloorSprite, 56:woodWallBottomLeftSprite, 57:woodWallBottomMiddleSprite, 58:woodWallBottomRightSprite,59:woodWallTopLeftSprite, 60:woodWallTopMiddleSprite, 61:woodWallTopRightSprite, 62:redRug1Sprite, 63:redRug2Sprite, 64:woodTable1Sprite,65:woodTable2Sprite,66:woodTable3Sprite,67:woodTable4Sprite,68:woodTable5Sprite,69:woodTable6Sprite, 70:curtain1Sprite,71:curtain2Sprite,72:curtain3Sprite,73:curtain4Sprite,74:tv1Sprite,75:tv2Sprite,76:tv3Sprite,77:tv4Sprite,78:blueStoolSprite, 79:blueCushionSprite, 80:blueRug1Sprite,81:blueRug2Sprite,82:blueRug3Sprite,83:blueRug4Sprite,84:blueRug5Sprite,85:blueRug6Sprite,86:blueRug7Sprite,87:blueRug8Sprite,88:blueRug9Sprite, 89:friendSprite, 90:path0MiddleSprite,91:path0TopMiddleSprite,92:path0TopRightSprite,93:longGrass2Sprite,94:longGrass3Sprite,95:path0BottomRightSprite,96:path0MiddleRightSprite,97:playerSprite,98:path0BottomLeftSprite,99:path0BottomMiddleSprite,100:path0MiddleLeftSprite,101:path0TopLeftSprite,102:ThumbSprite,}
 					
-	nocollision = [0,1,44, 39, 55, 62, 63, 79,80,81,82,83,84,85,86,87,88,78]
+	nocollision = [0,1,44, 39, 55, 62, 63, 79,80,81,82,83,84,85,86,87,88,78,90]
 	
     //playerYPos = playerRow * 16;
     //playerXPos = playerCol * 16;
@@ -246,7 +236,8 @@ $(document).ready(function() {
 			}
 		}
 		currentLevel[currentLevel.length - 3].forEach(function(point){
-			//console.log(point);
+			console.log(point);
+			console.log(playerXTile, playerYTile)
 			if(playerXTile == point[1] && playerYTile == point[0]){
 					context.clearRect(0,0, canvas.width, canvas.height)
 					//console.log(point[2])

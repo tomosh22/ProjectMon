@@ -46,7 +46,7 @@ function events(){
 					context.fillStyle = "#FFFFFF"
 					context.fillRect(0, canvas.height - 20, canvas.width, 20)
 					context.fillStyle = "#000000"
-					context.fillText("Hi",canvas.width / 10, canvas.height - 10)
+					context.fillText("Imma fuck you up kid",canvas.width / 10, canvas.height - 10)
 					if (wDown || aDown || sDown || dDown){
 						firstBattle["done"][2] = 2
 					}
@@ -70,6 +70,7 @@ function events(){
 }
 hit = ""
 effect = ""
+enemyMoved = false
 function LoadBattle(playerMonster, enemyMonster){
 	
 	drawMonsters(playerMonster, enemyMonster);
@@ -85,38 +86,71 @@ function LoadBattle(playerMonster, enemyMonster){
 			drawAttacks(playerMonster);
 			if(zDown && menuReady){
 				currentBattleMenu = "message"
-				message = useAttack(playerMonster["attacks"][1],playerMonster, enemyMonster)
+				useAttack(playerMonster["attacks"][1],playerMonster, enemyMonster)
 				if (menuReady){currentBattleMenu = "main"}
 				
 			}
 			if(xDown && menuReady){
 				currentBattleMenu = "message"
-				message = useAttack(playerMonster["attacks"][4],playerMonster, enemyMonster)
+				useAttack(playerMonster["attacks"][4],playerMonster, enemyMonster)
 				if (menuReady){currentBattleMenu = "main"}
 			}
 			if(cDown && menuReady){
 				currentBattleMenu = "message"
-				hit,effect = useAttack(playerMonster["attacks"][2],playerMonster, enemyMonster)
+				useAttack(playerMonster["attacks"][2],playerMonster, enemyMonster)
 				if (menuReady){currentBattleMenu = "main"}
 			}
 			if(vDown && menuReady){
 				currentBattleMenu = "message"
-				message = useAttack(playerMonster["attacks"][3],playerMonster, enemyMonster)
+				useAttack(playerMonster["attacks"][3],playerMonster, enemyMonster)
 				if (menuReady){currentBattleMenu = "main"}
 				
 			}
 			
 			break;
 		case "message":
-		displayBattleMessage(hit,effect)
+			displayBattleMessage(hit,effect)
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
-	}
+			}
+			if ((zDown||xDown||cDown||vDown) && menuReady){
+				enemyMoved = false
+				currentBattleMenu = "enemyTurn"
+				menuReady = false
+			}
+			break;
+		case "enemyMessage":
+			displayBattleMessage(hit,effect)
+			if (!(zDown||xDown||cDown||vDown)){
+				menuReady = true
+			}
 			if ((zDown||xDown||cDown||vDown) && menuReady){
 				currentBattleMenu = "main"
 				menuReady = false
 			}
 			break;
+		case "enemyTurn":
+			
+				if(!enemyMoved){
+					attack = Math.ceil(Math.random() * 4)
+					console.log(attack)
+					useAttack(enemyMonster["attacks"][attack], enemyMonster, playerMonster)
+					hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
+					effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
+					enemyMoved = true
+					displayBattleMessage()
+					currentBattleMenu = "enemyMessage"
+				}
+				else{
+					if (!(zDown||xDown||cDown||vDown)){
+						menuReady = true
+			}
+			if ((zDown||xDown||cDown||vDown) && menuReady){
+				currentBattleMenu = "main"
+				menuReady = false
+			}
+				}
+			
 	}
 	if (!(zDown||xDown||cDown||vDown)){								//workaround for the cross tick button holding problem
 				menuReady = true
@@ -140,7 +174,7 @@ function LoadBattle(playerMonster, enemyMonster){
 
 function displayBattleMessage(hit,effect){
 	//context.clearRect(0,0,canvas.width, canvas.height);
-	currentBattleMenu = "message"
+	//currentBattleMenu = "message"
 	//menuReady = false
 	context.beginPath();
 	context.lineWidth=1;
@@ -153,8 +187,9 @@ function displayBattleMessage(hit,effect){
 	//context.fillRect(0,0,canvas.height, canvas.width)
 }
 function useAttack(attack, user, target){
+	console.log(attack, user)
 	menuReady = false
-	console.log("using attack")
+	//console.log("using attack")
 	if (user["effect"] != null){
 		if (Math.random() < 0.1){
 			user["effect"] = null
@@ -194,7 +229,7 @@ function useAttack(attack, user, target){
 		}
 	}
 	else{effect = "Attack has no extra effect"}
-	return hit,effect
+	//return hit,effect
 }
 function eventRender() {
 			for (y = 0; y < currentLevelRows; y++) {
@@ -337,7 +372,7 @@ function drawMonsters(playerMonster, enemyMonster){
 	context.fillStyle = "#00FF00"
 	}
 	if(playerHealthPercent < 0.75 && playerHealthPercent >= 0.25){
-		context.fillStyle = "#FF4500"
+		context.fillStyle = "orange"
 	}
 	if(playerHealthPercent < 0.25){
 		context.fillStyle = "#FF0000"
