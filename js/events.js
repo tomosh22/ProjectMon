@@ -150,7 +150,7 @@ function LoadBattle(playerMonster, enemyMonster){
 				menuReady = false
 			}
 				}
-			
+			break;
 	}
 	if (!(zDown||xDown||cDown||vDown)){								//workaround for the cross tick button holding problem
 				menuReady = true

@@ -1,0 +1,1 @@
+128:path0LeftDownSprite,129:path0LeftUpSprite,130:path0RightDownSprite,131:path0RightUpSprite,
