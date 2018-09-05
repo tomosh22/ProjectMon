@@ -1,1 +1,27 @@
-128:path0LeftDownSprite,129:path0LeftUpSprite,130:path0RightDownSprite,131:path0RightUpSprite,
+Hello guys, I want to start this thread so we can together figure out what is getting us banned and what is safe.
+I got 3 accounts banned , and here is the info :
+Account creation date : all 3 accounts were made almost a year ago.
+
+what did i do : I ran 3 accounts, using Nox emulator and android phone too, sometimes I ran 3 accounts all at the same time.
+I swapped between MODS a lot, used them all, used low damage for dungeon and TOA, used high damage in scenario .
+Never used in Arena.
+Did use in rift ( In group with 3 accounts all me ) 
+*Rift works weird and I think it should not be used there never!
+Did use for Elemental bosses but not on main account.
+
+all 3 accounts used MOD last year , then I chose 1 account and played only on it.
+Main account had some nice progress and mons, can auto GB10, can get far in TOA WITHOUT mod , so I figured it will be safe to hack there to speed things up but i was wrong and got banned( maybe detected maybe not).
+Main account used MOD to do EVERYTHING for few months and I didn't get banned then I stopped when I built my GB10 team. 
+But using MOD now after months of not playing got me banned in a week.
+
+2 other accounts progressed way too fast, and I did finish TOA with them at around lv30 while disconnected from chat so i dont draw attention. finishing TOA can be the reason.
+
+Now why did I get banned? maybe running the 2 dummy accounts on same network as main got my main banned too?
+Or was it the emulator? who used Nox emulator , did you get a ban ?
+Are they detecting the hack somehow ( software related) ?
+
+what I learned : the mod that didn't get me banned for months was dumb enemy + 2k dmg( whatever damage just not so high ) , maybe because it doesn't clear things in world record speed.
+Doing GB10,Dragons B10 at lower level, with mod, I did it with friends rep + MOD , i dont know if it works but I didnt get banned either ( maybe using a rep makes it OK).
+Sticking to using mod only for scenario and dungeon and TOA normal was safe to me too.
+
+I hope you share your experience so we learn and figure out what works and what not :).

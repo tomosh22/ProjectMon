@@ -46,7 +46,7 @@ function events(){
 					context.fillStyle = "#FFFFFF"
 					context.fillRect(0, canvas.height - 20, canvas.width, 20)
 					context.fillStyle = "#000000"
-					context.fillText("Imma fuck you up kid",canvas.width / 10, canvas.height - 10)
+					context.fillText("Battle Trigger",canvas.width / 10, canvas.height - 10)
 					if (wDown || aDown || sDown || dDown){
 						firstBattle["done"][2] = 2
 					}
