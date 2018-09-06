@@ -1,8 +1,10 @@
 currentBattleMenu = "main"
 firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], "points":[[4,6], [2,6]]}
+healing = {"running":false}
+
 function events(){
 	
-	if (firstBattle["ready"] && currentLevel == house0){
+	if (firstBattle["ready"] && currentLevel == house0){	//introduction battle
 		
 		if (!firstBattle["running"]){
 			playerCanMove = false
@@ -54,7 +56,7 @@ function events(){
 			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && !firstBattle["done"][3]){
 				canvas.width = 176
 				canvas.height = 144
-				if(!LoadBattle(currentMonsters[1], testMonster)){
+				if(!LoadBattle(currentMonsters[0], testMonster)){
 					firstBattle["done"][3] = true
 				}
 			}
@@ -66,6 +68,37 @@ function events(){
 		}
 		
 		
+	} //end of introduction battle
+	
+	if(currentLevel == maps[3] && healing["running"] == false){
+		//console.log("in hospital")
+		
+		if(playerXTile == 5 && playerYTile == 2){
+			healing["running"] = true
+			menuReady = false
+		}
+	}
+	if(healing["running"]){
+		console.log("healing")
+		playerCanMove = false
+		displayMessage("healing", null)
+		currentMonsters.forEach(function(monster){
+			monster.hp = monster.maxhp
+		})
+				
+		if (!(zDown||xDown||cDown||vDown)){
+			console.log("menu ready")
+			menuReady = true
+		}
+		if(menuReady && (zDown||xDown||cDown||vDown)){
+			console.log("healing done")
+			playerCanMove = true
+			healing["running"] = false
+			playerYPos = 3 * 16
+			menuReady = true
+		}
+	
+
 	}
 }
 hit = ""
@@ -109,7 +142,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			
 			break;
 		case "message":
-			displayBattleMessage(hit,effect)
+			displayMessage(hit,effect)
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
@@ -120,7 +153,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "enemyMessage":
-			displayBattleMessage(hit,effect)
+			displayMessage(hit,effect)
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
@@ -138,7 +171,7 @@ function LoadBattle(playerMonster, enemyMonster){
 					hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
 					effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
 					enemyMoved = true
-					displayBattleMessage()
+					displayMessage()
 					currentBattleMenu = "enemyMessage"
 				}
 				else{
@@ -172,18 +205,22 @@ function LoadBattle(playerMonster, enemyMonster){
 	return true
 }
 
-function displayBattleMessage(hit,effect){
+function displayMessage(hit,effect){
 	//context.clearRect(0,0,canvas.width, canvas.height);
 	//currentBattleMenu = "message"
 	//menuReady = false
 	context.beginPath();
 	context.lineWidth=1;
 	context.strokeStyle="#000000";
+	context.fillStyle = "#FFFFFF";
+	context.fillRect(0, canvas.height - 40, canvas.width, 39);
 	context.rect(0, canvas.height - 40, canvas.width, 39);
 	context.stroke();
 	context.fillStyle = "#000000"
 	context.fillText(hit, 10, canvas.height - 30)
-	context.fillText(effect, 10, canvas.height - 20)
+	if(effect){
+		context.fillText(effect, 10, canvas.height - 20)
+	}
 	//context.fillRect(0,0,canvas.height, canvas.width)
 }
 function useAttack(attack, user, target){
