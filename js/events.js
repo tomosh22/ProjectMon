@@ -1,6 +1,7 @@
 currentBattleMenu = "main"
 firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], "points":[[4,6], [2,6]]}
 healing = {"running":false}
+shopping = {"running":false}
 
 function events(){
 	
@@ -70,7 +71,7 @@ function events(){
 		
 	} //end of introduction battle
 	
-	if(currentLevel == maps[3] && healing["running"] == false){
+	if(currentLevel == maps[3] && healing["running"] == false){		//hospital
 		//console.log("in hospital")
 		
 		if(playerXTile == 5 && playerYTile == 2){
@@ -99,7 +100,34 @@ function events(){
 		}
 	
 
+	}	//end of hospital
+	
+	if(currentLevel == maps[4] && shopping["running"] == false){		//shop
+		//console.log("in hospital")
+		
+		if(playerXTile == 2 && playerYTile == 2){
+			shopping["running"] = true
+			menuReady = false
+		}
 	}
+	if(shopping["running"]){
+		console.log("shop")
+		playerCanMove = false
+		displayMessage("shop", null)
+		if (!(zDown||xDown||cDown||vDown)){
+			console.log("menu ready")
+			menuReady = true
+		}
+		if(menuReady && (zDown||xDown||cDown||vDown)){
+			console.log("shopping done")
+			playerCanMove = true
+			shopping["running"] = false
+			playerYPos = 3 * 16
+			menuReady = true
+		}
+	
+
+	}	//end of shop
 }
 hit = ""
 effect = ""
@@ -347,6 +375,11 @@ function drawAttacks(playerMonster){
 	context.stroke();
 	context.fillStyle = "#000000"
 	context.fillText("X:"+attacks[4]["name"],110, canvas.height - 26)
+}
+
+function drawItems(){
+	context.strokeStyle = "#000000"
+	context.fillStyle = "#FFFFFF"
 }
 function drawControls(){
 	//control panel
