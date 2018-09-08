@@ -1,7 +1,9 @@
 currentBattleMenu = "main"
 firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], "points":[[4,6], [2,6]]}
+
 healing = {"running":false}
 shopping = {"running":false}
+itemIndex = 0
 
 function events(){
 	
@@ -169,6 +171,27 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			
 			break;
+		case "item":
+			drawItems();
+			if(zDown && menuReady){
+				currentBattleMenu = "message"
+				useItem(currentItems[itemIndex],playerMonster)
+				if (menuReady){currentBattleMenu = "main"}
+				
+			}
+			if(xDown && menuReady){
+				currentBattleMenu = "message"
+				useItem(currentItems[itemIndex + 1],playerMonster)
+				if (menuReady){currentBattleMenu = "main"}
+			}
+			if(cDown && menuReady){						//NEED TO ADD CHECK THAT THERE ARE MORE ITEMS IN CURRENTITEMS ARRAY
+				menuReady = false
+				itemIndex += 2
+				if (!(zDown||xDown||cDown||vDown)){
+				menuReady = true
+			}
+			}
+			break;
 		case "message":
 			displayMessage(hit,effect)
 			if (!(zDown||xDown||cDown||vDown)){
@@ -226,6 +249,10 @@ function LoadBattle(playerMonster, enemyMonster){
 			currentBattleMenu = "attack"
 			menuReady = false
 		}
+		if(xDown){
+			currentBattleMenu = "item"
+			menuReady = false
+		}
 		if(vDown){
 			return false
 		}
@@ -252,7 +279,6 @@ function displayMessage(hit,effect){
 	//context.fillRect(0,0,canvas.height, canvas.width)
 }
 function useAttack(attack, user, target){
-	console.log(attack, user)
 	menuReady = false
 	//console.log("using attack")
 	if (user["effect"] != null){
@@ -295,6 +321,18 @@ function useAttack(attack, user, target){
 	}
 	else{effect = "Attack has no extra effect"}
 	//return hit,effect
+}
+function useItem(item,playerMonster){
+	menuReady = false
+	if (item["effect"] == "hpRestore"){
+		playerMonster["hp"] += item["strength"]
+		if(playerMonster["hp"] > playerMonster["maxhp"]){
+			playerMonster["hp"] = playerMonster["maxhp"]
+		}
+	hit = "Used healing potion"
+	effect = "Restored "+ item["strength"]+" health"
+	}
+	
 }
 function eventRender() {
 			for (y = 0; y < currentLevelRows; y++) {
@@ -378,8 +416,40 @@ function drawAttacks(playerMonster){
 }
 
 function drawItems(){
-	context.strokeStyle = "#000000"
-	context.fillStyle = "#FFFFFF"
+	context.beginPath();
+	context.lineWidth=1;
+	context.strokeStyle="#000000";
+	context.rect(0, canvas.height - 40, canvas.width, 39);
+	context.stroke();
+	
+	context.beginPath();
+	context.lineWidth=1;
+	context.strokeStyle="#000000";
+	context.rect(10, canvas.height - 36, 60, 31);
+	context.stroke();
+	context.fillStyle = "#000000"
+	context.fillText("Z:"+ currentItems[itemIndex]["name"],15, canvas.height - 27)
+	context.fillText("Strength:",15, canvas.height - 17)
+	context.fillText(currentItems[itemIndex]["strength"],30, canvas.height - 7)
+	
+	if (currentItems[itemIndex + 1]){
+		context.beginPath();
+		context.lineWidth=1;
+		context.strokeStyle="#000000";
+		context.rect(75, canvas.height - 36, 60, 31);
+		context.stroke();
+		context.fillStyle = "#000000"
+		context.fillText("X:"+currentItems[itemIndex + 1]["name"],80, canvas.height - 27)
+		context.fillText("Strength:",80, canvas.height - 17)
+		context.fillText(currentItems[itemIndex + 1]["strength"],95, canvas.height - 7)
+		
+		
+		context.fillText("C:",150, canvas.height -27)
+		context.fillText("Next",145, canvas.height -17)
+		context.fillText("Page",145, canvas.height -7)
+	}
+	
+	
 }
 function drawControls(){
 	//control panel
