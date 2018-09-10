@@ -4,7 +4,8 @@ firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], 
 healing = {"running":false}
 shopping = {"running":false}
 itemIndex = 0
-
+switchIndex = 0
+currentMonsterIndex = 0
 function events(){
 	
 	if (firstBattle["ready"] && currentLevel == house0){	//introduction battle
@@ -59,7 +60,7 @@ function events(){
 			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && !firstBattle["done"][3]){
 				canvas.width = 176
 				canvas.height = 144
-				if(!LoadBattle(currentMonsters[0], testMonster)){
+				if(!LoadBattle(currentMonsters[currentMonsterIndex], testMonster)){
 					firstBattle["done"][3] = true
 				}
 			}
@@ -192,6 +193,29 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			}
 			break;
+		case "switch":
+			drawSwitch();
+			if(zDown && menuReady){
+				currentBattleMenu = "message"
+				Switch(switchIndex)
+				if (menuReady){currentBattleMenu = "main"}
+				
+			}
+			if(xDown && menuReady){
+				currentBattleMenu = "message"
+				Switch(switchIndex + 1)
+				if (menuReady){currentBattleMenu = "main"}
+			}
+			if(cDown && menuReady){	
+														//NEED TO ADD CHECK THAT THERE ARE MORE ITEMS IN CURRENTITEMS ARRAY
+				console.log("cDown")
+				menuReady = false
+				switchIndex += 2
+				if (!(zDown||xDown||cDown||vDown)){
+				menuReady = true
+			}
+			}
+			break;
 		case "message":
 			displayMessage(hit,effect)
 			if (!(zDown||xDown||cDown||vDown)){
@@ -251,6 +275,10 @@ function LoadBattle(playerMonster, enemyMonster){
 		}
 		if(xDown){
 			currentBattleMenu = "item"
+			menuReady = false
+		}
+		if(cDown){
+			currentBattleMenu = "switch"
 			menuReady = false
 		}
 		if(vDown){
@@ -322,12 +350,25 @@ function useAttack(attack, user, target){
 	else{effect = "Attack has no extra effect"}
 	//return hit,effect
 }
+function Switch(index,playerMonster){
+	menuReady = false
+	console.log(currentMonsters)
+	console.log(currentMonsterIndex)
+	hit = currentMonsters[currentMonsterIndex]["name"] + " switched out"
+	currentMonsterIndex = index
+	console.log(currentMonsters)
+	console.log(currentMonsterIndex)
+	effect = currentMonsters[currentMonsterIndex]["name"] + " switched in"
+	switchIndex = 0
+	}
+	
+
 function useItem(item,playerMonster){
 	menuReady = false
 	if (item["effect"] == "hpRestore"){
 		playerMonster["hp"] += item["strength"]
 		if(playerMonster["hp"] > playerMonster["maxhp"]){
-			playerMonster["hp"] = playerMonster["maxhp"]
+			playerMonster["hp"] = playerMonster["maxhp"]	
 		}
 	hit = "Used healing potion"
 	effect = "Restored "+ item["strength"]+" health"
@@ -414,6 +455,42 @@ function drawAttacks(playerMonster){
 	context.fillStyle = "#000000"
 	context.fillText("X:"+attacks[4]["name"],110, canvas.height - 26)
 }
+function drawSwitch(){
+	context.beginPath();
+	context.lineWidth=1;
+	context.strokeStyle="#000000";
+	context.rect(0, canvas.height - 40, canvas.width, 39);
+	context.stroke();
+	
+	context.beginPath();
+	context.lineWidth=1;
+	context.strokeStyle="#000000";
+	context.rect(10, canvas.height - 36, 60, 31);
+	context.stroke();
+	context.fillStyle = "#000000"
+	context.fillText("Z:"+ currentMonsters[switchIndex]["name"],15, canvas.height - 27)
+	context.fillText("HP:",15, canvas.height - 17)
+	context.fillText(currentMonsters[switchIndex]["hp"],30, canvas.height - 7)
+	
+	if (currentMonsters[switchIndex + 1]){
+		context.beginPath();
+		context.lineWidth=1;
+		context.strokeStyle="#000000";
+		context.rect(75, canvas.height - 36, 60, 31);
+		context.stroke();
+		context.fillStyle = "#000000"
+		context.fillText("X:"+currentMonsters[switchIndex + 1]["name"],80, canvas.height - 27)
+		context.fillText("HP:",80, canvas.height - 17)
+		context.fillText(currentMonsters[switchIndex + 1]["hp"],95, canvas.height - 7)
+		
+		
+		context.fillText("C:",150, canvas.height -27)
+		context.fillText("Next",145, canvas.height -17)
+		context.fillText("Page",145, canvas.height -7)
+	}
+	
+	
+}
 
 function drawItems(){
 	context.beginPath();
@@ -428,6 +505,7 @@ function drawItems(){
 	context.rect(10, canvas.height - 36, 60, 31);
 	context.stroke();
 	context.fillStyle = "#000000"
+	console.log(itemIndex)
 	context.fillText("Z:"+ currentItems[itemIndex]["name"],15, canvas.height - 27)
 	context.fillText("Strength:",15, canvas.height - 17)
 	context.fillText(currentItems[itemIndex]["strength"],30, canvas.height - 7)
