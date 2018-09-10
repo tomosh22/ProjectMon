@@ -9,12 +9,18 @@ $(document).ready(function() {
     
     tickCounter = 0
 	menuReady = false
-    testMonster = {name:"Charmander", hp:40, maxhp:40, defense:25, attack:35, attacks:{
+    enemyMonsters = [{name:"Charmander", hp:40, maxhp:40, type:"fire" ,defense:25, attack:35, attacks:{
 						1:{name:"Fire Punch", type:"fire", damage:5, accuracy:100, effect:null},
 						2:{name:"Slam", type:"normal", damage:5, accuracy:100, effect:null},
 						3:{name:"Flamethrower", type:"fire", damage:10, accuracy:50, effect:null},
-						4:{name:"High Kick", type:"fighting", damage:8, accuracy:80, effect:null}}}
-	
+						4:{name:"High Kick", type:"fighting", damage:8, accuracy:80, effect:null}}},
+						
+						{name:"Pikachu", hp:40, maxhp:40, type:"electric" ,attacks:{
+						1:{name:"Vine Whip", type:"grass", damage:5, accuracy:100, effect:null},
+						2:{name:"Slam", type:"normal", damage:5, accuracy:100, effect:null},
+						3:{name:"Leaf Blade", type:"grass", damage:10, accuracy:50, effect:null},
+						4:{name:"Confusion", type:"psychic", damage:8, accuracy:80, effect:null}},
+						attack:40, defense:20, speed:100, effects:null}]
 						
 	currentLevelCols = 0;
 	currentLevelRows = 0;
@@ -30,14 +36,14 @@ $(document).ready(function() {
 	playerCanMove = true
 	LoadLevel();
 	
-	currentMonsters = [{name:"Bulbasaur", hp:30, maxhp:30, attacks:{
+	currentMonsters = [{name:"Bulbasaur", hp:99999, maxhp:99999, type:"grass", attacks:{
 						1:{name:"Vine Whip", type:"grass", damage:5, accuracy:100, effect:null},
 						2:{name:"Slam", type:"normal", damage:5, accuracy:100, effect:null},
 						3:{name:"Leaf Blade", type:"grass", damage:10, accuracy:50, effect:null},
 						4:{name:"Confusion", type:"psychic", damage:8, accuracy:80, effect:null}},
 						attack:30, defense:50, speed:100, effects:null},
 						
-						{name:"Pikachu", hp:40, maxhp:40, attacks:{
+						{name:"Pikachu", hp:40, maxhp:40, type:"electric", attacks:{
 						1:{name:"Vine Whip", type:"grass", damage:5, accuracy:100, effect:null},
 						2:{name:"Slam", type:"normal", damage:5, accuracy:100, effect:null},
 						3:{name:"Leaf Blade", type:"grass", damage:10, accuracy:50, effect:null},

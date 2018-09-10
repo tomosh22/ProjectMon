@@ -1,4 +1,5 @@
 currentBattleMenu = "main"
+
 firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], "points":[[4,6], [2,6]]}
 
 healing = {"running":false}
@@ -6,8 +7,25 @@ shopping = {"running":false}
 itemIndex = 0
 switchIndex = 0
 currentMonsterIndex = 0
-function events(){
+enemyMonsterIndex = 0
+function isWeakTo(defend,attack){
+	switch (defend){
+		case "fire":
+			if (["ground","rock","water"].contains(attack)){
+				return true
+			}
+	}
+}
+function isStrongAgainst(defend,attack){
+	switch(defend){
+		case "fire":
+			if(["bug","steel","fire","grass","ice","fairy"].contains(attack)){
+				return true
+			}
+	}
 	
+}
+function events(){
 	if (firstBattle["ready"] && currentLevel == house0){	//introduction battle
 		
 		if (!firstBattle["running"]){
@@ -37,7 +55,6 @@ function events(){
 
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
-				console.log
 				friendXPos -= 1;
 			
 			}
@@ -53,14 +70,14 @@ function events(){
 					context.fillRect(0, canvas.height - 20, canvas.width, 20)
 					context.fillStyle = "#000000"
 					context.fillText("Battle Trigger",canvas.width / 10, canvas.height - 10)
-					if (wDown || aDown || sDown || dDown){
+					if (zDown || xDown || cDown || vDown){
 						firstBattle["done"][2] = 2
 					}
 			}
 			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && !firstBattle["done"][3]){
 				canvas.width = 176
 				canvas.height = 144
-				if(!LoadBattle(currentMonsters[currentMonsterIndex], testMonster)){
+				if(!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])){
 					firstBattle["done"][3] = true
 				}
 			}
@@ -83,7 +100,6 @@ function events(){
 		}
 	}
 	if(healing["running"]){
-		console.log("healing")
 		playerCanMove = false
 		displayMessage("healing", null)
 		currentMonsters.forEach(function(monster){
@@ -91,11 +107,9 @@ function events(){
 		})
 				
 		if (!(zDown||xDown||cDown||vDown)){
-			console.log("menu ready")
 			menuReady = true
 		}
 		if(menuReady && (zDown||xDown||cDown||vDown)){
-			console.log("healing done")
 			playerCanMove = true
 			healing["running"] = false
 			playerYPos = 3 * 16
@@ -114,15 +128,12 @@ function events(){
 		}
 	}
 	if(shopping["running"]){
-		console.log("shop")
 		playerCanMove = false
 		displayMessage("shop", null)
 		if (!(zDown||xDown||cDown||vDown)){
-			console.log("menu ready")
 			menuReady = true
 		}
 		if(menuReady && (zDown||xDown||cDown||vDown)){
-			console.log("shopping done")
 			playerCanMove = true
 			shopping["running"] = false
 			playerYPos = 3 * 16
@@ -135,11 +146,11 @@ function events(){
 hit = ""
 effect = ""
 enemyMoved = false
+enemyDied = false
+
 function LoadBattle(playerMonster, enemyMonster){
-	
 	drawMonsters(playerMonster, enemyMonster);
 	context.font = "9px Verdana"
-	console.log(currentBattleMenu, menuReady)
 	
 	switch(currentBattleMenu){
 		case "main":
@@ -151,26 +162,34 @@ function LoadBattle(playerMonster, enemyMonster){
 			if(zDown && menuReady){
 				currentBattleMenu = "message"
 				useAttack(playerMonster["attacks"][1],playerMonster, enemyMonster)
-				if (menuReady){currentBattleMenu = "main"}
+				
+				
+				
 				
 			}
 			if(xDown && menuReady){
 				currentBattleMenu = "message"
 				useAttack(playerMonster["attacks"][4],playerMonster, enemyMonster)
-				if (menuReady){currentBattleMenu = "main"}
 			}
 			if(cDown && menuReady){
 				currentBattleMenu = "message"
 				useAttack(playerMonster["attacks"][2],playerMonster, enemyMonster)
-				if (menuReady){currentBattleMenu = "main"}
 			}
 			if(vDown && menuReady){
 				currentBattleMenu = "message"
 				useAttack(playerMonster["attacks"][3],playerMonster, enemyMonster)
-				if (menuReady){currentBattleMenu = "main"}
 				
 			}
-			
+			if(enemyMonster["hp"] < 1){
+					enemyMonsterIndex++
+					if(enemyMonsters[enemyMonsterIndex]){
+						enemySwitch(enemyMonsterIndex)
+						enemyDied = true
+					}
+					else{
+						return false
+					}
+				}
 			break;
 		case "item":
 			drawItems();
@@ -207,8 +226,7 @@ function LoadBattle(playerMonster, enemyMonster){
 				if (menuReady){currentBattleMenu = "main"}
 			}
 			if(cDown && menuReady){	
-														//NEED TO ADD CHECK THAT THERE ARE MORE ITEMS IN CURRENTITEMS ARRAY
-				console.log("cDown")
+									
 				menuReady = false
 				switchIndex += 2
 				if (!(zDown||xDown||cDown||vDown)){
@@ -238,10 +256,9 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "enemyTurn":
-			
-				if(!enemyMoved){
+				console.log(enemyDied)
+				if(!enemyMoved && !enemyDied){
 					attack = Math.ceil(Math.random() * 4)
-					console.log(attack)
 					useAttack(enemyMonster["attacks"][attack], enemyMonster, playerMonster)
 					hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
 					effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
@@ -258,6 +275,10 @@ function LoadBattle(playerMonster, enemyMonster){
 				menuReady = false
 			}
 				}
+			if(enemyDied){
+				enemyDied = false
+				currentBattleMenu = "main"
+			}
 			break;
 	}
 	if (!(zDown||xDown||cDown||vDown)){								//workaround for the cross tick button holding problem
@@ -317,7 +338,12 @@ function useAttack(attack, user, target){
 			console.log("enemy turn")
 		}
 	}
-			
+	if isStrongAgainst(target["type"],attack["type"]){
+		console.log("attack is strong")
+	}
+	if isWeakTo(target["type"],attack["type"]){
+		console.log("attack is weak")
+	}	
 	// if opponent.isWeakTo(attack[type]) { 
 		// damage = attack["damage"] *= 2
 	// }
@@ -352,16 +378,18 @@ function useAttack(attack, user, target){
 }
 function Switch(index,playerMonster){
 	menuReady = false
-	console.log(currentMonsters)
-	console.log(currentMonsterIndex)
 	hit = currentMonsters[currentMonsterIndex]["name"] + " switched out"
 	currentMonsterIndex = index
-	console.log(currentMonsters)
-	console.log(currentMonsterIndex)
 	effect = currentMonsters[currentMonsterIndex]["name"] + " switched in"
 	switchIndex = 0
 	}
-	
+function enemySwitch(index,enemyMonster){
+	menuReady = false
+	hit = enemyMonsters[enemyMonsterIndex]["name"] + " switched out"
+	enemyMonsterIndex = index
+	effect = enemyMonsters[enemyMonsterIndex]["name"] + " switched in"
+	switchIndex = 0
+	}
 
 function useItem(item,playerMonster){
 	menuReady = false
@@ -505,7 +533,6 @@ function drawItems(){
 	context.rect(10, canvas.height - 36, 60, 31);
 	context.stroke();
 	context.fillStyle = "#000000"
-	console.log(itemIndex)
 	context.fillText("Z:"+ currentItems[itemIndex]["name"],15, canvas.height - 27)
 	context.fillText("Strength:",15, canvas.height - 17)
 	context.fillText(currentItems[itemIndex]["strength"],30, canvas.height - 7)
