@@ -866,3 +866,7 @@ var triggerMatSprite = new Image();
 		triggerMatSprite.src = "sprites/overworld/triggerMat.png"
 		triggerMatSprite.height = 16
 		triggerMatSprite.width = 16
+var npcSprite = new Image();
+		npcSprite.src = "sprites/overworld/triggerMat.png"
+		npcSprite.height = 16
+		npcSprite.width = 16

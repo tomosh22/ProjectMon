@@ -8,24 +8,38 @@ itemIndex = 0
 switchIndex = 0
 currentMonsterIndex = 0
 enemyMonsterIndex = 0
-function isWeakTo(defend,attack){
+function distanceTo(y1,y2,x1,x2){
+	y = y2 - y1
+	x = x2 - x1
+	return Math.sqrt(Math.pow(x,2) + Math.pow(y,2))
+}
+function isStrongAgainst(defend,attack){
 	switch (defend){
 		case "fire":
-			if (["ground","rock","water"].contains(attack)){
+			if (["ground","rock","water"].includes(attack)){
 				return true
 			}
 	}
 }
-function isStrongAgainst(defend,attack){
+function isWeakTo(defend,attack){
 	switch(defend){
 		case "fire":
-			if(["bug","steel","fire","grass","ice","fairy"].contains(attack)){
+			if(["bug","steel","fire","grass","ice","fairy"].includes(attack)){
 				return true
 			}
 	}
 	
 }
 function events(){
+	for (i=0;i<=npcs.length - 1;i++){
+		if (npcs[i]["map"] == currentLevel){
+			//console.log("npc on map")
+			//console.log(playerYPos,npcs[i]["y"]*16,playerXPos,npcs[i]["x"]*16)
+			//console.log(distanceTo(playerYPos,npcs[i]["y"]*16,playerXPos,npcs[i]["x"]*16))
+		}
+		
+	}
+		
 	if (firstBattle["ready"] && currentLevel == house0){	//introduction battle
 		
 		if (!firstBattle["running"]){
@@ -225,7 +239,7 @@ function LoadBattle(playerMonster, enemyMonster){
 				Switch(switchIndex + 1)
 				if (menuReady){currentBattleMenu = "main"}
 			}
-			if(cDown && menuReady){	
+			if(cDown && menuReady){						//NEED TO ADD CHECK THAT THERE ARE MORE MONSTERS IN CURRENTMONSTERS ARRAY
 									
 				menuReady = false
 				switchIndex += 2
@@ -256,20 +270,25 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "enemyTurn":
-				console.log(enemyDied)
-				if(!enemyMoved && !enemyDied){
-					attack = Math.ceil(Math.random() * 4)
-					useAttack(enemyMonster["attacks"][attack], enemyMonster, playerMonster)
-					hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
-					effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
-					enemyMoved = true
-					displayMessage()
-					currentBattleMenu = "enemyMessage"
+			if(!enemyMoved && !enemyDied){
+				attack = Math.ceil(Math.random() * 4)
+				useAttack(enemyMonster["attacks"][attack], enemyMonster, playerMonster)
+				hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
+				effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
+				enemyMoved = true
+				displayMessage()
+				if(playerMonster["hp"] < 1){
+					effect = playerMonster["name"] + " was killed"
+					if (currentMonsters[currentMonsterIndex + 1]){
+						Switch(currentMonsterIndex + 1)
+					}
 				}
-				else{
-					if (!(zDown||xDown||cDown||vDown)){
-						menuReady = true
+				currentBattleMenu = "enemyMessage"
 			}
+			else{
+				if (!(zDown||xDown||cDown||vDown)){
+					menuReady = true
+				}	
 			if ((zDown||xDown||cDown||vDown) && menuReady){
 				currentBattleMenu = "main"
 				menuReady = false
@@ -338,23 +357,20 @@ function useAttack(attack, user, target){
 			console.log("enemy turn")
 		}
 	}
-	if isStrongAgainst(target["type"],attack["type"]){
+	damage = Math.round(attack["damage"] * user["attack"] / target["defense"])
+	if (isStrongAgainst(target["type"],attack["type"])){
+		damage *= 2
 		console.log("attack is strong")
 	}
-	if isWeakTo(target["type"],attack["type"]){
+	if (isWeakTo(target["type"],attack["type"])){
+		damage *= 0.5
 		console.log("attack is weak")
-	}	
-	// if opponent.isWeakTo(attack[type]) { 
-		// damage = attack["damage"] *= 2
-	// }
-	// if opponent.isStrongAgainst(attack[type]){
-		// damage = attack["damage"] *= 0.5
-	// }
+	}
 
 	hit = ""
 	chance = Math.random()
 	if (chance < attack["accuracy"] / 100) {
-		target["hp"] -= Math.round(attack["damage"] * user["attack"] / target["defense"])
+		target["hp"] -= damage
 		hit = "Attack landed"
 	}
 	else{
@@ -376,7 +392,7 @@ function useAttack(attack, user, target){
 	else{effect = "Attack has no extra effect"}
 	//return hit,effect
 }
-function Switch(index,playerMonster){
+function Switch(index){
 	menuReady = false
 	hit = currentMonsters[currentMonsterIndex]["name"] + " switched out"
 	currentMonsterIndex = index
