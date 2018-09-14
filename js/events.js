@@ -30,15 +30,39 @@ function isWeakTo(defend,attack){
 	}
 	
 }
+npcBattle = false
 function events(){
 	for (i=0;i<=npcs.length - 1;i++){
-		if (npcs[i]["map"] == currentLevel){
-			//console.log("npc on map")
-			//console.log(playerYPos,npcs[i]["y"]*16,playerXPos,npcs[i]["x"]*16)
-			//console.log(distanceTo(playerYPos,npcs[i]["y"]*16,playerXPos,npcs[i]["x"]*16))
-		}
+			if (npcs[i]["map"] == currentLevel){
+				//console.log("npc on map")
+				if((distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7))<23 && npcs[i]["ready"] && !npcBattle){
+					console.log("next to npc")
+					playerCanMove = false
+					npcBattle = true
+					menuReady = false
+					displayMessage("npc battle", null)
+					if (!(zDown||xDown||cDown||vDown)){
+						menuReady = true
+					}
+					if(menuReady && (zDown||xDown||cDown||vDown)){
+						playerCanMove = true
+							healing["running"] = false
+						playerYPos = 3 * 16
+						menuReady = true
+					}
+				}
+				if(npcBattle && menuReady){
+					enemyMonsters = npcs[i]["team"]
+					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
+						console.log("npc beaten")
+						playerCanMove = true
+						npcBattle = false
+						npcs[i]["ready"] = false
+					}
+				}
+			}
 		
-	}
+		}
 		
 	if (firstBattle["ready"] && currentLevel == house0){	//introduction battle
 		
@@ -89,8 +113,7 @@ function events(){
 					}
 			}
 			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && !firstBattle["done"][3]){
-				canvas.width = 176
-				canvas.height = 144
+				
 				if(!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])){
 					firstBattle["done"][3] = true
 				}
@@ -163,6 +186,8 @@ enemyMoved = false
 enemyDied = false
 
 function LoadBattle(playerMonster, enemyMonster){
+	canvas.width = 176
+	canvas.height = 144
 	drawMonsters(playerMonster, enemyMonster);
 	context.font = "9px Verdana"
 	
@@ -201,6 +226,7 @@ function LoadBattle(playerMonster, enemyMonster){
 						enemyDied = true
 					}
 					else{
+						currentMonsterIndex,enemyMonsterIndex = 0,0
 						return false
 					}
 				}
@@ -322,6 +348,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			menuReady = false
 		}
 		if(vDown){
+			currentMonsterIndex,enemyMonsterIndex = 0,0
 			return false
 		}
 	}
