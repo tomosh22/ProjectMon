@@ -1,4 +1,4 @@
-class charmander{
+class charmander extends monster{
 	constructor(){
 		this.level = 1
 		this.name = "Charmander"
@@ -16,10 +16,13 @@ class charmander{
 		this.maxhp = this.baseHp * level
 		this.attack = this.baseAttack * level
 		this.defense = this.baseDefense * level
-		console.log(this)
-		this.learnattacks.forEach(function(attack){
-			console.log(this)
-			slot = emptyAttackSlot(this)
+		//this.baseMonster = this
+		var testCharmander = this
+		console.log(testCharmander)
+		//console.log(this)
+		this.learnattacks.forEach(function(testCharmander, attack){
+			console.log(testCharmander)
+			slot = emptyAttackSlot(testCharmander)
 			console.log(slot)
 			if(level >= attack[0]){
 				
@@ -36,3 +39,5 @@ function emptyAttackSlot(monster){
 	}
 	return false					//if no slots are free return false
 }
+
+
