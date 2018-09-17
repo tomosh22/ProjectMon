@@ -33,31 +33,32 @@ function isWeakTo(defend,attack){
 npcBattle = false
 function events(){
 	for (i=0;i<=npcs.length - 1;i++){
+		
 			if (npcs[i]["map"] == currentLevel){
 				//console.log("npc on map")
 				if((distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7))<23 && npcs[i]["ready"] && !npcBattle){
-					console.log("next to npc")
+					
 					playerCanMove = false
-					npcBattle = true
-					menuReady = false
+					
 					displayMessage("npc battle", null)
-					if (!(zDown||xDown||cDown||vDown)){
-						menuReady = true
-					}
+					
 					if(menuReady && (zDown||xDown||cDown||vDown)){
-						playerCanMove = true
-							healing["running"] = false
-						playerYPos = 3 * 16
-						menuReady = true
+						menuReady = false	
+						npcBattle = true
+						
 					}
 				}
+				if (!(zDown||xDown||cDown||vDown)){
+						menuReady = true
+					}
 				if(npcBattle && menuReady){
 					enemyMonsters = npcs[i]["team"]
 					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
-						console.log("npc beaten")
 						playerCanMove = true
 						npcBattle = false
 						npcs[i]["ready"] = false
+						canvas.height = currentLevelRows*16
+						canvas.width = currentLevelCols*16
 					}
 				}
 			}
@@ -109,6 +110,7 @@ function events(){
 					context.fillStyle = "#000000"
 					context.fillText("Battle Trigger",canvas.width / 10, canvas.height - 10)
 					if (zDown || xDown || cDown || vDown){
+						menuReady = false
 						firstBattle["done"][2] = 2
 					}
 			}
@@ -140,7 +142,8 @@ function events(){
 		playerCanMove = false
 		displayMessage("healing", null)
 		currentMonsters.forEach(function(monster){
-			monster.hp = monster.maxhp
+			monster["hp"] = monster.maxhp
+			monster["effect"] = null
 		})
 				
 		if (!(zDown||xDown||cDown||vDown)){
@@ -186,16 +189,17 @@ enemyMoved = false
 enemyDied = false
 
 function LoadBattle(playerMonster, enemyMonster){
+	
 	canvas.width = 176
 	canvas.height = 144
 	drawMonsters(playerMonster, enemyMonster);
 	context.font = "9px Verdana"
-	
 	switch(currentBattleMenu){
 		case "main":
 			drawControls();
 			break;
 		case "attack":
+		console.log("attack menu")
 			//Z1 C2 V3 X4
 			drawAttacks(playerMonster);
 			if(zDown && menuReady){
@@ -297,6 +301,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			break;
 		case "enemyTurn":
 			if(!enemyMoved && !enemyDied){
+				
 				attack = Math.ceil(Math.random() * 4)
 				useAttack(enemyMonster["attacks"][attack], enemyMonster, playerMonster)
 				hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
@@ -338,6 +343,7 @@ function LoadBattle(playerMonster, enemyMonster){
 		if(zDown){
 			currentBattleMenu = "attack"
 			menuReady = false
+			console.log("zdown")
 		}
 		if(xDown){
 			currentBattleMenu = "item"
