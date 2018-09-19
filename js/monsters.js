@@ -1,43 +1,62 @@
-class charmander extends monster{
-	constructor(){
-		this.level = 1
-		this.name = "Charmander"
-		this.baseHp = 1.1
-		this.baseAttack = 2
-		this.baseDefense = 1.5
-		this.baseSpeed = 1.2
-		this.attacks={1:null,2:null,3:null,4:null}
-		this.learnattacks = [[0,firePunch],[0,slam],[0,flamethrower],[0,highKick]]
-	}	
+class monster{
 	
-	update(level){
+	levelUp(level){
 		this.level = level
 		this.hp = this.baseHp * level
 		this.maxhp = this.baseHp * level
 		this.attack = this.baseAttack * level
 		this.defense = this.baseDefense * level
-		//this.baseMonster = this
-		var testCharmander = this
-		console.log(testCharmander)
-		//console.log(this)
-		this.learnattacks.forEach(function(testCharmander, attack){
-			console.log(testCharmander)
-			slot = emptyAttackSlot(testCharmander)
-			console.log(slot)
-			if(level >= attack[0]){
-				
-			}
-		})
-	}
-}
-
-function emptyAttackSlot(monster){
-	for(x=0;x<=4;x++){				//check all 4 of the monsters attack slots
-		if (!monster.attacks[x]){	//if attack slot is null
-			return x				//return that slot
+		this.attackslearnt = 0
+		for(var x=100;x>=0;x--){
+			for(var y=0;y<=this.learnattacks.length;y++){
+				if(level >= this.learnattacks[y][0] && this.attackslearnt < 4){
+					this.attacks[this.attackslearnt + 1] = this.learnattacks[y][1]
+					this.attackslearnt++
+				}
+				if(this.attackslearnt == 4){
+					break
+				}
+		}
 		}
 	}
-	return false					//if no slots are free return false
 }
 
-
+class charmander extends monster{
+	constructor(){
+		super()
+		this.level = 1
+		this.name = "Charmander"
+		this.baseHp = 3.9
+		this.baseAttack = 5.2
+		this.baseDefense = 4.3
+		this.baseSpeed = 6.5
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,firePunch],[0,slam],[0,flamethrower],[0,highKick]]
+	}	
+}
+class bulbasaur extends monster{
+	constructor(){
+		super()
+		this.level = 1
+		this.name = "Bulbasaur"
+		this.baseHp = 4.5
+		this.baseAttack = 4.9
+		this.baseDefense = 4.9
+		this.baseSpeed = 4.5
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,confusion],[0,leafBlade],[0,vineWhip],[0,highKick]]
+	}	
+}
+class pikachu extends monster{
+	constructor(){
+		super()
+		this.level = 1
+		this.name = "Pikachu"
+		this.baseHp = 3.5
+		this.baseAttack = 5.5
+		this.baseDefense = 4.0
+		this.baseSpeed = 9.0
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,vineWhip],[0,slam],[0,flamethrower],[0,highKick]]
+	}	
+}

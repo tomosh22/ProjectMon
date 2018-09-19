@@ -381,7 +381,6 @@ function displayMessage(hit,effect){
 }
 function useAttack(attack, user, target){
 	menuReady = false
-	//console.log("using attack")
 	if (user["effect"] != null){
 		if (Math.random() < 0.1){
 			user["effect"] = null
@@ -494,6 +493,8 @@ function drawAttacks(playerMonster){
 	context.lineWidth=1;
 	context.strokeStyle="#000000";
 	context.rect(0, canvas.height - 40, canvas.width, 39);
+	context.fillStyle = "#FFFFFF"
+	context.fillRect(0, canvas.height - 40, canvas.width, 39);
 	context.stroke();
 	
 	context.beginPath();
@@ -537,6 +538,8 @@ function drawSwitch(){
 	context.lineWidth=1;
 	context.strokeStyle="#000000";
 	context.rect(0, canvas.height - 40, canvas.width, 39);
+	context.fillStyle = "#FFFFFF"
+	context.fillRect(0, canvas.height - 40, canvas.width, 39);
 	context.stroke();
 	
 	context.beginPath();
@@ -574,6 +577,8 @@ function drawItems(){
 	context.lineWidth=1;
 	context.strokeStyle="#000000";
 	context.rect(0, canvas.height - 40, canvas.width, 39);
+	context.fillStyle = "#FFFFFF"
+	context.fillRect(0, canvas.height - 40, canvas.width, 39);
 	context.stroke();
 	
 	context.beginPath();
@@ -611,6 +616,8 @@ function drawControls(){
 	context.lineWidth=1;
 	context.strokeStyle="#000000";
 	context.rect(0, canvas.height - 40, canvas.width, 39);
+	context.fillStyle = "#FFFFFF"
+	context.fillRect(0, canvas.height - 40, canvas.width, 39);
 	context.stroke();
 	
 	//attack button
@@ -707,15 +714,15 @@ function drawMonsters(playerMonster, enemyMonster){
 	
 	
 	//player monster sprite
-	spritePath = "sprites/monsters/back/"+playerMonster["name"]+".png"
+	spritePath = "sprites/monsters/back/"+playerMonster["name"]+".png"//USE HGSS SPRITES
 	playerMonsterSprite = new Image();
 	playerMonsterSprite.src = spritePath;
 	playerMonsterSprite.height = 64;
 	playerMonsterSprite.width = 64;
-	context.drawImage(playerMonsterSprite,10, 50);
+	context.drawImage(playerMonsterSprite,10, 40);
 	
 	//enemy monster sprite
-	spritePath = "sprites/monsters/front/"+enemyMonster["name"]+".png"
+	spritePath = "sprites/monsters/front/"+enemyMonster["name"]+".png"//USE  HGSS SPRITES
 	enemyMonsterSprite = new Image();
 	enemyMonsterSprite.src = spritePath;
 	enemyMonsterSprite.height = 64;
