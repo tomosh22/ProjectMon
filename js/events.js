@@ -1,5 +1,17 @@
 currentBattleMenu = "main"
-
+function LoadLevel(){
+		currentLevelCols = currentLevel[0].length;
+		currentLevelRows = currentLevel.length - 3;
+		
+		playerCol = currentLevel[currentLevel.length-2][0];
+		playerRow = currentLevel[currentLevel.length-2][1];
+		playerXTile = playerRow
+		playerYTile = playerCol
+		playerXPos = playerCol * 16
+		playerYPos = playerRow * 16
+		canvas.height = currentLevelRows*16//adjusts canvas to fit the map
+		canvas.width = currentLevelCols*16	
+	}
 firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], "points":[[4,6], [2,6]]}
 
 healing = {"running":false}
@@ -187,9 +199,8 @@ hit = ""
 effect = ""
 enemyMoved = false
 enemyDied = false
-
+battleWon = null
 function LoadBattle(playerMonster, enemyMonster){
-	
 	canvas.width = 176
 	canvas.height = 144
 	drawMonsters(playerMonster, enemyMonster);
@@ -199,7 +210,6 @@ function LoadBattle(playerMonster, enemyMonster){
 			drawControls();
 			break;
 		case "attack":
-		console.log("attack menu")
 			//Z1 C2 V3 X4
 			drawAttacks(playerMonster);
 			if(zDown && menuReady){
@@ -230,9 +240,39 @@ function LoadBattle(playerMonster, enemyMonster){
 						enemyDied = true
 					}
 					else{
-						currentMonsterIndex,enemyMonsterIndex = 0,0
-						return false
+						enemyMonsterIndex--//so that the monster that just died is still displayed
+						battleWon = "player"
+						hit,effect = "You win",null
+						currentBattleMenu = "message"
 					}
+			if(enemyMonster["hp"]<1){
+				monsterFound = false
+				for(x=0;x<currentMonsters.length;x++){
+					if (enemyMonsters[x] && enemyMonsters[x]["hp"] >= 1 && !monsterFound){
+						monsterFound = true
+						enemySwitch(x)
+					}
+				}
+			}
+					
+					
+					// if(playerMonster["hp"] < 1){
+					// effect = playerMonster["name"] + " was killed"
+					// monsterFound = false
+					// for(x=0;x<currentMonsters.length;x++){
+						// if (currentMonsters[x] && currentMonsters[x]["hp"] >= 1 && !monsterFound){
+							// monsterFound = true
+							// Switch(x)
+						// }
+					// }
+					
+					// if(!monsterFound){
+						// battleWon = "enemy"
+						
+					// }
+				// }
+					
+					
 				}
 			break;
 		case "item":
@@ -283,11 +323,33 @@ function LoadBattle(playerMonster, enemyMonster){
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
+			
 			if ((zDown||xDown||cDown||vDown) && menuReady){
 				enemyMoved = false
 				currentBattleMenu = "enemyTurn"
 				menuReady = false
+				if (battleWon == "player"){
+					battleWon = null
+					enemyMonsterIndex = 0
+					currentMonsterIndex = 0
+					currentBattleMenu = "main"
+					return false
+				}
+				
+				if(battleWon == "enemy"){
+					battleWon = null
+					enemyMonsterIndex = 0
+					currentMonsterIndex = 0
+					console.log(currentMonsterIndex, enemyMonsterIndex)
+					currentLevel = maps[3]
+					LoadLevel()
+					playerXPos = 5 * 16
+					playerYPos = 2 * 16
+					currentBattleMenu = "main"
+					return false
+				}
 			}
+			
 			break;
 		case "enemyMessage":
 			displayMessage(hit,effect)
@@ -310,8 +372,17 @@ function LoadBattle(playerMonster, enemyMonster){
 				displayMessage()
 				if(playerMonster["hp"] < 1){
 					effect = playerMonster["name"] + " was killed"
-					if (currentMonsters[currentMonsterIndex + 1]){
-						Switch(currentMonsterIndex + 1)
+					monsterFound = false
+					for(x=0;x<currentMonsters.length;x++){
+						if (currentMonsters[x] && currentMonsters[x]["hp"] >= 1 && !monsterFound){
+							monsterFound = true
+							Switch(x)
+						}
+					}
+					
+					if(!monsterFound){
+						battleWon = "enemy"
+						
 					}
 				}
 				currentBattleMenu = "enemyMessage"
@@ -328,6 +399,11 @@ function LoadBattle(playerMonster, enemyMonster){
 			if(enemyDied){
 				enemyDied = false
 				currentBattleMenu = "main"
+			}
+			if(battleWon == "enemy"){
+				hit,effect = "You lose",null
+				currentBattleMenu = "message"
+				menuReady = false
 			}
 			break;
 	}
@@ -354,7 +430,8 @@ function LoadBattle(playerMonster, enemyMonster){
 			menuReady = false
 		}
 		if(vDown){
-			currentMonsterIndex,enemyMonsterIndex = 0,0
+			enemyMonsterIndex = 0
+			currentMonsterIndex = 0
 			return false
 		}
 	}
@@ -431,7 +508,7 @@ function Switch(index){
 	effect = currentMonsters[currentMonsterIndex]["name"] + " switched in"
 	switchIndex = 0
 	}
-function enemySwitch(index,enemyMonster){
+function enemySwitch(index){
 	menuReady = false
 	hit = enemyMonsters[enemyMonsterIndex]["name"] + " switched out"
 	enemyMonsterIndex = index
