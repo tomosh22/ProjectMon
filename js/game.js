@@ -13,11 +13,11 @@ $(document).ready(function() {
 	
 	currentMonsters = [new bulbasaur,new pikachu,new charmander]
 	for(x=0;x<currentMonsters.length;x++){
-		currentMonsters[x].levelUp(1)
+		currentMonsters[x].levelUp(1000)
 	}
 	enemyMonsters = [new charmander, new pikachu]
 	for(x=0;x<enemyMonsters.length;x++){
-		enemyMonsters[x].levelUp(10000)
+		enemyMonsters[x].levelUp(1)
 	}				
 	wildMonsters = {1:[new charmander]}
 	levelDifficulty = {1:1000}
