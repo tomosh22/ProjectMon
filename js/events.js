@@ -200,6 +200,7 @@ effect = ""
 enemyMoved = false
 enemyDied = false
 battleWon = null
+monsterFound = false
 function LoadBattle(playerMonster, enemyMonster){
 	canvas.width = 176
 	canvas.height = 144
@@ -210,7 +211,12 @@ function LoadBattle(playerMonster, enemyMonster){
 			drawControls();
 			break;
 		case "attack":
+			
+			if (!(zDown||xDown||cDown||vDown)){
+				menuReady = true
+			}
 			//Z1 C2 V3 X4
+			
 			drawAttacks(playerMonster);
 			if(zDown && menuReady){
 				currentBattleMenu = "message"
@@ -275,13 +281,8 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "message":
-			console.log("dislpaying")
 			console.log(hit,effect)
 			displayMessage(hit,effect)
-			menuReady = false
-			if (!(zDown||xDown||cDown||vDown)){
-				menuReady = true
-			}
 			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
 				monsterFound = false
 				menuReady = true
@@ -289,46 +290,54 @@ function LoadBattle(playerMonster, enemyMonster){
 					if (enemyMonsters[x] && enemyMonsters[x]["hp"] >= 1 && !monsterFound){
 						monsterFound = true
 						enemySwitch(x)
-						displayMessage()
+						
 					}
 				}
 				if(!monsterFound){
+					console.log("oinsdgndsfig")
 					battleWon = "player"
+					currentBattleMenu = "battleWon"
+					menuReady = false
+					break;
 				}
 				
 			}
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
-			
-			if ((zDown||xDown||cDown||vDown) && menuReady){
+			if ((zDown||xDown||cDown||vDown) && menuReady &&!monsterFound){
 				enemyMoved = false
 				currentBattleMenu = "enemyTurn"
 				menuReady = false
-				if (battleWon == "player"){
-					battleWon = null
-					enemyMonsterIndex = 0
-					currentMonsterIndex = 0
-					currentBattleMenu = "main"
-					return false
-				}
-				
-				if(battleWon == "enemy"){
-					battleWon = null
-					enemyMonsterIndex = 0
-					currentMonsterIndex = 0
-					currentLevel = maps[3]
-					LoadLevel()
-					playerXPos = 5 * 16
-					playerYPos = 2 * 16
-					currentBattleMenu = "main"
-					return false
-				}
 			}
-			
+			if (!(zDown||xDown||cDown||vDown) && monsterFound){
+				menuReady = true
+			}
+			if ((zDown||xDown||cDown||vDown) && menuReady && monsterFound){
+				currentBattleMenu = "main"
+				menuReady = false
+				monsterFound = false
+			}
 			break;
 		case "enemyMessage":
 			displayMessage(hit,effect)
+			if(playerMonster["hp"] < 1){
+					effect = playerMonster["name"] + " was killed"
+					monsterFound = false
+					for(x=0;x<currentMonsters.length;x++){
+						if (currentMonsters[x] && currentMonsters[x]["hp"] >= 1 && !monsterFound){
+							monsterFound = true
+							Switch(x)
+						}
+					}
+					
+					if(!monsterFound){
+						battleWon = "enemy"
+						currentBattleMenu = "battleWon"
+						menuReady = false
+						break;
+					}
+				}
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
@@ -346,21 +355,8 @@ function LoadBattle(playerMonster, enemyMonster){
 				effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
 				enemyMoved = true
 				displayMessage()
-				if(playerMonster["hp"] < 1){
-					effect = playerMonster["name"] + " was killed"
-					monsterFound = false
-					for(x=0;x<currentMonsters.length;x++){
-						if (currentMonsters[x] && currentMonsters[x]["hp"] >= 1 && !monsterFound){
-							monsterFound = true
-							Switch(x)
-						}
-					}
-					
-					if(!monsterFound){
-						battleWon = "enemy"
-						
-					}
-				}
+				
+				
 				currentBattleMenu = "enemyMessage"
 			}
 			else{
@@ -376,26 +372,36 @@ function LoadBattle(playerMonster, enemyMonster){
 				enemyDied = false
 				currentBattleMenu = "main"
 			}
-			if(battleWon == "enemy"){
-				hit,effect = "You lose",null
-				currentBattleMenu = "message"
-				menuReady = false
+			break;
+		case "battleWon":
+			console.log("battle won")
+			if (battleWon == "player")
+				displayMessage("You Win",null)
+			if (battleWon == "enemy"){
+				displayMessage("You lose",null)
+			}
+			if (!(zDown||xDown||cDown||vDown)){
+				menuReady = true
+			}
+			if ((zDown||xDown||cDown||vDown) && menuReady){
+				return false
 			}
 			break;
 	}
 	if (!(zDown||xDown||cDown||vDown)){								//workaround for the cross tick button holding problem
 				menuReady = true
 	}
-	
 	if (menuReady){
+		console.log("waiting for input")
 		if(escDown){
 			currentBattleMenu = "main"
 			menuReady = false
 		}
 		if(zDown){
+			console.log("zDown")
 			currentBattleMenu = "attack"
 			menuReady = false
-			console.log("zdown")
+			
 		}
 		if(xDown){
 			currentBattleMenu = "item"

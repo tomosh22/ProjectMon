@@ -13,11 +13,11 @@ $(document).ready(function() {
 	
 	currentMonsters = [new bulbasaur,new pikachu,new charmander]
 	for(x=0;x<currentMonsters.length;x++){
-		currentMonsters[x].levelUp(1000)
+		currentMonsters[x].levelUp(1)
 	}
 	enemyMonsters = [new charmander, new pikachu]
 	for(x=0;x<enemyMonsters.length;x++){
-		enemyMonsters[x].levelUp(1)
+		enemyMonsters[x].levelUp(100000)
 	}				
 	wildMonsters = {1:[new charmander]}
 	levelDifficulty = {1:1000}
@@ -209,6 +209,14 @@ $(document).ready(function() {
 		
 		var devTool = $("<p/>")
 			.html("menuReady "+menuReady);
+		$("#devTools").append(devTool)
+		
+		var devTool = $("<p/>")
+			.html("monsterFound "+monsterFound);
+		$("#devTools").append(devTool)
+		
+		var devTool = $("<p/>")
+			.html("currentBattleMenu "+currentBattleMenu);
 		$("#devTools").append(devTool)
 		
 		for(x=0;x<=currentMonsters.length - 1;x++){//for each of the player's current monsters
