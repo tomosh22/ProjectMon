@@ -294,7 +294,6 @@ function LoadBattle(playerMonster, enemyMonster){
 					}
 				}
 				if(!monsterFound){
-					console.log("oinsdgndsfig")
 					battleWon = "player"
 					currentBattleMenu = "battleWon"
 					menuReady = false
@@ -313,7 +312,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			if (!(zDown||xDown||cDown||vDown) && monsterFound){
 				menuReady = true
 			}
-			if ((zDown||xDown||cDown||vDown) && menuReady && monsterFound){
+			if ((zDown||xDown||cDown||vDown) && menuReady){
 				currentBattleMenu = "main"
 				menuReady = false
 				monsterFound = false
@@ -321,7 +320,8 @@ function LoadBattle(playerMonster, enemyMonster){
 			break;
 		case "enemyMessage":
 			displayMessage(hit,effect)
-			if(playerMonster["hp"] < 1){
+			monsterFound = false
+			if(playerMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
 					effect = playerMonster["name"] + " was killed"
 					monsterFound = false
 					for(x=0;x<currentMonsters.length;x++){
@@ -341,9 +341,14 @@ function LoadBattle(playerMonster, enemyMonster){
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
-			if ((zDown||xDown||cDown||vDown) && menuReady){
+			if ((zDown||xDown||cDown||vDown) && menuReady && !monsterFound){
 				currentBattleMenu = "main"
 				menuReady = false
+			}
+			if ((zDown||xDown||cDown||vDown) && menuReady && monsterFound){
+				currentBattleMenu = "enemyMessage"
+				menuReady = false
+				monsterFound = false
 			}
 			break;
 		case "enemyTurn":

@@ -17,7 +17,7 @@ $(document).ready(function() {
 	}
 	enemyMonsters = [new charmander, new pikachu]
 	for(x=0;x<enemyMonsters.length;x++){
-		enemyMonsters[x].levelUp(100000)
+		enemyMonsters[x].levelUp(10000)
 	}				
 	wildMonsters = {1:[new charmander]}
 	levelDifficulty = {1:1000}
