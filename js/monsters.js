@@ -1,5 +1,8 @@
 class monster{
-	
+	constructor(){
+		this.xp = 0
+		this.level = 1
+	}
 	levelUp(level){
 		this.level = level
 		this.hp = this.baseHp * level
@@ -24,7 +27,7 @@ class monster{
 class charmander extends monster{
 	constructor(){
 		super()
-		this.level = 1
+		
 		this.name = "Charmander"
 		this.baseHp = 3.9
 		this.baseAttack = 5.2
@@ -37,7 +40,6 @@ class charmander extends monster{
 class bulbasaur extends monster{
 	constructor(){
 		super()
-		this.level = 1
 		this.name = "Bulbasaur"
 		this.baseHp = 4.5
 		this.baseAttack = 4.9
@@ -50,7 +52,6 @@ class bulbasaur extends monster{
 class pikachu extends monster{
 	constructor(){
 		super()
-		this.level = 1
 		this.name = "Pikachu"
 		this.baseHp = 3.5
 		this.baseAttack = 5.5

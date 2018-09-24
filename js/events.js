@@ -16,6 +16,7 @@ firstBattle = {"ready":true, "running":false, "done":[false,false,false,false], 
 
 healing = {"running":false}
 shopping = {"running":false}
+canCapture = false
 itemIndex = 0
 switchIndex = 0
 currentMonsterIndex = 0
@@ -65,6 +66,7 @@ function events(){
 					}
 				if(npcBattle && menuReady){
 					enemyMonsters = npcs[i]["team"]
+					canCapture = false
 					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
 						playerCanMove = true
 						npcBattle = false
@@ -127,15 +129,26 @@ function events(){
 					}
 			}
 			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && !firstBattle["done"][3]){
-				
+				canCapture = false
 				if(!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])){
 					firstBattle["done"][3] = true
+					menuReady = false
 				}
 			}
 			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && firstBattle["done"][3]){
-				playerCanMove = true
-				firstBattle["ready"] = false								//ends the event and the game continues as normal
-				firstBattle["running"] = false
+				LoadLevel()
+				eventRender()
+				displayMessage("Wow you won!", "I'm going to improve my team!")
+				if (!(zDown||xDown||cDown||vDown)){
+					menuReady = true
+				}
+				if ((zDown||xDown||cDown||vDown) && menuReady){
+					
+					playerCanMove = true
+					firstBattle["ready"] = false								//ends the event and the game continues as normal
+					firstBattle["running"] = false
+				}
+				
 			}
 		}
 		
@@ -181,19 +194,101 @@ function events(){
 	}
 	if(shopping["running"]){
 		playerCanMove = false
-		displayMessage("shop", null)
-		if (!(zDown||xDown||cDown||vDown)){
-			menuReady = true
-		}
-		if(menuReady && (zDown||xDown||cDown||vDown)){
+		if(LoadShop()){
+			console.log("ibdbdib")
 			playerCanMove = true
+			LoadLevel()
 			shopping["running"] = false
-			playerYPos = 3 * 16
-			menuReady = true
 		}
+		// if (!(zDown||xDown||cDown||vDown)){
+			// menuReady = true
+		// }
+		// if(menuReady && (zDown||xDown||cDown||vDown)){
+			// playerCanMove = true
+			// shopping["running"] = false
+			// playerYPos = 3 * 16
+			// menuReady = true
+		// }
 	
 
 	}	//end of shop
+}
+currentSelection = 0
+function LoadShop(){
+	console.log(currentSelection)
+	canvas.width = 200
+	canvas.height = 300
+	context.strokeStyle = "#000000"
+	context.fillStyle = "#000000"
+	context.rect(0,0,canvas.width,canvas.height)
+	context.stroke()
+	context.fillText("£"+playerMoney,160,10)
+	x = 0
+	xOffset = 10
+	yOffset = 20
+	newRow = true
+	
+	for(x=0;x<shopItems.length;x++){
+		if(x==currentSelection){
+			context.fillStyle="#0000FF"
+		}
+		else{
+			context.fillStyle="#000000"
+		}
+		context.rect(xOffset,yOffset,80,40)
+		context.stroke()
+		context.fillText(shopItems[x]["name"],xOffset+5,yOffset+10)
+		context.fillText("Strength: "+shopItems[x]["strength"],xOffset+5,yOffset+20)
+		context.fillText("Price: "+"5",xOffset+5,yOffset+30)
+		xOffset += 100
+		newRow = !newRow
+		if(newRow){
+			xOffset = 10
+			yOffset += 50
+		}
+	}
+	if((zDown||xDown||cDown||vDown) && menuReady){
+		if (playerMoney >= 5){
+			menuReady = false
+			playerMoney -= 5					//PRICE OF ITEM NEEDS ADDING
+			currentItems.push(shopItems[currentSelection])
+		}
+	}
+	if(wDown && menuReady){
+		menuReady = false
+		currentSelection -= 2
+		if(currentSelection < 0){
+			currentSelection = 0
+		}
+	}
+	if(aDown && menuReady){
+		menuReady = false
+		currentSelection -= 1
+		if(currentSelection < 0){
+			currentSelection = 0
+		}
+	}
+	if(sDown && menuReady){
+		menuReady = false
+		currentSelection += 2
+		if(currentSelection > x-1){
+			currentSelection = x-1
+		}
+	}
+	if(dDown && menuReady){
+		menuReady = false
+		currentSelection += 1
+		if(currentSelection > x-1){
+			currentSelection = x-1
+		}
+	}
+	if (!(wDown||aDown||sDown||dDown||zDown||xDown||cDown||vDown)){
+				menuReady = true
+		}
+	if(escDown && menuReady){
+		console.log("fnoinb")
+		return true
+	}
 }
 hit = ""
 effect = ""
@@ -208,6 +303,7 @@ function LoadBattle(playerMonster, enemyMonster){
 	context.font = "9px Verdana"
 	switch(currentBattleMenu){
 		case "main":
+		itemIndex = 0
 			drawControls();
 			break;
 		case "attack":
@@ -239,13 +335,13 @@ function LoadBattle(playerMonster, enemyMonster){
 			break;
 		case "item":
 			drawItems();
-			if(zDown && menuReady){
+			if(zDown && menuReady && currentItems[itemIndex]){
 				currentBattleMenu = "message"
 				useItem(currentItems[itemIndex],playerMonster)
 				if (menuReady){currentBattleMenu = "main"}
 				
 			}
-			if(xDown && menuReady){
+			if(xDown && menuReady && currentItems[itemIndex + 1]){
 				currentBattleMenu = "message"
 				useItem(currentItems[itemIndex + 1],playerMonster)
 				if (menuReady){currentBattleMenu = "main"}
@@ -254,8 +350,8 @@ function LoadBattle(playerMonster, enemyMonster){
 				menuReady = false
 				itemIndex += 2
 				if (!(zDown||xDown||cDown||vDown)){
-				menuReady = true
-			}
+					menuReady = true
+				}
 			}
 			break;
 		case "switch":
@@ -281,16 +377,20 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "message":
-			console.log(hit,effect)
 			displayMessage(hit,effect)
 			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
+				console.log(5*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level))
+				currentMonsters[currentMonsterIndex].xp += 40*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)
+				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){
+					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)
+					currentMonsters[currentMonsterIndex].xp = 0
+				}
 				monsterFound = false
 				menuReady = true
 				for(x=0;x<currentMonsters.length;x++){
 					if (enemyMonsters[x] && enemyMonsters[x]["hp"] >= 1 && !monsterFound){
 						monsterFound = true
 						enemySwitch(x)
-						
 					}
 				}
 				if(!monsterFound){
@@ -379,9 +479,9 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "battleWon":
-			console.log("battle won")
 			if (battleWon == "player")
 				displayMessage("You Win",null)
+				playerMoney+=5
 			if (battleWon == "enemy"){
 				displayMessage("You lose",null)
 			}
@@ -389,6 +489,8 @@ function LoadBattle(playerMonster, enemyMonster){
 				menuReady = true
 			}
 			if ((zDown||xDown||cDown||vDown) && menuReady){
+				currentBattleMenu = "main"
+				battleWon = null
 				return false
 			}
 			break;
@@ -396,14 +498,13 @@ function LoadBattle(playerMonster, enemyMonster){
 	if (!(zDown||xDown||cDown||vDown)){								//workaround for the cross tick button holding problem
 				menuReady = true
 	}
+	
 	if (menuReady){
-		console.log("waiting for input")
 		if(escDown){
 			currentBattleMenu = "main"
 			menuReady = false
 		}
 		if(zDown){
-			console.log("zDown")
 			currentBattleMenu = "attack"
 			menuReady = false
 			
@@ -451,7 +552,7 @@ function useAttack(attack, user, target){
 			user["effect"] = null
 		}
 		if (user["effect"] == "frozen"){
-			console.log("enemy turn")
+			console.log("frozen")
 		}
 	}
 	damage = Math.round(attack["damage"] * user["attack"] / target["defense"])
@@ -514,7 +615,17 @@ function useItem(item,playerMonster){
 	hit = "Used healing potion"
 	effect = "Restored "+ item["strength"]+" health"
 	}
-	
+	if (item["effect"] == "capture"){
+		if(canCapture){
+			currentMonsters.push(enemyMonsters[enemyMonsterIndex])
+			currentBattleMenu = "battleWon"
+			battleWon = "player"
+		}
+		else{
+			hit = "Can't capture"
+			effect = "This is an NPC battle"
+		}
+	}
 }
 function eventRender() {
 			for (y = 0; y < currentLevelRows; y++) {
@@ -645,7 +756,7 @@ function drawItems(){
 	context.fillStyle = "#FFFFFF"
 	context.fillRect(0, canvas.height - 40, canvas.width, 39);
 	context.stroke();
-	
+	if(currentItems[itemIndex]){
 	context.beginPath();
 	context.lineWidth=1;
 	context.strokeStyle="#000000";
@@ -655,6 +766,7 @@ function drawItems(){
 	context.fillText("Z:"+ currentItems[itemIndex]["name"],15, canvas.height - 27)
 	context.fillText("Strength:",15, canvas.height - 17)
 	context.fillText(currentItems[itemIndex]["strength"],30, canvas.height - 7)
+	}
 	
 	if (currentItems[itemIndex + 1]){
 		context.beginPath();
@@ -742,14 +854,17 @@ function drawMonsters(playerMonster, enemyMonster){
 	}
 	if(playerHealthPercent < 0.25){
 		context.fillStyle = "#FF0000"
-	}	
+	}
+	
 	context.fillRect(105,canvas.height - 55, 65 * playerHealthPercent, 5)
 	context.fillStyle = "#000000"
 	context.font = ("7px Verdana")
 	context.fillText(playerMonster["name"],102, canvas.height - 65)
 	context.fillText("HP:"+playerMonster["hp"]+"/"+playerMonster["maxhp"],110, canvas.height-58)
-	
-	
+	context.fillStyle = "#7777FF"
+	context.fillRect(100,canvas.height-47,75*(playerMonster.xp / 100),1)
+	context.fillStyle = "#000000"
+	context.fillText("Lvl."+playerMonster.level,145,canvas.height-65)
 	
 	//enemy monster stats
 	context.beginPath();
@@ -776,7 +891,7 @@ function drawMonsters(playerMonster, enemyMonster){
 	context.font = ("7px Verdana")
 	context.fillText(enemyMonster["name"],7, canvas.height - 120)
 	context.fillText("HP:"+enemyMonster["hp"]+"/"+enemyMonster["maxhp"],15, canvas.height-113)
-	
+	context.fillText("Lvl."+enemyMonster.level,55,canvas.height-120)
 	
 	//player monster sprite
 	spritePath = "sprites/monsters/back/"+playerMonster["name"]+".png"//USE HGSS SPRITES
