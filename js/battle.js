@@ -4,7 +4,27 @@ enemyMoved = false
 enemyDied = false
 battleWon = null
 monsterFound = false
+function Tutorial(){
+	context.fillStyle = "#FF0000"
+	switch (currentBattleMenu){
+		case "main":
+			context.fillText("Press Z to attack", 10, 55)
+		break;
+		case "attack":
+			context.fillText("Press Z to use "+currentMonsters[currentMonsterIndex].attacks[1].name, 10, 55)
+		break;
+	}
+}
+function CaptureTutorial(){
+	context.fillStyle = "#FF0000"
+	switch (currentBattleMenu){
+		case "main":
+			context.fillText("Press X to use an item", 10, 55)
+		break;
+	}
+}
 function LoadBattle(playerMonster, enemyMonster){
+	
 	canvas.width = 176
 	canvas.height = 144
 	drawMonsters(playerMonster, enemyMonster);
@@ -189,6 +209,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			if ((zDown||xDown||cDown||vDown) && menuReady){
 				currentBattleMenu = "main"
 				battleWon = null
+				enemyMonsterIndex = 0
 				return false
 			}
 			break;
@@ -197,6 +218,8 @@ function LoadBattle(playerMonster, enemyMonster){
 				menuReady = true
 	}
 	if (menuReady){
+		console.log("waiting for input")
+		console.log(xDown)
 		if(escDown){
 			currentBattleMenu = "main"
 			menuReady = false
@@ -205,19 +228,26 @@ function LoadBattle(playerMonster, enemyMonster){
 			currentBattleMenu = "attack"
 			menuReady = false
 		}
-		if(xDown){
+		if(xDown && !tutorial){
+			console.log("xDown")
 			currentBattleMenu = "item"
 			menuReady = false
 		}
-		if(cDown){
+		if(cDown && !tutorial){
 			currentBattleMenu = "switch"
 			menuReady = false
 		}
-		if(vDown){
+		if(vDown && !tutorial){
 			enemyMonsterIndex = 0
 			currentMonsterIndex = 0
 			return false
 		}
+	}
+	if (tutorial){
+		Tutorial()
+	}
+	if(tutorialCapture){
+		CaptureTutorial()
 	}
 	return true
 }

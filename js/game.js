@@ -15,7 +15,7 @@ $(document).ready(function() {
 	for(x=0;x<currentMonsters.length;x++){
 		currentMonsters[x].levelUp(2)
 	}
-	enemyMonsters = [new charmander, new pikachu]
+	enemyMonsters = [new charmander]
 	for(x=0;x<enemyMonsters.length;x++){
 		enemyMonsters[x].levelUp(1)
 	}				
@@ -274,7 +274,6 @@ $(document).ready(function() {
 				}
 			}
 			else{
-				console.log(currentMonsterIndex)
 				canCapture = true
 				if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
 					playerCanMove = true
