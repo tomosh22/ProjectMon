@@ -12,8 +12,36 @@ function LoadLevel(){
 		canvas.height = currentLevelRows*16//adjusts canvas to fit the map
 		canvas.width = currentLevelCols*16	
 	}
-firstBattle = {"ready":true, "running":false, "done":[false,false,false,false,false,false], "points":[[4,6], [2,6],[4,8]]}
-firstCapture = {"ready":true, "running":false, "done":[false,false,false], "points":[[7,15],[7,8]]}
+function eventMessage(one,two,three){
+	context.fillStyle = "#FFFFFF"
+	context.fillRect(0, canvas.height - 40, canvas.width, 40)
+	if(one){
+	context.fillStyle = "#000000"
+	context.fillText(one,5, canvas.height - 30)
+	}
+	if(two){
+	context.fillStyle = "#000000"
+	context.fillText(two,5, canvas.height - 20)
+	}
+	if(three){
+	context.fillStyle = "#000000"
+	context.fillText(three,5, canvas.height - 10)
+	}
+	context.rect(0, canvas.height - 40, canvas.width, 40);
+	context.stroke();
+}
+class event{
+	constructor(){
+		this.ready = true
+		this.running = false
+		this.done = []
+	}
+}
+firstBattle = new event()
+firstCapture = new event()
+outsideGym = new event()
+//outsideGym.ready = false
+
 healing = {"running":false}
 shopping = {"running":false}
 canCapture = false
@@ -24,9 +52,7 @@ enemyMonsterIndex = 0
 tutorial = false
 tutorialCapture = false
 function distanceTo(y1,y2,x1,x2){
-	y = y2 - y1
-	x = x2 - x1
-	return Math.sqrt(Math.pow(x,2) + Math.pow(y,2))
+	return Math.sqrt(Math.pow(x2 - x1,2) + Math.pow(y2 - y1,2))
 }
 function isStrongAgainst(defend,attack){
 	switch (defend){
@@ -80,86 +106,192 @@ function events(){
 			}
 		
 		}
-	if (firstCapture["ready"] && currentLevel == town0){
-		if (!firstCapture["running"]){
+	if (outsideGym.ready && currentLevel == maps[2]){
+		if (!outsideGym.running){
+			friendXPos = 8 * 16
+			friendYPos = 6 * 16
+			playerCanMove = false
+			outsideGym.running = true
+			menuReady = false
+		}
+		else{
+			if (!outsideGym.done[0]){
+				eventRender()
+		
+				context.drawImage(friendSprite, friendXPos, friendYPos);
+		
+				eventMessage("Hey, over here!")
+				if (!(zDown || xDown || cDown || vDown)){
+					menuReady = true
+				}
+				if ((zDown || xDown || cDown || vDown) && menuReady){
+					outsideGym.done[0] = true
+					menuReady = false
+				}
+			}
+			if(outsideGym.done[0] && !outsideGym.done[1]){
+				if(Math.floor(friendXPos / 16) != 4){
+				eventRender();
+				context.drawImage(friendSprite, friendXPos, friendYPos);
+				friendXPos--;
+				
+			}
+			else{
+				outsideGym.done[1] = true
+			}
+			}
+			if(outsideGym.done[1] && !outsideGym.done[2]){
+				if(Math.floor(friendYPos / 16) != 16){
+				eventRender();
+				context.drawImage(friendSprite, friendXPos, friendYPos);
+				friendYPos++;
+			
+			}
+			else{
+				outsideGym.done[2] = true
+			}
+			}
+			if (outsideGym.done[2] && !outsideGym.done[3]){
+				eventRender()
+				context.drawImage(friendSprite, friendXPos, friendYPos);
+				eventMessage("I just beat the gym, it wasn't even that hard.","I'm going to beat every gym and become", "the best trainer in the world, just you wait!")
+				if (!(zDown || xDown || cDown || vDown)){
+					menuReady = true
+				}
+				if ((zDown || xDown || cDown || vDown) && menuReady){
+					outsideGym.done[3] = true
+					menuReady = false
+				}
+			}
+			if (outsideGym.done[3] && !outsideGym.done[4]){
+				if(Math.floor(friendYPos / 16) != 0){
+					eventRender();
+					context.drawImage(friendSprite, friendXPos, friendYPos);
+					friendYPos--;
+				}
+				else{
+					playerCanMove = true
+					outsideGym.running = false
+					outsideGym.ready = false
+				}
+			}
+		}
+		
+	}
+	if (firstCapture.ready && currentLevel == town0){
+		if (!firstCapture.running){
 			playerCanMove = false
 			eventRender()
-			context.drawImage(friendSprite, friendXPos, friendYPos);
 			friendXTile = 4
 			friendYTile = 15
 			friendXPos = friendXTile * 16
 			friendYPos = friendYTile * 16
-			firstCapture["running"] = true;
+			context.drawImage(friendSprite, friendXPos, friendYPos);
+			
+			firstCapture.running = true;
 			tutorialCapture = true
 		}
 		else{
-			if(Math.floor(friendXPos / 16) != firstCapture["points"][0][0]){
+			if(Math.floor(friendXPos / 16) != 7){
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
 				friendXPos++;
 			}
 			else{
-				firstCapture["done"][0] = true
+				firstCapture.done[0] = true
 			}
-			if(firstCapture["done"][0])
-				if(Math.floor(friendYPos / 16) != firstCapture["points"][1][1]-1){
+			if(firstCapture.done[0] && !firstCapture.done[1])
+				if(Math.floor(friendYPos / 16) != 7){
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
 				friendYPos--;
 			}
 			else{
-				firstCapture["done"][1] = true
+				firstCapture.done[1] = true
 			}
-			if(firstCapture["done"][1]){
-				context.fillStyle = "#FFFFFF"
-				context.fillRect(0, canvas.height - 20, canvas.width, 20)
-				context.fillStyle = "#000000"
-				context.fillText("Here, I'll show you how to",canvas.width / 10, canvas.height - 10)
-				context.fillText("capture monsters",canvas.width / 10, canvas.height - 2)
+			if(firstCapture.done[1] && !firstCapture.done[2]){
+				eventMessage("Here, I'll show you how to","capture monsters.")
 				if (zDown || xDown || cDown || vDown){
 					menuReady = false
-					firstCapture["done"][2] = true
+					firstCapture.done[2] = true
 					canCapture = true
 					enemyMonsters = [wildMonsters[levelIndex][0]]
 					enemyMonsters[0].levelUp(levelDifficulty[levelIndex])
 				}
 			}
-			if (firstCapture["done"][2]){
+			if (firstCapture.done[2] && !firstCapture.done[3]){
 				
 				if(!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])){
 					firstCapture["done"][3] = true
 					menuReady = false
+					canvas.height = currentLevelRows*16
+					canvas.width = currentLevelCols*16
+				}
+			}
+			if(firstCapture.done[3] && !firstCapture.done[4]){
+				eventRender()
+				eventMessage("Well done, it's best to lower a","monster's HP or give it a status ","effect before trying to capture it.")
+				if (!(zDown || xDown || cDown || vDown)){
+					menuReady = true
+				}
+				if ((zDown || xDown || cDown || vDown) && menuReady){
+					firstCapture.done[4] = true
+					menuReady = false
+				}
+			}
+			if(firstCapture.done[4] && !firstCapture.done[5]){
+				eventRender()
+				eventMessage("OK, I'm off to the next town to","challenge the gym.","Here's some capsules to get you started.")
+				context.fillText("",5, canvas.height - 2)
+				if (!(zDown || xDown || cDown || vDown)){
+					menuReady = true
+				}
+				if ((zDown || xDown || cDown || vDown) && menuReady){
+					firstCapture.done[5] = true
+				}
+			}
+			if(firstCapture.done[5] && !firstCapture.done[6]){
+				if(Math.floor(friendYPos / 16) != 0){
+					eventRender();
+					context.drawImage(friendSprite, friendXPos, friendYPos);
+					friendYPos--;
+				}
+				else{
+					playerCanMove = true
+					tutorialCapture = false
+					firstCapture.running = false
+					firstCapture.ready = false
 				}
 			}
 		}
 	}
-	if (firstBattle["ready"] && currentLevel == house0){	//introduction battle
+	if (firstBattle.ready && currentLevel == house0){	//introduction battle
 		
-		if (!firstBattle["running"]){
+		if (!firstBattle.running){
 			playerCanMove = false
 			friendXTile = 4
 			friendYTile = 8
 			friendXPos = friendXTile * 16
 			friendYPos = friendYTile * 16
-			firstBattle["running"] = true;
+			firstBattle.running = true;
 			tutorial = true
 		}
 		else{
 			friendXTile = Math.round(friendXPos / 16)
 			friendYTile = Math.round(friendYPos / 16)
-			if(Math.floor(friendYPos / 16) != firstBattle["points"][0][1] - 1 && !firstBattle["done"][0]){
+			if(Math.floor(friendYPos / 16) != 6 - 1 && !firstBattle.done[0]){
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
 				friendYPos -= 1;
 			
 			}
 			else{
-				firstBattle["done"][0] = true
+				firstBattle.done[0] = true
 			}
 			//console.log(Math.ceil(friendXPos / 16) != firstBattle["points"][1][0],!firstBattle["done"][1],firstBattle["done"][0])
 
 
-			if(Math.floor(friendXPos / 16) != firstBattle["points"][1][0] - 1 	&& !firstBattle["done"][1] && 	firstBattle["done"][0]){
+			if(Math.floor(friendXPos / 16) != 2 - 1 	&& !firstBattle.done[1] && 	firstBattle.done[0]){
 
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
@@ -167,33 +299,30 @@ function events(){
 			
 			}
 			else{
-				if(firstBattle["done"][0]){ 
-					firstBattle["done"][1] = true
+				if(firstBattle.done[0]){ 
+					firstBattle.done[1] = true
 					//house0[6][2] = [89, 55]
 				}
 			}
 			
-			if (firstBattle["done"][1] && 	firstBattle["done"][0] && !firstBattle["done"][2]){
-					context.fillStyle = "#FFFFFF"
-					context.fillRect(0, canvas.height - 20, canvas.width, 20)
-					context.fillStyle = "#000000"
-					context.fillText("Battle Trigger",canvas.width / 10, canvas.height - 10)
+			if (firstBattle.done[1] && 	firstBattle.done[0] && !firstBattle.done[2]){
+					eventMessage("Battle trigger")
 					if (zDown || xDown || cDown || vDown){
 						menuReady = false
-						firstBattle["done"][2] = true
+						firstBattle.done[2] = true
 					}
 			}
-			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && !firstBattle["done"][3]){
+			if (firstBattle.done[0] && firstBattle.done[1] && firstBattle.done[2] && !firstBattle.done[3]){
 				canCapture = false
 				if(!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])){
 					firstBattle["done"][3] = true
 					menuReady = false
 				}
 			}
-			if (firstBattle["done"][0] && firstBattle["done"][1] && firstBattle["done"][2] && firstBattle["done"][3] && !firstBattle["done"][4]){
+			if (firstBattle.done[0] && firstBattle.done[1] && firstBattle.done[2] && firstBattle.done[3] && !firstBattle.done[4]){
 				LoadLevel()
 				eventRender()
-				displayMessage("Wow you won!", "I'm going to improve my team!")
+				eventMessage("Wow you won!","I'm going to improve my team!")
 				if (!(zDown||xDown||cDown||vDown)){
 					menuReady = true
 				}
@@ -202,26 +331,25 @@ function events(){
 				}
 				
 			}
-			if(firstBattle["done"][4] && !firstBattle["done"][5]){
-				if(Math.floor(friendXPos / 16) != firstBattle["points"][2][0] ){
+			if(firstBattle.done[4] && !firstBattle.done[5]){
+				if(Math.floor(friendXPos / 16) != 4 ){
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
 					friendXPos++
 				}
 				else{
-					console.log("5 true")
-					firstBattle["done"][5] = true
+					firstBattle.done[5] = true
 				}
 			}
-			if(firstBattle["done"][5]){
-				if(Math.floor(friendYPos / 16) != firstBattle["points"][2][1] ){
+			if(firstBattle.done[5]){
+				if(Math.floor(friendYPos / 16) != 8 ){
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
 					friendYPos++
 				}
 				else{
-					firstBattle["ready"] = false
-					firstBattle["running"] = false
+					firstBattle.ready = false
+					firstBattle.running = false
 					playerCanMove = true
 					tutorial = false
 				}
@@ -273,7 +401,6 @@ function events(){
 	if(shopping["running"]){
 		playerCanMove = false
 		if(LoadShop()){
-			console.log("ibdbdib")
 			playerCanMove = true
 			LoadLevel()
 			shopping["running"] = false
@@ -284,7 +411,6 @@ function events(){
 }
 currentSelection = 0
 function LoadShop(){
-	console.log(currentSelection)
 	canvas.width = 200
 	canvas.height = 300
 	context.strokeStyle = "#000000"
@@ -355,7 +481,6 @@ function LoadShop(){
 				menuReady = true
 		}
 	if(escDown && menuReady){
-		console.log("fnoinb")
 		return true
 	}
 }

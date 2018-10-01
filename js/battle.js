@@ -21,6 +21,9 @@ function CaptureTutorial(){
 		case "main":
 			context.fillText("Press X to use an item", 10, 55)
 		break;
+		case "item":
+			context.fillText("Press Z to use a capsule",10,55)
+		break;
 	}
 }
 function LoadBattle(playerMonster, enemyMonster){
@@ -101,7 +104,7 @@ function LoadBattle(playerMonster, enemyMonster){
 		case "message":
 			displayMessage(hit,effect)
 			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
-				console.log(5*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level))
+				//console.log(5*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level))
 				currentMonsters[currentMonsterIndex].xp += 40*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)
 				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)
@@ -203,6 +206,9 @@ function LoadBattle(playerMonster, enemyMonster){
 			if (battleWon == "enemy"){
 				displayMessage("You lose",null)
 			}
+			if (battleWon == "captured"){
+				displayMessage(enemyMonsters[enemyMonsterIndex].name + " was captured")
+			}
 			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
@@ -210,7 +216,26 @@ function LoadBattle(playerMonster, enemyMonster){
 				currentBattleMenu = "main"
 				battleWon = null
 				enemyMonsterIndex = 0
+				menuReady = false
 				return false
+			}
+			break;
+		case "run":
+			if (canCapture){
+				displayMessage("You ran away")
+				enemyMonsterIndex = 0
+				currentMonsterIndex = 0
+				return false
+			}
+			else{
+				displayMessage("You can't run from this battle")
+				if (!(zDown||xDown||cDown||vDown)){
+					menuReady = true
+				}
+				if ((zDown||xDown||cDown||vDown) && menuReady){
+					currentBattleMenu = "main"
+					menuReady = false
+				}
 			}
 			break;
 	}
@@ -218,29 +243,25 @@ function LoadBattle(playerMonster, enemyMonster){
 				menuReady = true
 	}
 	if (menuReady){
-		console.log("waiting for input")
-		console.log(xDown)
 		if(escDown){
 			currentBattleMenu = "main"
 			menuReady = false
 		}
-		if(zDown){
+		if(zDown && !tutorialCapture){
 			currentBattleMenu = "attack"
 			menuReady = false
 		}
 		if(xDown && !tutorial){
-			console.log("xDown")
 			currentBattleMenu = "item"
 			menuReady = false
 		}
-		if(cDown && !tutorial){
+		if(cDown && !tutorial && !tutorialCapture){
 			currentBattleMenu = "switch"
 			menuReady = false
 		}
-		if(vDown && !tutorial){
-			enemyMonsterIndex = 0
-			currentMonsterIndex = 0
-			return false
+		if(vDown && !tutorial && !tutorialCapture){
+			currentBattleMenu = "run"
+			menuReady = false
 		}
 	}
 	if (tutorial){
@@ -340,7 +361,7 @@ function useItem(item,playerMonster){
 		if(canCapture){
 			currentMonsters.push(enemyMonsters[enemyMonsterIndex])
 			currentBattleMenu = "battleWon"
-			battleWon = "player"
+			battleWon = "captured"
 		}
 		else{
 			hit = "Can't capture"

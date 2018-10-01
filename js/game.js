@@ -7,13 +7,13 @@ $(document).ready(function() {
     
 	maps = {0:house0, 1:town0, 2:town1, 3:hospital, 4:shop}
     currentLevel = maps[0];
-	levelIndex = 2
+	levelIndex = 0
 	playerCanMove = true
 	LoadLevel();
 	
 	currentMonsters = [new bulbasaur,new pikachu,new charmander]
 	for(x=0;x<currentMonsters.length;x++){
-		currentMonsters[x].levelUp(2)
+		currentMonsters[x].levelUp(1000)
 	}
 	enemyMonsters = [new charmander]
 	for(x=0;x<enemyMonsters.length;x++){
@@ -220,6 +220,10 @@ $(document).ready(function() {
 		
 		var devTool = $("<p/>")
 			.html("currentBattleMenu "+currentBattleMenu);
+		$("#devTools").append(devTool)
+		
+		var devTool = $("<p/>")
+			.html("canCapture "+canCapture);
 		$("#devTools").append(devTool)
 		
 		for(x=0;x<=currentMonsters.length - 1;x++){//for each of the player's current monsters
