@@ -32,7 +32,7 @@ function eventMessage(one,two,three){
 }
 class event{
 	constructor(){
-		this.ready = true
+		this.ready = false
 		this.running = false
 		this.done = []
 	}
@@ -40,7 +40,6 @@ class event{
 firstBattle = new event()
 firstCapture = new event()
 outsideGym = new event()
-//outsideGym.ready = false
 
 healing = {"running":false}
 shopping = {"running":false}
