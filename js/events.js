@@ -91,7 +91,7 @@ function events(){
 				if (!(zDown||xDown||cDown||vDown)){
 						menuReady = true
 					}
-				if(npcBattle && menuReady){
+				if(npcBattle && menuReady && distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7)<23 ){
 					enemyMonsters = npcs[i]["team"]
 					canCapture = false
 					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
