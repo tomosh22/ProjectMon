@@ -4,10 +4,11 @@ $(document).ready(function() {
     
     tickCounter = 0
 	menuReady = false
-    
+	outsideLocation = [0,0]
 	maps = {0:house0, 1:town0, 2:town1, 3:hospital, 4:shop,5:route0,6:town2}
-    currentLevel = maps[5];
-	levelIndex = 5
+    currentLevel = maps[6];
+	levelIndex = 6
+	outsideIndex = 6
 	playerCanMove = true
 	LoadLevel();
 	
@@ -33,11 +34,11 @@ $(document).ready(function() {
 	//sprites that the player can walk through, grass, floor, etc.				
 	nocollision = [0,1,44, 39, 55, 62, 63, 79,80,81,82,83,84,85,86,87,88,78,90, 91,92,93,94,95,96,98,99,100,101,128,129,130,131,125,124,152,188,189,200,201,209, ]
 	
-	npcs = [{map:maps[2],x:5,y:8,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-			{map:maps[5],x:9,y:9,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-			{map:maps[5],x:10,y:4,ready:true,level:10, team:[new charmander, new pikachu]}
-			]
-	//npcs=[]
+	//npcs = [{map:maps[2],x:5,y:8,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+	//		{map:maps[5],x:9,y:9,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+	//		{map:maps[5],x:10,y:4,ready:true,level:10, team:[new charmander, new pikachu]}
+	//		]
+	npcs=[]
 	for(x=0;x<npcs.length;x++){
 		for(y=0;y<npcs[x]["team"].length;y++){
 			npcs[x]["team"][y].levelUp(npcs[x].level)
@@ -239,6 +240,10 @@ $(document).ready(function() {
 			.html("canCapture "+canCapture);
 		$("#devTools").append(devTool)
 		
+		var devTool = $("<p/>")
+			.html("outsideLocation "+outsideLocation);
+		$("#devTools").append(devTool)
+		
 		for(x=0;x<=currentMonsters.length - 1;x++){//for each of the player's current monsters
 			var devTool = $("<p/>")
 				.html(currentMonsters[x].name+ " hp " + currentMonsters[x].hp);//create a html element displaying their current health
@@ -248,13 +253,28 @@ $(document).ready(function() {
 		
 		
 		currentLevel[currentLevel.length - 3].forEach(function(point){//array in map variable containing exit locations
+			
 			if(playerXTile == point[1] && playerYTile == point[0]){//if the player is on an exit point
-					context.clearRect(0,0, canvas.width, canvas.height)//clear the current map
-					x = point[3]
-					y = point[4]
-					currentLevel = maps[point[2]];
-					levelIndex = point[2]
-					LoadLevel(x,y);//load the new map
+					if (point[2] == "outside"){
+						
+						context.clearRect(0,0, canvas.width, canvas.height)//clear the current map
+						currentLevel = maps[outsideIndex];
+						levelIndex = outsideIndex
+						LoadLevel(outsideLocation[1],outsideLocation[0]);//load the new map
+					}
+					else{
+						context.clearRect(0,0, canvas.width, canvas.height)//clear the current map
+						x = point[3]
+						y = point[4]
+						currentLevel = maps[point[2]];
+						levelIndex = point[2]
+						outsideLocation = [point[0]+1,point[1]]
+						if (![3,4].includes(point[2])){
+							outsideIndex = point[2]
+						}
+						LoadLevel(x,y);//load the new map
+					}
+					
 			}
 		})
 		
