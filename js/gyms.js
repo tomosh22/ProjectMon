@@ -1,0 +1,101 @@
+class gym{
+	constructor(){
+		this.complete = false
+		this.npcs = []
+		this.bossReady = true
+		this.map = null
+		this.npcsRemaining = 0
+		this.difficulty = 1
+		this.bossLocation = []
+	}
+}
+gyms = []
+gym0Object = new gym
+gym0Object.bossLocation = [5,2]
+gym0Object.map = gym0
+gym0Object.npcs = [{x:3,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+					{x:5,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+					{x:7,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+					{x:9,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]}
+					]
+gym0Object.boss = [new bulbasaur, new pikachu]
+for(y=0;y<gym0Object.boss.length;y++){
+	gym0Object.boss[y].levelUp(Math.round(gym0Object.difficulty * 1.1))
+}
+console.log(gym0Object.boss)
+gym0Object.npcsRemaining = gym0Object.npcs.length
+for(x=0;x<gym0Object.npcs.length;x++){
+		for(y=0;y<gym0Object.npcs[x]["team"].length;y++){
+			gym0Object.npcs[x]["team"][y].levelUp(gym0Object.difficulty)
+		}
+	}
+gyms.push(gym0Object)
+
+function gymsLoop(){
+	for (x=0;x<gyms.length;x++){
+		gym = gyms[x]
+		if (gym.map == currentLevel){
+			for (i=0;i<=gym.npcs.length - 1;i++){
+				if(false && (distanceTo(playerYTile * 16 + 7,(gym.npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(gym.npcs[i]["x"]-1)*16 + 7))<23 && gym.npcs[i]["ready"] && !npcBattle){
+					
+					playerCanMove = false
+					
+					displayMessage("npc battle", null)
+					
+					if(menuReady && (zDown||xDown||cDown||vDown)){
+						menuReady = false	
+						npcBattle = true
+						
+					}
+				}
+				if (!(zDown||xDown||cDown||vDown)){
+						menuReady = true
+					}
+				if(gym.npcs[i].ready && npcBattle && menuReady && distanceTo(playerYTile * 16 + 7,(gym.npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(gym.npcs[i]["x"]-1)*16 + 7)<23 ){
+					enemyMonsters = gym.npcs[i]["team"]
+					canCapture = false
+					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
+						playerCanMove = true
+						npcBattle = false
+						gym.npcs[i]["ready"] = false
+						canvas.height = currentLevelRows*16
+						canvas.width = currentLevelCols*16
+						gym.npcsRemaining --
+						if (gym.npcsRemaining == 0){
+							gym.bossReady = true
+						}
+					}
+				}
+			
+		
+			}
+			if (!npcBattle && !gym.complete && gym.bossReady && distanceTo(playerYTile * 16 + 7, gym.bossLocation[1] * 16, playerXTile * 16, gym.bossLocation[0] * 16) < 23){
+				playerCanMove = false
+					
+					displayMessage("gym boss battle", null)
+					
+					if(menuReady && (zDown||xDown||cDown||vDown)){
+						menuReady = false	
+						npcBattle = true
+						
+					}
+			}
+			if (!(zDown||xDown||cDown||vDown)){
+						menuReady = true
+					}
+			if (npcBattle && menuReady && !gym.complete && distanceTo(playerYTile * 16 + 7, gym.bossLocation[1] * 16, playerXTile * 16, gym.bossLocation[0] * 16) < 23){
+				enemyMonsters = gym.boss
+					canCapture = false
+					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
+						//playerCanMove = true
+						
+						npcBattle = false
+						gym.complete = true
+						canvas.height = currentLevelRows*16
+						canvas.width = currentLevelCols*16
+						gym0Event.ready = true
+					}
+			}
+		}
+	}
+}

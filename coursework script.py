@@ -1,6 +1,8 @@
 from os import listdir
-files = listdir(r"C:\Users\Tom\Documents\GitHub\ProjectMon\sprites\overworld")
-text = open(r"C:\Users\Tom\Documents\GitHub\ProjectMon\js\sprites.js", "w")
+#files = listdir(r"C:\Users\Tom\Documents\GitHub\ProjectMon\sprites\overworld")
+#text = open(r"C:\Users\Tom\Documents\GitHub\ProjectMon\js\sprites.js", "w")
+files = listdir(r"C:\Users\s171159\Documents\GitHub\ProjectMon\sprites\overworld")
+text = open(r"C:\Users\s171159\Documents\GitHub\ProjectMon\js\sprites.js", "w")
 for f in files:
     name = f[:-4]
     string = """var {}Sprite = new Image();

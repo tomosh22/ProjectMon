@@ -1,1 +1,1 @@
-212:healer0Sprite,213:healer1Sprite,214:healer2Sprite,215:healer3Sprite,
+219:npcSPriteSprite,220:rockBottomLeftSprite,221:rockBottomMiddleSprite,222:rockMiddleSprite,223:rockMiddleLeftSprite,224:rockMiddleRightSprite,225:rockStairsSprite,226:rockTopLeftSprite,227:rockTopMiddleSprite,228:rockTopRightSprite,

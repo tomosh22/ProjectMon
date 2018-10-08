@@ -40,6 +40,7 @@ class event{
 firstBattle = new event()
 firstCapture = new event()
 outsideGym = new event()
+gym0Event = new event()
 
 healing = {"running":false}
 shopping = {"running":false}
@@ -72,6 +73,11 @@ function isWeakTo(defend,attack){
 }
 npcBattle = false
 function events(){
+	if (gym0Event.ready){
+		eventRender()
+		eventMessage("Well done, you have beaten the first!", "gym!", "If you beat all the rest you can become the champion")
+		
+	}
 	for (i=0;i<=npcs.length - 1;i++){
 		
 			if (npcs[i]["map"] == currentLevel){
@@ -91,7 +97,7 @@ function events(){
 				if (!(zDown||xDown||cDown||vDown)){
 						menuReady = true
 					}
-				if(npcBattle && menuReady && distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7)<23 ){
+				if(npcs[i].ready && npcBattle && menuReady && distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7)<23 ){
 					enemyMonsters = npcs[i]["team"]
 					canCapture = false
 					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
@@ -487,21 +493,21 @@ function LoadShop(){
 function eventRender() {
 			for (y = 0; y < currentLevelRows; y++) {
 				for (x = 0; x < currentLevelCols; x++) {
-						context.drawImage(sprites[currentLevel[currentLevel.length-1]], x*16, y*16)
+						context.drawImage(sprites[currentLevel.background], x*16, y*16)
 				}
 			}
 			for (y = 0; y < currentLevelRows; y++) {
 				for (x = 0; x < currentLevelCols; x++) {
-					if (currentLevel[y][x].constructor != Array){
-						context.drawImage(sprites[currentLevel[y][x]], x*16, y*16)
+					if (currentLevel.tiles[y][x].constructor != Array){
+						context.drawImage(sprites[currentLevel.tiles[y][x]], x*16, y*16)
 					}
 					else{
-						context.drawImage(sprites[currentLevel[y][x][1]], x*16, y*16)
-						context.drawImage(sprites[currentLevel[y][x][0]], x*16, y*16)
+						context.drawImage(sprites[currentLevel.tiles[y][x][1]], x*16, y*16)
+						context.drawImage(sprites[currentLevel.tiles[y][x][0]], x*16, y*16)
 					}
 				}
 			}
-			if (currentLevel[playerYTile][playerXTile] == 1){
+			if (currentLevel.tiles[playerYTile][playerXTile] == 1){
 					if (currentGrassSprite == longGrass2Sprite){
 						if (tickCounter % 7 == 0){
 							currentGrassSprite = longGrass3Sprite
