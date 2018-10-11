@@ -41,7 +41,8 @@ firstBattle = new event()
 firstCapture = new event()
 outsideGym = new event()
 gym0Event = new event()
-
+gym1Event = new event()
+gymsBeaten = 0
 healing = {"running":false}
 shopping = {"running":false}
 canCapture = false
@@ -75,7 +76,32 @@ npcBattle = false
 function events(){
 	if (gym0Event.ready){
 		eventRender()
-		eventMessage("Well done, you have beaten the first!", "gym!", "If you beat all the rest you can become the champion")
+		eventMessage("Well done, you have beaten the first", "gym! If you beat all the others you", "can become the champion")
+		
+		if (!(zDown || xDown || cDown || vDown)){
+			menuReady = true
+		}
+		if ((zDown || xDown || cDown || vDown) && menuReady){
+			gymsBeaten++
+			menuReady = false
+			playerCanMove = true
+			gym0Event.ready = false
+		}
+		
+	}
+	if (gym1Event.ready){
+		eventRender()
+		eventMessage("Wow, that's 2 gyms beaten now!")
+		
+		if (!(zDown || xDown || cDown || vDown)){
+			menuReady = true
+		}
+		if ((zDown || xDown || cDown || vDown) && menuReady){
+			gymsBeaten++
+			menuReady = false
+			playerCanMove = true
+			gym1Event.ready = false
+		}
 		
 	}
 	for (i=0;i<=npcs.length - 1;i++){

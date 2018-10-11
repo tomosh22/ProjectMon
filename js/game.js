@@ -5,10 +5,10 @@ $(document).ready(function() {
     tickCounter = 0
 	menuReady = false
 	outsideLocation = [0,0]
-	maps = {0:house0, 1:town0, 2:town1, 3:hospital, 4:shop,5:route0,6:town2,7:gym0}
-    currentLevel = maps[7];
-	levelIndex = 7
-	outsideIndex = 2
+	maps = {0:house0, 1:town0, 2:town1, 3:hospital, 4:shop,5:route0,6:town2,7:gym0,8:gym1,9:route1}
+    currentLevel = maps[9];
+	levelIndex = 9
+	outsideIndex = 9
 	playerCanMove = true
 	LoadLevel();
 	
@@ -244,6 +244,10 @@ $(document).ready(function() {
 			.html("outsideLocation "+outsideLocation);
 		$("#devTools").append(devTool)
 		
+		var devTool = $("<p/>")
+			.html("gymsBeaten"+gymsBeaten);
+		$("#devTools").append(devTool)
+		
 		for(x=0;x<=currentMonsters.length - 1;x++){//for each of the player's current monsters
 			var devTool = $("<p/>")
 				.html(currentMonsters[x].name+ " hp " + currentMonsters[x].hp);//create a html element displaying their current health
@@ -269,7 +273,7 @@ $(document).ready(function() {
 						currentLevel = maps[point[2]];
 						levelIndex = point[2]
 						outsideLocation = [point[0]+1,point[1]]
-						if (![3,4].includes(point[2])){
+						if (![3,4,7,8].includes(point[2])){
 							outsideIndex = point[2]
 						}
 						LoadLevel(x,y);//load the new map
