@@ -32,7 +32,7 @@ function eventMessage(one,two,three){
 }
 class event{
 	constructor(){
-		this.ready = false
+		this.ready = true
 		this.running = false
 		this.done = []
 	}

@@ -6,9 +6,9 @@ $(document).ready(function() {
 	menuReady = false
 	outsideLocation = [0,0]
 	maps = {0:house0, 1:town0, 2:town1, 3:hospital, 4:shop,5:route0,6:town2,7:gym0,8:gym1,9:route1}
-    currentLevel = maps[9];
-	levelIndex = 9
-	outsideIndex = 9
+    currentLevel = maps[0];
+	levelIndex = 0
+	outsideIndex = 0
 	playerCanMove = true
 	LoadLevel();
 	
