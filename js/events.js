@@ -1,14 +1,22 @@
 currentBattleMenu = "main"
-function LoadLevel(){
-		currentLevelCols = currentLevel[0].length;
-		currentLevelRows = currentLevel.length - 3;
-		
-		playerCol = currentLevel[currentLevel.length-2][0];
-		playerRow = currentLevel[currentLevel.length-2][1];
-		playerXTile = playerRow
-		playerYTile = playerCol
-		playerXPos = playerCol * 16
-		playerYPos = playerRow * 16
+function LoadLevel(x,y){
+		if(!x || !y){
+			playerCol = currentLevel.spawnPoint[0];
+			playerRow = currentLevel.spawnPoint[1];
+			playerXTile = playerRow
+			playerYTile = playerCol
+			playerXPos = playerCol * 16
+			playerYPos = playerRow * 16
+			
+		}
+		else{
+			playerXTile = x
+			playerYTile = y
+			playerXPos = playerXTile * 16
+			playerYPos = playerYTile * 16
+		}
+		currentLevelCols = currentLevel.tiles[0].length;
+		currentLevelRows = currentLevel.tiles.length
 		canvas.height = currentLevelRows*16//adjusts canvas to fit the map
 		canvas.width = currentLevelCols*16	
 	}
@@ -41,7 +49,11 @@ firstBattle = new event()
 firstCapture = new event()
 outsideGym = new event()
 gym0Event = new event()
+gym0Event.ready = false
+
+
 gym1Event = new event()
+gym1Event.ready = false
 gymsBeaten = 0
 healing = {"running":false}
 shopping = {"running":false}
