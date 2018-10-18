@@ -41,11 +41,11 @@ gyms.push(gym0Object)
 gym1Object = new gym
 gym1Object.bossLocation = [5,2]
 gym1Object.map = gym1
-//gym1Object.npcs = [{x:3,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-//					{x:5,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-//					{x:7,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-//					{x:9,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]}
-//					]
+gym1Object.npcs = [{x:7,y:7,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+					{x:3,y:8,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+					{x:2,y:6,ready:true,level:10, team:[new bulbasaur, new pikachu]},
+					{x:10,y:6,ready:true,level:10, team:[new bulbasaur, new pikachu]}
+					]
 gym1Object.boss = [new bulbasaur, new pikachu]
 for(y=0;y<gym1Object.boss.length;y++){
 	gym1Object.boss[y].levelUp(Math.round(gym1Object.difficulty * 1.1))
@@ -67,6 +67,7 @@ function gymsLoop(){
 		gym = gyms[x]
 		if (gym.map == currentLevel){
 			for (i=0;i<=gym.npcs.length - 1;i++){
+				// && FALSE SO BATTLES NEVER RUN FOR DEVLOPMENT
 				if((distanceTo(playerYTile * 16 + 7,(gym.npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(gym.npcs[i]["x"]-1)*16 + 7))<23 && gym.npcs[i]["ready"] && !npcBattle){
 					
 					playerCanMove = false

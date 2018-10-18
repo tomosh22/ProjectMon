@@ -40,11 +40,13 @@ function eventMessage(one,two,three){
 }
 class event{
 	constructor(){
-		this.ready = true
+		this.ready = true// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
 		this.running = false
 		this.done = []
 	}
 }
+finalBoss = new event()
+finalBoss.ready = false //TRUE FOR DEVELEOPMENT
 firstBattle = new event()
 firstCapture = new event()
 outsideGym = new event()
@@ -55,6 +57,7 @@ gym0Event.ready = false
 gym1Event = new event()
 gym1Event.ready = false
 gymsBeaten = 0
+numberOfGyms = 2
 healing = {"running":false}
 shopping = {"running":false}
 canCapture = false
@@ -84,11 +87,48 @@ function isWeakTo(defend,attack){
 	}
 	
 }
+finalBossTeam = [new pikachu,new charmander]
+for(x=0;x<finalBossTeam.length;x++){
+		finalBossTeam[x].levelUp(1)
+	}
 npcBattle = false
 function events(){
+	if (finalBoss.ready && playerYTile == 1 && playerXTile == 6 && currentLevel == finalLevel){
+		playerCanMove = false
+		
+		if(!finalBoss.done[0]){
+			eventMessage("Well done, you have beaten every gym.", "Now let's see if you are worthy of the title","of champion.")
+			if (!(zDown || xDown || cDown || vDown)){
+				menuReady = true
+			}
+			if ((zDown || xDown || cDown || vDown) && menuReady){
+				finalBoss.done[0] = true
+				menuReady = false
+			}
+		}
+		if (!(zDown||xDown||cDown||vDown)){
+			menuReady = true
+		}
+		if (menuReady && finalBoss.done[0] && !finalBoss.done[1]){
+			npcBattle = true
+			canCapture = false
+			enemyMonsters = finalBossTeam
+			if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
+				finalBoss.done[1] = true
+			}
+		}
+		if(finalBoss.done[1]){
+			LoadLevel(playerXTile,playerYTile)
+			eventRender()
+			eventMessage("Well done, you have proven yourself to be", "the strongest trainer in the world!")
+		}
+	}
+	if(gymsBeaten == numberOfGyms){
+		finalBoss.ready = true
+	}
 	if (gym0Event.ready){
 		eventRender()
-		eventMessage("Well done, you have beaten the first", "gym! If you beat all the others you", "can become the champion")
+		eventMessage("Well done, you have beaten the first", "gym! If you beat all the others you", "can become the champion.")
 		
 		if (!(zDown || xDown || cDown || vDown)){
 			menuReady = true

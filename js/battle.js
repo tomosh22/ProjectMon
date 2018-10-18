@@ -201,11 +201,11 @@ function LoadBattle(playerMonster, enemyMonster){
 			break;
 		case "battleWon":
 			if (battleWon == "player")
-				displayMessage("You Win, £5 has been added to your wallet",null)
+				displayMessage("You Win, £5 has been awarded",null)
 				playerMoney+=5
 			if (battleWon == "enemy"){
-				displayMessage("You lose, £10 has been taken from you",null)
-				playerMoney-=10
+				displayMessage("You lose, £5 has been removed",null)
+				playerMoney-=5
 			}
 			if (battleWon == "captured"){
 				displayMessage(enemyMonsters[enemyMonsterIndex].name + " was captured")
