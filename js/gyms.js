@@ -18,14 +18,15 @@ gyms = []
 gym0Object = new gym
 gym0Object.bossLocation = [5,2]
 gym0Object.map = gym0
-gym0Object.npcs = [{x:3,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-					{x:5,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-					{x:7,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-					{x:9,y:5,ready:true,level:10, team:[new bulbasaur, new pikachu]}
+gym0Object.difficulty = 11
+gym0Object.npcs = [{x:3,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:5,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:7,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:9,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]}
 					]
 gym0Object.boss = [new bulbasaur, new pikachu]
 for(y=0;y<gym0Object.boss.length;y++){
-	gym0Object.boss[y].levelUp(Math.round(gym0Object.difficulty * 1.1))
+	gym0Object.boss[y].levelUp(Math.ceil(gym0Object.difficulty * 1.1))
 }
 gym0Object.npcsRemaining = gym0Object.npcs.length
 for(x=0;x<gym0Object.npcs.length;x++){

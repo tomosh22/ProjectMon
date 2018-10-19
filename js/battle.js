@@ -4,6 +4,7 @@ enemyMoved = false
 enemyDied = false
 battleWon = null
 monsterFound = false
+battleWon2 = null
 function Tutorial(){
 	context.fillStyle = "#FF0000"
 	switch (currentBattleMenu){
@@ -206,7 +207,9 @@ function LoadBattle(playerMonster, enemyMonster){
 			if (battleWon == "enemy"){
 				displayMessage("You lose, £5 has been removed",null)
 				playerMoney-=5
+				
 			}
+			battleWon2 = battleWon//need a variable for the event loop to determine if an npc has been beaten
 			if (battleWon == "captured"){
 				displayMessage(enemyMonsters[enemyMonsterIndex].name + " was captured")
 			}
@@ -215,14 +218,24 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			if ((zDown||xDown||cDown||vDown) && menuReady){
 				currentBattleMenu = "main"
-				battleWon = null
+				
 				enemyMonsterIndex = 0
 				menuReady = false
+				if (battleWon == "enemy"){
+					outsideLocation = currentLevel.spawnPoint
+					currentLevel = maps[3]
+					levelIndex = 3
+					LoadLevel(5,2)
+					battleWon = null
+				}
+				battleWon = null
 				return false
 			}
 			break;
 		case "run":
 			if (canCapture){
+				battleWon = null
+				currentBattleMenu = "main"
 				displayMessage("You ran away")
 				enemyMonsterIndex = 0
 				currentMonsterIndex = 0

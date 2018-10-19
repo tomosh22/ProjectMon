@@ -40,7 +40,7 @@ function eventMessage(one,two,three){
 }
 class event{
 	constructor(){
-		this.ready = true// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
+		this.ready = false// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
 		this.running = false
 		this.done = []
 	}
@@ -178,10 +178,16 @@ function events(){
 				if(npcs[i].ready && npcBattle && menuReady && distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7)<23 ){
 					enemyMonsters = npcs[i]["team"]
 					canCapture = false
+					
 					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
 						playerCanMove = true
 						npcBattle = false
-						npcs[i]["ready"] = false
+						if (battleWon2 == "player"){
+							npcs[i]["ready"] = false
+						}
+						for(y=0;y<npcs[i]["team"].length;y++){
+							npcs[i]["team"][y].levelUp(npcs[i].level)
+						}
 						canvas.height = currentLevelRows*16
 						canvas.width = currentLevelCols*16
 					}
@@ -448,6 +454,7 @@ function events(){
 		//console.log("in hospital")
 		
 		if(playerXTile == 5 && playerYTile == 2){
+			eventRender()
 			healing["running"] = true
 			menuReady = false
 		}
