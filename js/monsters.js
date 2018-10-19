@@ -5,8 +5,8 @@ class monster{
 	}
 	levelUp(level){
 		this.level = level
-		this.hp = this.baseHp * level
-		this.maxhp = this.baseHp * level
+		this.hp = Math.round(this.baseHp * level)
+		this.maxhp = Math.round(this.baseHp * level)
 		this.attack = this.baseAttack * level
 		this.defense = this.baseDefense * level
 		this.attackslearnt = 0

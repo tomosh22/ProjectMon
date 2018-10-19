@@ -89,7 +89,7 @@ function isWeakTo(defend,attack){
 }
 finalBossTeam = [new pikachu,new charmander]
 for(x=0;x<finalBossTeam.length;x++){
-		finalBossTeam[x].levelUp(1)
+		finalBossTeam[x].levelUp(25)
 	}
 npcBattle = false
 function events(){

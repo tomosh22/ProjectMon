@@ -325,7 +325,8 @@ function useAttack(attack, user, target){
 	hit = ""
 	chance = Math.random()
 	if (chance < attack["accuracy"] / 100) {
-		target["hp"] -= damage
+		target["hp"] -= Math.round(damage)
+		console.log(target["hp"])
 		hit = "Attack landed"
 	}
 	else{

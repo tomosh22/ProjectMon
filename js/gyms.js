@@ -20,9 +20,9 @@ gym0Object.bossLocation = [5,2]
 gym0Object.map = gym0
 gym0Object.difficulty = 11
 gym0Object.npcs = [{x:3,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:5,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:7,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:9,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]}
+					{x:6,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:8,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:10,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]}
 					]
 gym0Object.boss = [new bulbasaur, new pikachu]
 for(y=0;y<gym0Object.boss.length;y++){
@@ -32,6 +32,7 @@ gym0Object.npcsRemaining = gym0Object.npcs.length
 for(x=0;x<gym0Object.npcs.length;x++){
 		for(y=0;y<gym0Object.npcs[x]["team"].length;y++){
 			gym0Object.npcs[x]["team"][y].levelUp(gym0Object.difficulty)
+			console.log("debiudfvb")
 		}
 	}
 gyms.push(gym0Object)
@@ -42,14 +43,15 @@ gyms.push(gym0Object)
 gym1Object = new gym
 gym1Object.bossLocation = [5,2]
 gym1Object.map = gym1
-gym1Object.npcs = [{x:7,y:7,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-					{x:3,y:8,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-					{x:2,y:6,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-					{x:10,y:6,ready:true,level:10, team:[new bulbasaur, new pikachu]}
+gym1Object.difficulty = 18
+gym1Object.npcs = [{x:7,y:7,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:3,y:8,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:2,y:6,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]},
+					{x:10,y:6,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]}
 					]
 gym1Object.boss = [new bulbasaur, new pikachu]
 for(y=0;y<gym1Object.boss.length;y++){
-	gym1Object.boss[y].levelUp(Math.round(gym1Object.difficulty * 1.1))
+	gym1Object.boss[y].levelUp(Math.ceil(gym1Object.difficulty * 1.1))
 }
 gym1Object.npcsRemaining = gym1Object.npcs.length
 for(x=0;x<gym1Object.npcs.length;x++){

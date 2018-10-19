@@ -20,8 +20,8 @@ $(document).ready(function() {
 	for(x=0;x<enemyMonsters.length;x++){
 		enemyMonsters[x].levelUp(9)
 	}				
-	wildMonsters = {1:[new charmander]}
-	levelDifficulty = {1:9}
+	wildMonsters = {1:[new charmander],5:[new pikachu]}
+	levelDifficulty = {1:9,5:14}
 	
 	//player inventory, items can be used during battle
 	playerMoney = 50
@@ -35,9 +35,9 @@ $(document).ready(function() {
 	nocollision = [0,1,44, 39, 55, 62, 63, 79,80,81,82,83,84,85,86,87,88,78,90, 91,92,93,94,95,96,98,99,100,101,128,129,130,131,125,124,152,188,189,200,201,209,222,225,233,244,255,258,259,260,235,236,237,240,241,242,246,247,248,251,252,253,262 ]
 	
 	npcs = [{map:maps[2],x:5,y:8,ready:true,level:11, team:[new bulbasaur, new pikachu]},
-			{map:maps[5],x:9,y:9,ready:true,level:10, team:[new bulbasaur, new pikachu]},
-			{map:maps[5],x:10,y:4,ready:true,level:10, team:[new charmander, new pikachu]},
-			{map:maps[9],x:5,y:6,ready:true,level:10, team:[new charmander, new pikachu]}
+			{map:maps[5],x:9,y:9,ready:true,level:15, team:[new bulbasaur, new pikachu]},
+			{map:maps[5],x:10,y:4,ready:true,level:15, team:[new charmander, new pikachu]},
+			{map:maps[9],x:5,y:6,ready:true,level:22, team:[new charmander, new pikachu]}
 			]
 	//npcs=[{map:maps[9],x:5,y:6,ready:true,level:10, team:[new charmander, new pikachu,new bulbasaur]}]
 	for(x=0;x<npcs.length;x++){
@@ -330,8 +330,10 @@ $(document).ready(function() {
         
 		if(currentLevel.tiles[playerYTile][playerXTile] == 1 ){//if player is standing on long grass
 			if (playerCanMove){
-				trigger = Math.floor(Math.random() * 50)// 1/50 chance per tick (60th of a second) that a wild monster battle will be triggered
-				if(trigger == 0 && Date.now() - lastWildBattle > 2000){
+				trigger = Math.floor(Math.random() * 100)// 1% chance per tick (60th of a second) that a wild monster battle will be triggered
+				console.log(trigger)
+				if(trigger == 0 && Date.now() - lastWildBattle > 2000){//must be a 2 second gap between battles
+				//if(Date.now() - lastWildBattle > 2000){
 					index = Math.floor(Math.random() * wildMonsters[levelIndex].length)
 					playerCanMove = false
 					lastWildBattle = Date.now()
