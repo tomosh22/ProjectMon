@@ -70,20 +70,54 @@ tutorialCapture = false
 function distanceTo(y1,y2,x1,x2){
 	return Math.sqrt(Math.pow(x2 - x1,2) + Math.pow(y2 - y1,2))
 }
-function isStrongAgainst(defend,attack){
+function attackIsStrong(defend,attack){
 	switch (defend){
 		case "fire":
-			if (["ground","rock","water"].includes(attack)){
-				return true
-			}
+			return ["ground","rock","water"].includes(attack)
+			break;
+		case "water":
+			return ["grass","electric"].includes(attack)
+			break;
+		case "rock":
+			return ["fighting","ground","steel","water","grass"].includes(attack)
+			break;
+		case "fighting":
+			return ["flying","psychic"].includes(attack)
+			break;
+		case "normal"
+			return ["fighting"].includes(attack)
+			break;
+		case "ground":
+			return ["water","grass","ice"].includes(attack)
+			break;
+		case "ice"
+			return ["fight","rock","steel","fire"].includes(attack)
+			break;
 	}
 }
-function isWeakTo(defend,attack){
+function defenceIsStrong(defend,attack){
 	switch(defend){
 		case "fire":
-			if(["bug","steel","fire","grass","ice","fairy"].includes(attack)){
-				return true
-			}
+			return ["bug","steel","fire","grass","ice"].includes(attack)
+			break;
+		case "water":
+			return ["steel","fire","ice","water"].includes(attack)
+			break;
+		case "rock":
+			return ["normal","flying","poison","fire"].includes(attack)
+			break;
+		case "fighting":
+			return ["rock","bug","dark"].includes(attack)
+			break;
+		case "normal":
+			return false
+			break;
+		case "ground":
+			return ["poison","rock"].includes(attack)
+			break;
+		case "ice"
+			return ["ice"].includes(attack)
+			break;
 	}
 	
 }

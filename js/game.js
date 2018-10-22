@@ -25,7 +25,8 @@ $(document).ready(function() {
 	
 	//player inventory, items can be used during battle
 	playerMoney = 50
-	currentItems = [{name:"Capsule","effect":"capture","strength":10,"price":4}]
+	currentItems = [{name:"Capsule","effect":"capture","strength":10,"price":4},{name:"Capsule","effect":"capture","strength":10,"price":4},
+					{name:"Capsule","effect":"capture","strength":10,"price":4},{name:"Capsule","effect":"capture","strength":10,"price":4}]
 	shopItems = [{name:"HP Potion","effect":"hpRestore","strength":10,"price":2},{name:"Capsule","effect":"capture","strength":10,"price":4},
 				{name:"HP Potion","effect":"hpRestore","strength":20,"price":3},{name:"Capsule","effect":"capture","strength":20,"price":6}
 				]
@@ -331,7 +332,7 @@ $(document).ready(function() {
 		if(currentLevel.tiles[playerYTile][playerXTile] == 1 ){//if player is standing on long grass
 			if (playerCanMove){
 				trigger = Math.floor(Math.random() * 100)// 1% chance per tick (60th of a second) that a wild monster battle will be triggered
-				console.log(trigger)
+				//console.log(trigger)
 				if(trigger == 0 && Date.now() - lastWildBattle > 2000){//must be a 2 second gap between battles
 				//if(Date.now() - lastWildBattle > 2000){
 					index = Math.floor(Math.random() * wildMonsters[levelIndex].length)

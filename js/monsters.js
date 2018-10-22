@@ -9,6 +9,7 @@ class monster{
 		this.maxhp = Math.round(this.baseHp * level)
 		this.attack = this.baseAttack * level
 		this.defense = this.baseDefense * level
+		this.speed = this.baseSpeed * level
 		this.attackslearnt = 0
 		for(var x=100;x>=0;x--){
 			for(var y=0;y<=this.learnattacks.length;y++){
