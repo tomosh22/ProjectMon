@@ -12,9 +12,6 @@ class gym{
 gyms = []
 
 
-
-
-
 gym0Object = new gym
 gym0Object.bossLocation = [5,2]
 gym0Object.map = gym0
@@ -32,7 +29,6 @@ gym0Object.npcsRemaining = gym0Object.npcs.length
 for(x=0;x<gym0Object.npcs.length;x++){
 		for(y=0;y<gym0Object.npcs[x]["team"].length;y++){
 			gym0Object.npcs[x]["team"][y].levelUp(gym0Object.difficulty)
-			console.log("debiudfvb")
 		}
 	}
 gyms.push(gym0Object)

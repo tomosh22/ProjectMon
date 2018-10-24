@@ -1,3 +1,22 @@
+type = {
+		normal:"normal",
+		fighting:"fighting",
+		flying:"flying",
+		poison:"poison",
+		ground:"ground",
+		rock:"rock",
+		bug:"bug",
+		ghost:"ghost",
+		steel:"steel",
+		fire:"fire",
+		water:"water",
+		grass:"grass",
+		electric:"electric",
+		psychic:"psychic",
+		ice:"ice",
+		dragon:"dragon",
+		dark:"dark"
+	}
 class monster{
 	constructor(){
 		this.xp = 0
@@ -36,6 +55,7 @@ class charmander extends monster{
 		this.baseSpeed = 6.5
 		this.attacks={1:null,2:null,3:null,4:null}
 		this.learnattacks = [[0,firePunch],[0,slam],[0,flamethrower],[0,highKick]]
+		this.type = type.fire
 	}	
 }
 class bulbasaur extends monster{
@@ -48,6 +68,7 @@ class bulbasaur extends monster{
 		this.baseSpeed = 4.5
 		this.attacks={1:null,2:null,3:null,4:null}
 		this.learnattacks = [[0,confusion],[0,leafBlade],[0,vineWhip],[0,highKick]]
+		this.type = type.grass
 	}	
 }
 class pikachu extends monster{
@@ -60,5 +81,6 @@ class pikachu extends monster{
 		this.baseSpeed = 9.0
 		this.attacks={1:null,2:null,3:null,4:null}
 		this.learnattacks = [[0,vineWhip],[0,slam],[0,flamethrower],[0,highKick]]
+		this.type = type.electric
 	}	
 }

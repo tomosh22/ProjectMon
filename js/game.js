@@ -22,7 +22,25 @@ $(document).ready(function() {
 	}				
 	wildMonsters = {1:[new charmander],5:[new pikachu]}
 	levelDifficulty = {1:9,5:14}
-	
+	type = {
+		normal:"normal",
+		fighting:"fighting",
+		flying:"flying",
+		poison:"poison",
+		ground:"ground",
+		rock:"rock",
+		bug:"bug",
+		ghost:"ghost",
+		steel:"steel",
+		fire:"fire",
+		water:"water",
+		grass:"grass",
+		electric:"electric",
+		psychic:"psychic",
+		ice:"ice",
+		dragon:"dragon",
+		dark:"dark"
+	}
 	//player inventory, items can be used during battle
 	playerMoney = 50
 	currentItems = [{name:"Capsule","effect":"capture","strength":10,"price":4},{name:"Capsule","effect":"capture","strength":10,"price":4},

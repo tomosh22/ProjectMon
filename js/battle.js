@@ -367,9 +367,11 @@ function useAttack(attack, user, target){
 		damage *= 2
 		console.log("attack is strong")
 	}
-	if (defenceIsStrong(target["type"],attack["type"])){
-		damage *= 0.5
-		console.log("attack is weak")
+	else{
+		if (defenceIsStrong(target["type"],attack["type"])){
+			damage *= 0.5
+			console.log("attack is weak")
+		}
 	}
 	hit = ""
 	chance = Math.random()

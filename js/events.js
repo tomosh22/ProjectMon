@@ -72,51 +72,111 @@ function distanceTo(y1,y2,x1,x2){
 }
 function attackIsStrong(defend,attack){
 	switch (defend){
-		case "fire":
-			return ["ground","rock","water"].includes(attack)
+		case type.fire:
+			return [type.ground,type.rock,type.water].includes(attack)
 			break;
-		case "water":
-			return ["grass","electric"].includes(attack)
+		case type.water:
+			return [type.grass,type.electric].includes(attack)
 			break;
-		case "rock":
-			return ["fighting","ground","steel","water","grass"].includes(attack)
+		case type.rock:
+			return [type.fighting,type.ground,type.steel,type.water,type.grass].includes(attack)
 			break;
-		case "fighting":
-			return ["flying","psychic"].includes(attack)
+		case type.fighting:
+			return [type.flying,type.psychic].includes(attack)
 			break;
-		case "normal"
-			return ["fighting"].includes(attack)
+		case type.ground:
+			return [type.water,type.grass,type.ice].includes(attack)
 			break;
-		case "ground":
-			return ["water","grass","ice"].includes(attack)
+		case type.ice:
+			return [type.fighting,type.rock,type.steel,type.fire].includes(attack)
 			break;
-		case "ice"
-			return ["fight","rock","steel","fire"].includes(attack)
+		case type.bug:
+			return [type.flying,type.rock,type.fire].includes(attack)
+			break;
+		case type.ghost:
+			return [type.ghost].includes(attack)
+			break;
+		case type.steel:
+			return [type.fighting,type.ground,type.fire].includes(attack)
+			break;
+		case type.normal:
+			return [type.fighting].includes(attack)
+			break;
+		case type.poison:
+			return [type.ground,type.psychic].includes(attack)
+			break;
+		case type.dragon:
+			return [type.ice,type.dragon].includes(attack)
+			break;
+		case type.electric:
+			return [type.ground].includes(attack)
+			break;
+		case type.dark:
+			return [type.fighting,type.bug].includes(attack)
+			break;
+		case type.psychic:
+			return [type.bug,type.ghost,type.dark].includes(attack)
+			break;
+		case type.flying:
+			return [type.rock,type.electric,type.ice].includes(attack)
+			break;
+		case type.grass:
+			return [type.flying,type.poison,type.bug,type.fire,type.ice].includes(attack)
 			break;
 	}
 }
 function defenceIsStrong(defend,attack){
 	switch(defend){
-		case "fire":
-			return ["bug","steel","fire","grass","ice"].includes(attack)
+		case type.fire:
+			return [type.bug,type.steel,type.fire,type.grass,type.ice].includes(attack)
 			break;
-		case "water":
-			return ["steel","fire","ice","water"].includes(attack)
+		case type.water:
+			return [type.steel,type.fire,type.ice,type.water].includes(attack)
 			break;
-		case "rock":
-			return ["normal","flying","poison","fire"].includes(attack)
+		case type.rock:
+			return [type.normal,type.flying,type.poison,type.fire].includes(attack)
 			break;
-		case "fighting":
-			return ["rock","bug","dark"].includes(attack)
+		case type.fighting:
+			return [type.rock,type.bug,type.dark].includes(attack)
 			break;
-		case "normal":
-			return false
+		case type.ground:
+			return [type.poison,type.rock].includes(attack)
 			break;
-		case "ground":
-			return ["poison","rock"].includes(attack)
+		case type.ice:
+			return [type.ice].includes(attack)
 			break;
-		case "ice"
-			return ["ice"].includes(attack)
+		case type.bug:
+			return [type.fighting,type.grass].includes(attack)
+			break;
+		case type.ghost:
+			return [type.normal,type.fighting,type.poison,type.bug].includes(attack)
+			break;
+		case type.steel:
+			return [type.normal,type.flying,type.rock,type.bug,type.steel,type.grass,type.psychic,type.ice,type.dragon,].includes(attack)
+			break;
+		case type.normal:
+			return [type.ghost].includes(attack)
+			break;
+		case type.poison:
+			return [type.fighting,type.poison,type.grass].includes(attack)
+			break;
+		case type.dragon:
+			return [type.fire,type.water,type.grass,type.electric].includes(attack)
+			break;
+		case type.electric:
+			return [type.flying,type.steel,type.electric].includes(attack)
+			break;
+		case type.dark:
+			return [type.ghost,type.psychic,type.dark].includes(attack)
+			break;
+		case type.psychic:
+			return [type.fighting,type.psychic].includes(attack)
+			break;
+		case type.flying:
+			return [type.ground,type.bug,type.grass].includes(attack)
+			break;
+		case type.grass:
+			return [type.ground,type.water,type.grass,type.electric].includes(attack)
 			break;
 	}
 	
