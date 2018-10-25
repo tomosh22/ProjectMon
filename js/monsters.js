@@ -43,7 +43,62 @@ class monster{
 		}
 	}
 }
-
+class machop extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Machop"
+		this.baseHp = 7
+		this.baseAttack = 8
+		this.baseDefense = 5
+		this.baseSpeed = 3.5
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,brickBreak],[0,auraSphere],[0,slam],[0,firePunch]]
+		this.type = type.fighting
+	}
+}
+class goldeen extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Goldeen"
+		this.baseHp = 4.5
+		this.baseAttack = 6.7
+		this.baseDefense = 6
+		this.baseSpeed = 6.3
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,aquaJet],[0,brine],[0,feint],[0,waterfall]]
+		this.type = type.water
+	}
+}
+class geodude extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Geodude"
+		this.baseHp = 4
+		this.baseAttack = 8
+		this.baseDefense = 10
+		this.baseSpeed = 2
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,boneRush],[0,rollout],[0,feint],[0,rockBlast]]
+		this.type = type.rock
+	}
+}
+class onix extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Onix"
+		this.baseHp = 4
+		this.baseAttack = 8
+		this.baseDefense = 10
+		this.baseSpeed = 2
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,slam],[0,rollout],[0,stealthRock],[0,rockBlast]]
+		this.type = type.rock
+	}
+}
 class charmander extends monster{
 	constructor(){
 		super()
@@ -54,7 +109,7 @@ class charmander extends monster{
 		this.baseDefense = 4.3
 		this.baseSpeed = 6.5
 		this.attacks={1:null,2:null,3:null,4:null}
-		this.learnattacks = [[0,firePunch],[0,slam],[0,flamethrower],[0,highKick]]
+		this.learnattacks = [[0,firePunch],[0,slam],[0,flamethrower],[0,highJumpKick]]
 		this.type = type.fire
 	}	
 }
@@ -67,7 +122,7 @@ class bulbasaur extends monster{
 		this.baseDefense = 4.9
 		this.baseSpeed = 4.5
 		this.attacks={1:null,2:null,3:null,4:null}
-		this.learnattacks = [[0,confusion],[0,leafBlade],[0,vineWhip],[0,highKick]]
+		this.learnattacks = [[0,confusion],[0,leafBlade],[0,vineWhip],[0,highJumpKick]]
 		this.type = type.grass
 	}	
 }
@@ -80,7 +135,7 @@ class pikachu extends monster{
 		this.baseDefense = 4.0
 		this.baseSpeed = 9.0
 		this.attacks={1:null,2:null,3:null,4:null}
-		this.learnattacks = [[0,vineWhip],[0,slam],[0,flamethrower],[0,highKick]]
+		this.learnattacks = [[0,vineWhip],[0,slam],[0,flamethrower],[0,highJumpKick]]
 		this.type = type.electric
 	}	
 }

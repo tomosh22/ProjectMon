@@ -200,7 +200,8 @@ function LoadBattle(playerMonster, enemyMonster){
 				
 				attack = Math.ceil(Math.random() * 4)
 				useAttack(enemyMonster["attacks"][attack], enemyMonster, playerMonster)
-				hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
+				//hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
+				hit = enemyMonster["name"] + " used " + enemyMonster["attacks"][attack].name
 				effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
 				enemyMoved = true
 				displayMessage()

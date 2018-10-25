@@ -12,19 +12,33 @@
 	<script src="js/levels.js"></script>
 	<script src="js/events.js"></script>
 	<script src="js/sprites.js"></script>
-	
-	
+	<script src="js/panel.js"></script>
 	<script src="js/battle.js"></script>
 	<script src="js/gyms.js"></script>
 </head>
 <body>
 	<div class="row">
-		<div class="col-sm-4">
+		<div class="col-sm-3">
 			<canvas id="canvas"></canvas>
 		</div>
-		<div id="devTools" class="col-sm-2">
+		<div id="monsters" class="col-sm-3">
 		</div>
-		<div id="devTools2" class="col-sm-4">
+		<div id="release" class="col-sm-1">
+			<button onClick = "
+				if(playerCanMove && currentMonsters.length > 1){
+					currentMonsters.splice(panelIndex,1);
+					if(panelIndex >0){
+						panelIndex--
+					}
+				}
+			">Release Monster</button>
+		</div>
+		
+	</div>
+	<div class="row">
+		<div id="devTools" class="col-sm-6">
+		</div>
+		<div id="devTools2" class="col-sm-2">
 		</div>
 	</div>
 </body>

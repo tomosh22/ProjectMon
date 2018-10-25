@@ -16,10 +16,10 @@ gym0Object = new gym
 gym0Object.bossLocation = [5,2]
 gym0Object.map = gym0
 gym0Object.difficulty = 11
-gym0Object.npcs = [{x:3,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:6,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:8,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:10,y:5,ready:true,level:gym0Object.difficulty, team:[new bulbasaur, new pikachu]}
+gym0Object.npcs = [{x:3,y:5,ready:true,level:gym0Object.difficulty, team:[new onix]},
+					{x:6,y:5,ready:true,level:gym0Object.difficulty, team:[new geodude]},
+					{x:8,y:5,ready:true,level:gym0Object.difficulty, team:[new geodude]},
+					{x:10,y:5,ready:true,level:gym0Object.difficulty, team:[new geodude]}
 					]
 gym0Object.boss = [new bulbasaur, new pikachu]
 for(y=0;y<gym0Object.boss.length;y++){

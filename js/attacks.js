@@ -34,7 +34,7 @@ flamethrower = {name:"Flamethrower", type:type.fire, damage:10, accuracy:100, ef
 ember = {name:"Ember", type:type.fire, damage:4, accuracy:100, effect:null}//early game
 //FIGHTING
 highJumpKick = {name:"High Jump Kick", type:type.fighting, damage:13, accuracy:90, effect:null}//late game
-auraSphere = {name:"Aura Sphere", type:type.fighting, damage:8, accuracy:100, effect:null}//mid game
+auraSphere = {name:"Aura Sphere", type:type.fighting, damage:8, accuracy:80, effect:null}//mid game
 brickBreak = {name:"Brick Break", type:type.fighting, damage:4, accuracy:100, effect:null}//early game
 //POISON
 acid = {name:"Acid", type:type.poison, damage:4, accuracy:100, effect:null}//early game
@@ -47,6 +47,7 @@ fly = {name:"Fly", type:type.flying, damage:7, accuracy:100, effect:null}//mid g
 //WATER
 aquaJet = {name:"Aqua Jet", type:type.water, damage:4, accuracy:100, effect:null}//early game
 brine = {name:"Brine", type:type.water, damage:6, accuracy:100, effect:null}//mid game
+waterfall = {name:"Waterfall", type:type.water, damage:6, accuracy:85, effect:null}//early game
 //DARK
 assurance = {name:"Assurance", type:type.dark, damage:6, accuracy:100, effect:null}//early game
 crunch = {name:"Crunch", type:type.dark, damage:8, accuracy:100, effect:null}//late game
@@ -56,12 +57,16 @@ blizzard = {name:"Blizzard", type:type.ice, damage:11, accuracy:70, effect:null}
 //ELECTRIC
 thunderbolt = {name:"Thunderbolt", type:type.electric, damage:7, accuracy:100, effect:null}//mid game
 spark = {name:"Spark", type:type.electric, damage:4, accuracy:100, effect:null}//early game
-fusionBolt = {name:"Electric", type:type.electric, damage:9, accuracy:100, effect:null}//late game
+fusionBolt = {name:"Electric", type:type.electric, damage:8, accuracy:80, effect:null}//late game
 //GROUND
 boneRush = {name:"Bone Rush", type:type.ground, damage:4, accuracy:100, effect:null}//early game
-boomerange = {name:"Boomerang", type:type.ground, damage:6, accuracy:85, effect:null}//mid game
+boomerang = {name:"Boomerang", type:type.ground, damage:6, accuracy:85, effect:null}//mid game
 fissure = {name:"Fissure", type:type.ground, damage:90, accuracy:90, effect:null}//late game
 //BUG
 stinger = {name:"Stinger", type:type.bug, damage:4, accuracy:100, effect:null}//early game
 //STEEL
 flashCannon = {name:"Flash Cannon", type:type.steel, damage:7, accuracy:90, effect:null}//mid game
+//ROCK
+rollout = {name:"Rollout", type:type.rock, damage:3, accuracy:100, effect:null}//early game
+rockBlast = {name:"Rock Blast", type:type.rock, damage:5, accuracy:85, effect:null}//early game
+stealthRock = {name:"Stealth Rock", type:type.rock, damage:4, accuracy:95, effect:null}//early game

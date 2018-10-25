@@ -20,7 +20,7 @@ $(document).ready(function() {
 	for(x=0;x<enemyMonsters.length;x++){
 		enemyMonsters[x].levelUp(9)
 	}				
-	wildMonsters = {1:[new charmander],5:[new pikachu]}
+	wildMonsters = {1:[new goldeen, new machop],5:[new pikachu]}
 	levelDifficulty = {1:9,5:14}
 	type = {
 		normal:"normal",
@@ -74,6 +74,8 @@ $(document).ready(function() {
 	cDown = false;
 	vDown = false
 	escDown = false
+	leftArrowDown = false
+	rightArrowDown = false
     document.addEventListener("keydown", function(key) {//reads the keycode of any button that is pressed down and sets corresponding boolean to true
         switch (key.keyCode) {
 			case 87:
@@ -103,6 +105,12 @@ $(document).ready(function() {
 			case 27:
                 escDown = true;
                 break;
+			case 188:
+				leftArrowDown = true;
+				break;
+			case 190:
+				rightArrowDown = true
+				break;
         }
     });
     document.addEventListener("keyup", function(key) {//reads the keycode of any button that is released and sets corresponding boolean to false
@@ -134,6 +142,12 @@ $(document).ready(function() {
 			case 27:
                 escDown = false;
                 break;
+			case 188:
+				leftArrowDown = false;
+				break;
+			case 190:
+				rightArrowDown = false;
+				break;
         }
     });
 
@@ -287,12 +301,15 @@ $(document).ready(function() {
 			.html("gymsBeaten"+gymsBeaten);
 		$("#devTools").append(devTool)
 		
-		for(x=0;x<=currentMonsters.length - 1;x++){//for each of the player's current monsters
-			var devTool = $("<p/>")
-				.html(currentMonsters[x].name+ " hp " + currentMonsters[x].hp);//create a html element displaying their current health
-			$("#devTools").append(devTool)//add html element to html div for devlopment tools
-		}
-		
+		// for(x=0;x<=currentMonsters.length - 1;x++){//for each of the player's current monsters
+			// var devTool = $("<p/>")
+				// .html(currentMonsters[x].name+ " hp " + currentMonsters[x].hp);//create a html element displaying their current health
+			// $("#devTools").append(devTool)//add html element to html div for devlopment tools
+			// var devTool = $("<p/>")
+				// .html("Attacks:" + currentMonsters[x].attacks[1].name + currentMonsters[x].attacks[2].name + currentMonsters[x].attacks[3].name + currentMonsters[x].attacks[4].name);
+			// $("#devTools").append(devTool)
+		// }
+		monsterPanel()
 		
 		
 		currentLevel.points.forEach(function(point){//array in map variable containing exit locations
@@ -356,14 +373,12 @@ $(document).ready(function() {
 					index = Math.floor(Math.random() * wildMonsters[levelIndex].length)
 					playerCanMove = false
 					lastWildBattle = Date.now()
-					console.log(lastWildBattle)
 					enemyMonsters = [wildMonsters[levelIndex][index]]
 					enemyMonsters[0].levelUp(levelDifficulty[levelIndex])
 				}
 			}
 			else{
 				canCapture = true
-				console.log(currentBattleMenu)
 				if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
 					
 					playerCanMove = true
