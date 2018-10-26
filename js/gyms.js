@@ -19,9 +19,9 @@ gym0Object.difficulty = 11
 gym0Object.npcs = [{x:3,y:5,ready:true,level:gym0Object.difficulty, team:[new onix]},
 					{x:6,y:5,ready:true,level:gym0Object.difficulty, team:[new geodude]},
 					{x:8,y:5,ready:true,level:gym0Object.difficulty, team:[new geodude]},
-					{x:10,y:5,ready:true,level:gym0Object.difficulty, team:[new geodude]}
+					{x:10,y:5,ready:true,level:gym0Object.difficulty, team:[new onix]}
 					]
-gym0Object.boss = [new bulbasaur, new pikachu]
+gym0Object.boss = [new onix, new geodude]
 for(y=0;y<gym0Object.boss.length;y++){
 	gym0Object.boss[y].levelUp(Math.ceil(gym0Object.difficulty * 1.1))
 }
@@ -40,12 +40,12 @@ gym1Object = new gym
 gym1Object.bossLocation = [5,2]
 gym1Object.map = gym1
 gym1Object.difficulty = 18
-gym1Object.npcs = [{x:7,y:7,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:3,y:8,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:2,y:6,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]},
-					{x:10,y:6,ready:true,level:gym1Object.difficulty, team:[new bulbasaur, new pikachu]}
+gym1Object.npcs = [{x:7,y:7,ready:true,level:gym1Object.difficulty, team:[new bulbasaur]},
+					{x:3,y:8,ready:true,level:gym1Object.difficulty, team:[new bayleef]},
+					{x:2,y:6,ready:true,level:gym1Object.difficulty, team:[new bayleef]},
+					{x:10,y:6,ready:true,level:gym1Object.difficulty, team:[new bulbasaur]}
 					]
-gym1Object.boss = [new bulbasaur, new pikachu]
+gym1Object.boss = [new bulbasaur, new bayleef]
 for(y=0;y<gym1Object.boss.length;y++){
 	gym1Object.boss[y].levelUp(Math.ceil(gym1Object.difficulty * 1.1))
 }

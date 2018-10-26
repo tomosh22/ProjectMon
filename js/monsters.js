@@ -43,6 +43,62 @@ class monster{
 		}
 	}
 }
+class dustox extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Dustox"
+		this.baseHp = 6
+		this.baseAttack = 5
+		this.baseDefense = 8
+		this.baseSpeed = 6.5
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,airCutter],[0,stinger],[0,confusion],[0,bugBuzz]]
+		this.type = type.bug
+	}
+}
+class muk extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Muk"
+		this.baseHp = 8
+		this.baseAttack = 8
+		this.baseDefense = 6
+		this.baseSpeed = 5
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,acid],[0,belch],[0,assurance],[0,confusion]]
+		this.type = type.poison
+	}
+}
+class staravia extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Staravia"
+		this.baseHp = 5.5
+		this.baseAttack = 7.5
+		this.baseDefense = 5
+		this.baseSpeed = 8
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,aeroblast],[0,airCutter],[0,beakBlast],[0,fly]]
+		this.type = type.flying
+	}
+}
+class bayleef extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Bayleef"
+		this.baseHp = 6
+		this.baseAttack = 8.0
+		this.baseDefense = 8
+		this.baseSpeed = 6
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,vineWhip],[0,leafBlade],[0,forestsCurse],[0,feint]]
+		this.type = type.grass
+	}
+}
 class machop extends monster{
 	constructor(){
 		super()
@@ -55,6 +111,34 @@ class machop extends monster{
 		this.attacks={1:null,2:null,3:null,4:null}
 		this.learnattacks = [[0,brickBreak],[0,auraSphere],[0,slam],[0,firePunch]]
 		this.type = type.fighting
+	}
+}
+class sandslash extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Sandslash"
+		this.baseHp = 7.5
+		this.baseAttack = 10
+		this.baseDefense = 11
+		this.baseSpeed = 6.5
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,boneRush],[0,boomerang],[0,fissure],[0,rollout]]
+		this.type = type.ground
+	}
+}
+class metang extends monster{
+	constructor(){
+		super()
+		
+		this.name = "Metang"
+		this.baseHp = 6
+		this.baseAttack = 7.5
+		this.baseDefense = 10
+		this.baseSpeed = 5
+		this.attacks={1:null,2:null,3:null,4:null}
+		this.learnattacks = [[0,flashCannon],[0,confusion],[0,metalClaw],[0,assurance]]
+		this.type = type.steel
 	}
 }
 class goldeen extends monster{

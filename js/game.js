@@ -1,7 +1,7 @@
 $(document).ready(function() {
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
-    
+    lastWildBattle = Date.now()
     tickCounter = 0
 	menuReady = false
 	outsideLocation = [0,0]
@@ -14,13 +14,13 @@ $(document).ready(function() {
 	lastWildBattle = 0
 	currentMonsters = [new bulbasaur,new pikachu,new charmander]
 	for(x=0;x<currentMonsters.length;x++){
-		currentMonsters[x].levelUp(10)
+		currentMonsters[x].levelUp(100)
 	}
 	enemyMonsters = [new charmander]
 	for(x=0;x<enemyMonsters.length;x++){
 		enemyMonsters[x].levelUp(9)
 	}				
-	wildMonsters = {1:[new goldeen, new machop],5:[new pikachu]}
+	wildMonsters = {1:[new goldeen, new machop, new bulbasaur, new metang, new sandslash],5:[new charmander, new staravia, new muk, new dustox]}
 	levelDifficulty = {1:9,5:14}
 	type = {
 		normal:"normal",
@@ -58,7 +58,7 @@ $(document).ready(function() {
 			{map:maps[5],x:10,y:4,ready:true,level:15, team:[new charmander, new pikachu]},
 			{map:maps[9],x:5,y:6,ready:true,level:22, team:[new charmander, new pikachu]}
 			]
-	//npcs=[{map:maps[9],x:5,y:6,ready:true,level:10, team:[new charmander, new pikachu,new bulbasaur]}]
+	npcs=[]
 	for(x=0;x<npcs.length;x++){
 		for(y=0;y<npcs[x]["team"].length;y++){
 			npcs[x]["team"][y].levelUp(npcs[x].level)

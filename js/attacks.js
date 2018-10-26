@@ -61,11 +61,13 @@ fusionBolt = {name:"Electric", type:type.electric, damage:8, accuracy:80, effect
 //GROUND
 boneRush = {name:"Bone Rush", type:type.ground, damage:4, accuracy:100, effect:null}//early game
 boomerang = {name:"Boomerang", type:type.ground, damage:6, accuracy:85, effect:null}//mid game
-fissure = {name:"Fissure", type:type.ground, damage:90, accuracy:90, effect:null}//late game
+fissure = {name:"Fissure", type:type.ground, damage:9, accuracy:80, effect:null}//late game
 //BUG
 stinger = {name:"Stinger", type:type.bug, damage:4, accuracy:100, effect:null}//early game
+bugBuzz = {name:"Bug Buzz", type:type.bug, damage:7, accuracy:90, effect:null}//mid game
 //STEEL
 flashCannon = {name:"Flash Cannon", type:type.steel, damage:7, accuracy:90, effect:null}//mid game
+metalClaw = {name:"Metal Claw", type:type.steel, damage:5, accuracy:95, effect:null}//early game
 //ROCK
 rollout = {name:"Rollout", type:type.rock, damage:3, accuracy:100, effect:null}//early game
 rockBlast = {name:"Rock Blast", type:type.rock, damage:5, accuracy:85, effect:null}//early game
