@@ -13,7 +13,7 @@ function monsterPanel(){
 	$("#monsters").append(panelItem)
 	
 	var panelItem = $("<p/>")
-		.html("Attack:"+panelMonster.attack + "&nbsp;".repeat(3) + "Defense:" + panelMonster.defense + "&nbsp;".repeat(3) + "Speed:"+panelMonster.speed)
+		.html("Attack:"+Math.round(panelMonster.attack) + "&nbsp;".repeat(3) + "Defense:" + Math.round(panelMonster.defense) + "&nbsp;".repeat(3) + "Speed:"+panelMonster.speed)
 		.prop("align","center")
 		.css("font-size","0.8em");
 	$("#monsters").append(panelItem)

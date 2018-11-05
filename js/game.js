@@ -1,28 +1,28 @@
 $(document).ready(function() {
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
-    lastWildBattle = Date.now()
-    tickCounter = 0
-	menuReady = false
-	outsideLocation = [0,0]
+    lastWildBattle = Date.now()//used to make sure there are 2 seconds between wild battles
+    tickCounter = 0//used in animating grass sprites
+	menuReady = false//used in menus when holding buttons across ticks was causing problems
+	outsideLocation = [0,0]//where the player needs to spawn when they leave a building
 	maps = {0:house0, 1:town0, 2:town1, 3:hospital, 4:shop,5:route0,6:town2,7:gym0,8:gym1,9:route1,10:finalLevel}
     currentLevel = maps[0];
 	levelIndex = 0
-	outsideIndex = 1
+	outsideIndex = 1 //last level the user was in that was outside
 	playerCanMove = true
 	LoadLevel();
-	lastWildBattle = 0
-	currentMonsters = [new bulbasaur,new pikachu,new charmander]
+	currentMonsters = [new pikachu,new bulbasaur,new charmander]
 	for(x=0;x<currentMonsters.length;x++){
-		currentMonsters[x].levelUp(100)
+		currentMonsters[x].levelUp(14)//all the players monsters must be level 14
 	}
-	enemyMonsters = [new charmander]
+	enemyMonsters = [new charmander]//monsters that the player's friend will have in the tutorial
 	for(x=0;x<enemyMonsters.length;x++){
-		enemyMonsters[x].levelUp(9)
+		enemyMonsters[x].levelUp(9)//each of their monsters must be level 9
 	}				
-	wildMonsters = {1:[new goldeen, new machop, new bulbasaur, new metang, new sandslash],5:[new charmander, new staravia, new muk, new dustox]}
-	levelDifficulty = {1:9,5:14}
-	type = {
+	wildMonsters = {1:[new goldeen, new machop, new bulbasaur, new metang, new sandslash],5:[new charmander, new staravia, new muk, new dustox]
+	,9:[new goldeen, new bulbasaur, new metang, new staravia, new muk]}//monsters that can spawn in the long grass of each level
+	levelDifficulty = {1:8,5:14,9:22}//level of monsters that spawn in long grass for each level
+	type = {//type enum
 		normal:"normal",
 		fighting:"fighting",
 		flying:"flying",
@@ -55,13 +55,13 @@ $(document).ready(function() {
 	
 	npcs = [{map:maps[2],x:5,y:8,ready:true,level:11, team:[new bulbasaur, new pikachu]},
 			{map:maps[5],x:9,y:9,ready:true,level:15, team:[new bulbasaur, new pikachu]},
-			{map:maps[5],x:10,y:4,ready:true,level:15, team:[new charmander, new pikachu]},
+			{map:maps[5],x:10,y:4,ready:true,level:15, team:[new charmander, new pikachu]},//every npc in the game besides the gym
 			{map:maps[9],x:5,y:6,ready:true,level:22, team:[new charmander, new pikachu]}
 			]
-	npcs=[]
+	//npcs=[]
 	for(x=0;x<npcs.length;x++){
 		for(y=0;y<npcs[x]["team"].length;y++){
-			npcs[x]["team"][y].levelUp(npcs[x].level)
+			npcs[x]["team"][y].levelUp(npcs[x].level)//levels every npc's monster to the appropriate level
 		}
 	}
 	wDown = false;
@@ -151,7 +151,7 @@ $(document).ready(function() {
         }
     });
 
-	function LoadLevel(x,y){
+	function LoadLevel(x,y){//adjusts the game to fit a new map and places the player in the right place if necessary
 		if(!x || !y){
 			playerCol = currentLevel.spawnPoint[0];
 			playerRow = currentLevel.spawnPoint[1];
@@ -172,10 +172,10 @@ $(document).ready(function() {
 		canvas.height = currentLevelRows*16//adjusts canvas to fit the map
 		canvas.width = currentLevelCols*16	
 	}
-	currentGrassSprite = null
+	currentGrassSprite = null//used in long grass animation
     function render() {
 		
-		if(playerCanMove){
+		if(playerCanMove){//only draws if no events are running
 			for (y = 0; y < currentLevelRows; y++) {
 				for (x = 0; x < currentLevelCols; x++) {//iterates through the current map
 						context.drawImage(sprites[currentLevel.background], x*16, y*16)//draws the background of the map as soom sprites have transparency
@@ -216,8 +216,8 @@ $(document).ready(function() {
 			context.drawImage(playerSprite, playerXPos, playerYPos);//draws the player on top of everything
 		}
 		
-		context.fillStyle = "#FFFFFF"
-		context.fillRect(playerXTile * 16 + 7,playerYTile * 16 + 7,2,2)//draws the centre of the players current tile for development purposes
+		//context.fillStyle = "#FFFFFF"
+		//context.fillRect(playerXTile * 16 + 7,playerYTile * 16 + 7,2,2)//draws the centre of the players current tile for development purposes
 			
     }
 
@@ -324,13 +324,13 @@ $(document).ready(function() {
 					}
 					else{
 						context.clearRect(0,0, canvas.width, canvas.height)//clear the current map
-						x = point[3]
+						x = point[3]//custom tile for the player to be placed on
 						y = point[4]
 						currentLevel = maps[point[2]];
 						levelIndex = point[2]
 						outsideLocation = [point[0]+1,point[1]]
-						if (![3,4,7,8].includes(point[2])){
-							outsideIndex = point[2]
+						if (![3,4,7,8].includes(point[2])){//if the player is not going inside
+							outsideIndex = point[2]//set the current outside level to the level that the player is entering
 						}
 						LoadLevel(x,y);//load the new map
 					}
@@ -340,10 +340,10 @@ $(document).ready(function() {
 		
 		playerXTile = Math.round(playerXPos / 16);
 		playerYTile = Math.round(playerYPos / 16);
-		gymsLoop();
+		gymsLoop();//runs the code to handle gyms
 		events();//loads events such as npc battles, hospital healing, etc.
 		
-		if(playerCanMove){
+		if(playerCanMove){//moves the player if a movement button (wasd) is pressed and the player is able to go in the desired direction
 			if (wDown && (nocollision.includes(currentLevel.tiles[Math.floor((playerYPos / 16))][playerXTile]) || nocollision.includes(currentLevel.tiles[Math.floor((playerYPos / 16))][playerXTile][0]))){
 						playerYPos -= 1;
 			}
@@ -363,27 +363,28 @@ $(document).ready(function() {
 				}
 			}
 		}
-        
+        //wild monster battles
 		if(currentLevel.tiles[playerYTile][playerXTile] == 1 ){//if player is standing on long grass
 			if (playerCanMove){
 				trigger = Math.floor(Math.random() * 100)// 1% chance per tick (60th of a second) that a wild monster battle will be triggered
 				//console.log(trigger)
 				if(trigger == 0 && Date.now() - lastWildBattle > 2000){//must be a 2 second gap between battles
 				//if(Date.now() - lastWildBattle > 2000){
-					index = Math.floor(Math.random() * wildMonsters[levelIndex].length)
+					index = Math.floor(Math.random() * wildMonsters[levelIndex].length)//random monster from the possible ones for this level
 					playerCanMove = false
-					lastWildBattle = Date.now()
+					
 					enemyMonsters = [wildMonsters[levelIndex][index]]
 					enemyMonsters[0].levelUp(levelDifficulty[levelIndex])
 				}
 			}
 			else{
 				canCapture = true
-				if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
+				if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){//load the wild monster battle
 					
 					playerCanMove = true
 					canvas.height = currentLevelRows*16
 					canvas.width = currentLevelCols*16
+					lastWildBattle = Date.now()//2 seconds must have passed from this point for the next battle
 				}
 			}
 		}

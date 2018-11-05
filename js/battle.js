@@ -6,7 +6,7 @@ battleWon = null
 monsterFound = false
 battleWon2 = null
 canRun = true
-function Tutorial(){
+function Tutorial(){//first battle when the friend comes into the spawn house
 	context.fillStyle = "#FF0000"
 	switch (currentBattleMenu){
 		case "main":
@@ -17,22 +17,25 @@ function Tutorial(){
 		break;
 	}
 }
-function CaptureTutorial(){
-	context.fillStyle = "#FF0000"
+function CaptureTutorial(){//second battle when the friends shows the player how to capture monsters
+	context.fillStyle = "#FF0000"//red text
 	switch (currentBattleMenu){
 		case "main":
 			context.fillText("Press X to use an item", 10, 55)
-		break;
+			break;
 		case "item":
 			context.fillText("Press Z to use a capsule",10,55)
-		break;
+			break;
 	}
 }
 function LoadBattle(playerMonster, enemyMonster){
 	
 	canvas.width = 176
 	canvas.height = 144
-	drawMonsters(playerMonster, enemyMonster);
+	//if(currentBattleMenu != "battleWon"){
+		drawMonsters(playerMonster, enemyMonster);
+	//}
+	
 	context.font = "9px Verdana"
 	switch(currentBattleMenu){
 		case "main":
@@ -44,7 +47,6 @@ function LoadBattle(playerMonster, enemyMonster){
 				menuReady = true
 			}
 			//Z1 C2 V3 X4
-			
 			drawAttacks(playerMonster);
 			if(zDown && menuReady){
 				currentBattleMenu = "message"
@@ -77,7 +79,7 @@ function LoadBattle(playerMonster, enemyMonster){
 				itemIndex = 0
 				if (menuReady){currentBattleMenu = "main"}
 			}
-			if(cDown && menuReady && currentItems.length > itemIndex + 2){	//NEED TO ADD CHECK THAT THERE ARE MORE ITEMS IN CURRENTITEMS ARRAY
+			if(cDown && menuReady && currentItems.length > itemIndex + 2){	//if there are more items to be shown
 				menuReady = false
 				itemIndex += 2
 				if (!(zDown||xDown||cDown||vDown)){
@@ -94,7 +96,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "switch":
-			drawSwitch();
+			drawSwitch();//draws the controls for monster switching
 			if(zDown && menuReady){
 				currentBattleMenu = "message"
 				Switch(switchIndex)
@@ -107,7 +109,7 @@ function LoadBattle(playerMonster, enemyMonster){
 				switchIndex = 0
 				if (menuReady){currentBattleMenu = "main"}
 			}
-			if(cDown && menuReady && currentMonsters.length > switchIndex + 2){						//NEED TO ADD CHECK THAT THERE ARE MORE MONSTERS IN CURRENTMONSTERS ARRAY	
+			if(cDown && menuReady && currentMonsters.length > switchIndex + 2){//if there are more monsters left to be shown	
 				menuReady = false
 				switchIndex += 2
 				if (!(zDown||xDown||cDown||vDown)){
@@ -126,7 +128,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			displayMessage(hit,effect)
 			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
 				//console.log(5*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level))
-				currentMonsters[currentMonsterIndex].xp += 100*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)
+				currentMonsters[currentMonsterIndex].xp += 120*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)
 				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)
 					currentMonsters[currentMonsterIndex].xp = 0
@@ -202,7 +204,7 @@ function LoadBattle(playerMonster, enemyMonster){
 				useAttack(enemyMonster["attacks"][attack], enemyMonster, playerMonster)
 				//hit = enemyMonster["name"] + " a" + hit.slice(1,hit.length)
 				hit = enemyMonster["name"] + " used " + enemyMonster["attacks"][attack].name
-				effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
+				//effect = enemyMonster["name"] + " a" + effect.slice(1,effect.length)
 				enemyMoved = true
 				displayMessage()
 				currentBattleMenu = "enemyMessage"
@@ -242,8 +244,9 @@ function LoadBattle(playerMonster, enemyMonster){
 				
 				enemyMonsterIndex = 0
 				menuReady = false
-				if (battleWon == "enemy"){
-					outsideLocation = currentLevel.spawnPoint
+				if (battleWon == "enemy"){//player must be sent to the hospital to regain hp
+					outsideLocation[1] = currentLevel.spawnPoint[0]
+					outsideLocation[0] = currentLevel.spawnPoint[1]
 					currentLevel = maps[3]
 					levelIndex = 3
 					LoadLevel(5,2)
@@ -255,7 +258,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			break;
 		case "run":
 			if (canCapture){
-				chance = currentMonsters[currentMonsterIndex].speed / enemyMonsters[enemyMonsterIndex].speed
+				chance = currentMonsters[currentMonsterIndex].speed / enemyMonsters[enemyMonsterIndex].speed //higher chance of escaping if player is faster
 				if (runSuccess(chance) && canRun){
 					battleWon = null
 					currentBattleMenu = "main"
@@ -277,7 +280,7 @@ function LoadBattle(playerMonster, enemyMonster){
 						enemyMoved = false
 					}
 				}
-			}	
+			}
 			else{
 				displayMessage("You can't run from this battle")
 				if (!(zDown||xDown||cDown||vDown)){
@@ -290,7 +293,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 	}
-	if (!(zDown||xDown||cDown||vDown)){								//workaround for the cross tick button holding problem
+	if (!(zDown||xDown||cDown||vDown)){//workaround for the cross tick button holding problem
 				menuReady = true
 	}
 	if (menuReady){
@@ -307,7 +310,6 @@ function LoadBattle(playerMonster, enemyMonster){
 			menuReady = false
 		}
 		if(cDown && !tutorial && !tutorialCapture){
-			console.log("bviudiuv")
 			currentBattleMenu = "switch"
 			menuReady = false
 		}
@@ -322,7 +324,7 @@ function LoadBattle(playerMonster, enemyMonster){
 	if(tutorialCapture){
 		CaptureTutorial()
 	}
-	return true
+	return true//if the battle is to carry on
 }
 function runSuccess(chance){
 	if (chance > 1.2){
@@ -334,6 +336,7 @@ function runSuccess(chance){
 	if (chance<0.8){
 		random = 0.75
 	}
+	//return false
 	return Math.random() > random
 }
 function displayMessage(hit,effect){
@@ -363,15 +366,16 @@ function useAttack(attack, user, target){
 			console.log("frozen")
 		}
 	}
+	effect = ""
 	damage = Math.round(attack["damage"] * user["attack"] / target["defense"])
 	if (attackIsStrong(target["type"],attack["type"])){
 		damage *= 2
-		console.log("attack is strong")
+		effect="Attack is strong"
 	}
 	else{
 		if (defenceIsStrong(target["type"],attack["type"])){
 			damage *= 0.5
-			console.log("attack is weak")
+			effect="Defense is strong"
 		}
 	}
 	hit = ""
@@ -386,7 +390,6 @@ function useAttack(attack, user, target){
 	if (target["hp"] <= 0){
 		target["hp"] = 0
 	}
-	effect = ""
 	if (attack["effect"] != null) {
 		if (Math.random() <= attack["effect"][1] / 100){					
 			target["effect"] = attack["effect"][0]
@@ -395,7 +398,6 @@ function useAttack(attack, user, target){
 		else{effect = "Failed to apply effect"
 		}
 	}
-	else{effect = "Attack has no extra effect"}
 	//return hit,effect
 }
 function Switch(index){

@@ -40,7 +40,7 @@ function eventMessage(one,two,three){
 }
 class event{
 	constructor(){
-		this.ready = false// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
+		this.ready = true// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
 		this.running = false
 		this.done = []
 	}
@@ -70,7 +70,7 @@ tutorialCapture = false
 function distanceTo(y1,y2,x1,x2){
 	return Math.sqrt(Math.pow(x2 - x1,2) + Math.pow(y2 - y1,2))
 }
-function attackIsStrong(defend,attack){
+function attackIsStrong(defend,attack){//checks type matchups
 	switch (defend){
 		case type.fire:
 			return [type.ground,type.rock,type.water].includes(attack)
@@ -125,7 +125,7 @@ function attackIsStrong(defend,attack){
 			break;
 	}
 }
-function defenceIsStrong(defend,attack){
+function defenceIsStrong(defend,attack){//checks type matchups
 	switch(defend){
 		case type.fire:
 			return [type.bug,type.steel,type.fire,type.grass,type.ice].includes(attack)
@@ -181,9 +181,9 @@ function defenceIsStrong(defend,attack){
 	}
 	
 }
-finalBossTeam = [new pikachu,new charmander]
+finalBossTeam = [new pikachu,new metang, new dustox]
 for(x=0;x<finalBossTeam.length;x++){
-		finalBossTeam[x].levelUp(25)
+		finalBossTeam[x].levelUp(25)//levels all the final boss' monsters to 25
 	}
 npcBattle = false
 function events(){
@@ -471,8 +471,7 @@ function events(){
 			else{
 				firstBattle.done[0] = true
 			}
-			//console.log(Math.ceil(friendXPos / 16) != firstBattle["points"][1][0],!firstBattle["done"][1],firstBattle["done"][0])
-
+			
 
 			if(Math.floor(friendXPos / 16) != 2 - 1 	&& !firstBattle.done[1] && 	firstBattle.done[0]){
 
@@ -484,12 +483,11 @@ function events(){
 			else{
 				if(firstBattle.done[0]){ 
 					firstBattle.done[1] = true
-					//house0[6][2] = [89, 55]
 				}
 			}
 			
 			if (firstBattle.done[1] && 	firstBattle.done[0] && !firstBattle.done[2]){
-					eventMessage("Battle trigger")
+					eventMessage("Let's see who's stronger")
 					if (zDown || xDown || cDown || vDown){
 						menuReady = false
 						firstBattle.done[2] = true

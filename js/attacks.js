@@ -1,4 +1,4 @@
-type = {
+type = {//type enum
 		normal:"normal",
 		fighting:"fighting",
 		flying:"flying",
