@@ -15,6 +15,64 @@
 	<script src="js/panel.js"></script>
 	<script src="js/battle.js"></script>
 	<script src="js/gyms.js"></script>
+	<script type = "text/javascript">
+	
+	function loadDevTools(){
+		if (devMode){
+		
+		var devTool = $("<button/>")//creating html elements for development tools
+			.html("Go to hospital")
+			.click(function(){
+				console.log("clicked")
+				currentLevel = maps[3]
+				levelIndex = 3
+				LoadLevel()
+			});
+		$("#devTools2").append(devTool)//adding tool to html div for development tools
+		
+		
+		
+		var devTool = $("<button/>")
+			.html("Go to spawn")
+			.click(function(){
+				console.log("clicked")
+				currentLevel = maps[0]
+				levelIndex = 0
+				LoadLevel()
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Go to gym0")
+			.click(function(){
+				console.log("clicked")
+				currentLevel = maps[7]
+				levelIndex = 7
+				LoadLevel()
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Go to gym1")
+			.click(function(){
+				console.log("clicked")
+				currentLevel = maps[8]
+				levelIndex = 8
+				LoadLevel()
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Current Monsters all level 1000")
+			.click(function(){
+				for(x=0;x<currentMonsters.length;x++){
+					currentMonsters[x].levelUp(1000)
+				}
+			});
+		$("#devTools2").append(devTool)
+	}
+	}
+	</script>
 </head>
 <body>
 	<div class="row">
@@ -23,7 +81,7 @@
 		</div>
 		<div id="monsters" class="col-sm-3">
 		</div>
-		<div id="release" class="col-sm-1">
+		<div id="buttons" class="col-sm-1">
 			<button onClick = "
 				if(playerCanMove && currentMonsters.length > 1){
 					currentMonsters.splice(panelIndex,1);
@@ -32,8 +90,23 @@
 					}
 				}
 			">Release Monster</button>
+			<button onClick = "
+				if(playerCanMove){
+					currentMonsters.splice(0, 0, currentMonsters.splice(panelIndex, 1)[0]);
+				}
+			">Move to front</button>
 		</div>
-		
+		<div id="devMode" class="col-sm-1">
+			<button onClick = "
+				
+				$('#devTools').empty();
+				$('#devTools2').empty()
+				devMode = !devMode
+				loadDevTools()
+				
+			">Dev Mode
+			</button>
+		</div>
 	</div>
 	<div class="row">
 		<div id="devTools" class="col-sm-6">

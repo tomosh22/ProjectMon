@@ -553,7 +553,7 @@ function events(){
 	}
 	if(healing["running"]){
 		playerCanMove = false
-		displayMessage("healing", null)
+		displayMessage("Let me heal your monsters","for you.", null)
 		currentMonsters.forEach(function(monster){
 			monster["hp"] = monster.maxhp
 			monster["effect"] = null

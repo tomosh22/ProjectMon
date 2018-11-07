@@ -70,12 +70,14 @@ function LoadBattle(playerMonster, enemyMonster){
 			if(zDown && menuReady && currentItems[itemIndex]){
 				currentBattleMenu = "message"
 				useItem(currentItems[itemIndex],playerMonster)
+				currentItems.splice(itemIndex,1);
 				itemIndex = 0
 				if (menuReady){currentBattleMenu = "main"}
 			}
 			if(xDown && menuReady && currentItems[itemIndex + 1]){
 				currentBattleMenu = "message"
 				useItem(currentItems[itemIndex + 1],playerMonster)
+				currentItems.splice(itemIndex + 1,1);
 				itemIndex = 0
 				if (menuReady){currentBattleMenu = "main"}
 			}
@@ -128,7 +130,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			displayMessage(hit,effect)
 			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
 				//console.log(5*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level))
-				currentMonsters[currentMonsterIndex].xp += 120*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)
+				currentMonsters[currentMonsterIndex].xp += 150*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)
 				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)
 					currentMonsters[currentMonsterIndex].xp = 0
@@ -426,7 +428,7 @@ function useItem(item,playerMonster){
 	effect = "Restored "+ item["strength"]+" health"
 	}
 	if (item["effect"] == "capture"){
-		if(canCapture){
+		if(canCapture){	
 			currentMonsters.push(enemyMonsters[enemyMonsterIndex])
 			currentBattleMenu = "battleWon"
 			battleWon = "captured"

@@ -7,9 +7,15 @@ function monsterPanel(){
 	
 	panelMonster = currentMonsters[panelIndex]
 	var panelItem = $("<p/>")
-		.html(panelMonster.name)
+		.html(panelMonster.name + " Level:" + panelMonster.level)
 		.prop("align","center")
 		.css("font-size","1.1em");
+	$("#monsters").append(panelItem)
+	
+	var panelItem = $("<p/>")
+		.html("Hp:"+ panelMonster.hp +"/" + panelMonster.maxhp)
+		.prop("align","center")
+		.css("font-size","0.8em");
 	$("#monsters").append(panelItem)
 	
 	var panelItem = $("<p/>")

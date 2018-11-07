@@ -71,7 +71,7 @@ function gymsLoop(){
 					
 					playerCanMove = false
 					
-					displayMessage("gym battle", null)
+					displayMessage("Gym battle", null)
 					
 					if(menuReady && (zDown||xDown||cDown||vDown)){
 						menuReady = false	

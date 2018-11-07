@@ -13,11 +13,11 @@ $(document).ready(function() {
 	LoadLevel();
 	currentMonsters = [new pikachu,new bulbasaur,new charmander]
 	for(x=0;x<currentMonsters.length;x++){
-		currentMonsters[x].levelUp(14)//all the players monsters must be level 14
+		currentMonsters[x].levelUp(15)//all the players monsters must be level 15 when the game starts
 	}
 	enemyMonsters = [new charmander]//monsters that the player's friend will have in the tutorial
 	for(x=0;x<enemyMonsters.length;x++){
-		enemyMonsters[x].levelUp(9)//each of their monsters must be level 9
+		enemyMonsters[x].levelUp(10)//each of their monsters must be level 10
 	}				
 	wildMonsters = {1:[new goldeen, new machop, new bulbasaur, new metang, new sandslash],5:[new charmander, new staravia, new muk, new dustox]
 	,9:[new goldeen, new bulbasaur, new metang, new staravia, new muk]}//monsters that can spawn in the long grass of each level
@@ -220,46 +220,11 @@ $(document).ready(function() {
 		//context.fillRect(playerXTile * 16 + 7,playerYTile * 16 + 7,2,2)//draws the centre of the players current tile for development purposes
 			
     }
-
-	var devTool = $("<button/>")//creating html elements for development tools
-			.html("Go to hospital")
-			.click(function(){
-				console.log("clicked")
-				currentLevel = maps[3]
-				levelIndex = 3
-				LoadLevel()
-			});
-		$("#devTools2").append(devTool)//adding tool to html div for development tools
-		
-		var devTool = $("<button/>")
-			.html("Go to spawn")
-			.click(function(){
-				console.log("clicked")
-				currentLevel = maps[0]
-				levelIndex = 0
-				LoadLevel()
-			});
-		$("#devTools2").append(devTool)
-		
-		var devTool = $("<button/>")
-			.html("Go to gym0")
-			.click(function(){
-				console.log("clicked")
-				currentLevel = maps[7]
-				levelIndex = 7
-				LoadLevel()
-			});
-		$("#devTools2").append(devTool)
-		
-		var devTool = $("<button/>")
-			.html("Go to gym1")
-			.click(function(){
-				console.log("clicked")
-				currentLevel = maps[8]
-				levelIndex = 8
-				LoadLevel()
-			});
-		$("#devTools2").append(devTool)
+	devMode = false
+	
+	
+	
+	
 		
     function update() {
 		
@@ -267,8 +232,8 @@ $(document).ready(function() {
 		if (tickCounter == 61){//resets at 60 ticks
 			tickCounter = 1
 		}
-		
-		$("#devTools").empty()//clears html div
+		if (devMode){
+			$("#devTools").empty()//clears html div
 		var devTool = $("<p/>")
 			.html("playerXTile "+playerXTile);
 		$("#devTools").append(devTool)
@@ -300,6 +265,8 @@ $(document).ready(function() {
 		var devTool = $("<p/>")
 			.html("gymsBeaten"+gymsBeaten);
 		$("#devTools").append(devTool)
+		}
+		
 		
 		// for(x=0;x<=currentMonsters.length - 1;x++){//for each of the player's current monsters
 			// var devTool = $("<p/>")
