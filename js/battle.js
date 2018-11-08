@@ -247,12 +247,20 @@ function LoadBattle(playerMonster, enemyMonster){
 				enemyMonsterIndex = 0
 				menuReady = false
 				if (battleWon == "enemy"){//player must be sent to the hospital to regain hp
-					outsideLocation[1] = currentLevel.spawnPoint[0]
-					outsideLocation[0] = currentLevel.spawnPoint[1]
+					if([7,8].includes(levelIndex)){
+						outsideLocation = maps[outsideIndex].spawnPoint
+					}
+					else{
+						outsideLocation = currentLevel.spawnPoint
+					}
+					
+					//outsideLocation[0] = currentLevel.spawnPoint[0]
 					currentLevel = maps[3]
 					levelIndex = 3
-					LoadLevel(5,2)
+					LoadLevel(5,2)//places the user on the healing spot in the hospital so they can't go outside without healing
 					battleWon = null
+					console.log(levelIndex)
+					
 				}
 				battleWon = null
 				return false

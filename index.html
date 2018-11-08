@@ -63,6 +63,16 @@
 		$("#devTools2").append(devTool)
 		
 		var devTool = $("<button/>")
+			.html("Go to finalLevel")
+			.click(function(){
+				console.log("clicked")
+				currentLevel = maps[10]
+				levelIndex = 10
+				LoadLevel()
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
 			.html("Current Monsters all level 1000")
 			.click(function(){
 				for(x=0;x<currentMonsters.length;x++){
@@ -70,9 +80,34 @@
 				}
 			});
 		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Current Monsters all level 1")
+			.click(function(){
+				for(x=0;x<currentMonsters.length;x++){
+					currentMonsters[x].levelUp(1)
+				}
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Enable all gym bosses")
+			.click(function(){
+				for(x=0;x<gyms.length;x++){
+					gyms[x].bossReady = true
+				}
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Disable all NPCs")
+			.click(function(){
+				npcs = []
+			});
+		$("#devTools2").append(devTool)
 	}
 	}
-	</script>
+	</script>	
 </head>
 <body>
 	<div class="row">

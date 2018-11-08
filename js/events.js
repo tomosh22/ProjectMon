@@ -40,7 +40,7 @@ function eventMessage(one,two,three){
 }
 class event{
 	constructor(){
-		this.ready = true// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
+		this.ready = false// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
 		this.running = false
 		this.done = []
 	}
@@ -258,7 +258,7 @@ function events(){
 					
 					playerCanMove = false
 					
-					displayMessage("npc battle", null)
+					displayMessage("NPC battle!", null)
 					
 					if(menuReady && (zDown||xDown||cDown||vDown)){
 						menuReady = false	
