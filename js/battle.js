@@ -124,16 +124,16 @@ function LoadBattle(playerMonster, enemyMonster){
 		case "message":
 			displayMessage(hit,effect)
 			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){//if an enemy monster has been killed
-<<<<<<< HEAD
+
 				
 				currentMonsters[currentMonsterIndex].xp += xpModifier*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)//add xp based on the level difference between the 2 monsters
 				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){//can't get any higher than level 100
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)//if xp has reached the max then level up
-=======
+
 				currentMonsters[currentMonsterIndex].xp += 150*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)//add xp based on the level difference between the 2 monsters
 				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){//if xp has reached the max then level up
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)
->>>>>>> 897a35b111cb9962b217849a7b12ebf187949f35
+
 					currentMonsters[currentMonsterIndex].xp = 0//reset xp
 				}
 				monsterFound = false
