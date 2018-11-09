@@ -192,7 +192,7 @@ $(document).ready(function() {
 					}
 				}
 			}
-			//console.log(playerXTile, playerYTile)
+			
 			
 			//animates long grass sprite if the player is standing on one
 			if (currentLevel.tiles[playerYTile][playerXTile] == 1){
@@ -334,7 +334,7 @@ $(document).ready(function() {
 		if(currentLevel.tiles[playerYTile][playerXTile] == 1 ){//if player is standing on long grass
 			if (playerCanMove){
 				trigger = Math.floor(Math.random() * 100)// 1% chance per tick (60th of a second) that a wild monster battle will be triggered
-				//console.log(trigger)
+				
 				if(trigger == 0 && Date.now() - lastWildBattle > 2000){//must be a 2 second gap between battles
 				//if(Date.now() - lastWildBattle > 2000){
 					index = Math.floor(Math.random() * wildMonsters[levelIndex].length)//random monster from the possible ones for this level

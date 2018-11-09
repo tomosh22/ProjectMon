@@ -253,7 +253,7 @@ function events(){
 	for (i=0;i<=npcs.length - 1;i++){
 		
 			if (npcs[i]["map"] == currentLevel){
-				//console.log("npc on map")
+				
 				if((distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7))<23 && npcs[i]["ready"] && !npcBattle){
 					
 					playerCanMove = false
@@ -543,7 +543,7 @@ function events(){
 	} //end of introduction battle
 	
 	if(currentLevel == maps[3] && healing["running"] == false){		//hospital
-		//console.log("in hospital")
+		
 		
 		if(playerXTile == 5 && playerYTile == 2){
 			eventRender()
@@ -573,7 +573,7 @@ function events(){
 	}	//end of hospital
 	
 	if(currentLevel == maps[4] && shopping["running"] == false){		//shop
-		//console.log("in hospital")
+		
 		
 		if(playerXTile == 2 && playerYTile == 2){
 			shopping["running"] = true

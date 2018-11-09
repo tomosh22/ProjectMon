@@ -6,6 +6,7 @@ battleWon = null
 monsterFound = false
 battleWon2 = null
 canRun = true
+xpModifier = 150
 function Tutorial(){//first battle when the friend comes into the spawn house
 	context.fillStyle = "#FF0000"
 	switch (currentBattleMenu){
@@ -125,9 +126,9 @@ function LoadBattle(playerMonster, enemyMonster){
 		case "message":
 			displayMessage(hit,effect)
 			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){//if an enemy monster has been killed
-				//console.log(5*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level))
-				currentMonsters[currentMonsterIndex].xp += 150*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)//add xp based on the level difference between the 2 monsters
-				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){
+				
+				currentMonsters[currentMonsterIndex].xp += xpModifier*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)//add xp based on the level difference between the 2 monsters
+				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){//can't get any higher than level 100
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)//if xp has reached the max then level up
 					currentMonsters[currentMonsterIndex].xp = 0//reset xp
 				}
@@ -253,7 +254,6 @@ function LoadBattle(playerMonster, enemyMonster){
 					levelIndex = 3
 					LoadLevel(5,2)//places the user on the healing spot in the hospital so they can't go outside without healing
 					battleWon = null
-					console.log(levelIndex)
 					
 				}
 				battleWon = null

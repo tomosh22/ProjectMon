@@ -23,7 +23,6 @@
 		var devTool = $("<button/>")//creating html elements for development tools
 			.html("Go to hospital")
 			.click(function(){
-				console.log("clicked")
 				currentLevel = maps[3]
 				levelIndex = 3
 				LoadLevel()
@@ -35,7 +34,6 @@
 		var devTool = $("<button/>")
 			.html("Go to spawn")
 			.click(function(){
-				console.log("clicked")
 				currentLevel = maps[0]
 				levelIndex = 0
 				LoadLevel()
@@ -45,7 +43,6 @@
 		var devTool = $("<button/>")
 			.html("Go to gym0")
 			.click(function(){
-				console.log("clicked")
 				currentLevel = maps[7]
 				levelIndex = 7
 				LoadLevel()
@@ -55,7 +52,6 @@
 		var devTool = $("<button/>")
 			.html("Go to gym1")
 			.click(function(){
-				console.log("clicked")
 				currentLevel = maps[8]
 				levelIndex = 8
 				LoadLevel()
@@ -65,10 +61,18 @@
 		var devTool = $("<button/>")
 			.html("Go to finalLevel")
 			.click(function(){
-				console.log("clicked")
 				currentLevel = maps[10]
 				levelIndex = 10
 				LoadLevel()
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Current Monsters all level 80")
+			.click(function(){
+				for(x=0;x<currentMonsters.length;x++){
+					currentMonsters[x].levelUp(80)
+				}
 			});
 		$("#devTools2").append(devTool)
 		
@@ -105,6 +109,22 @@
 				npcs = []
 			});
 		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Set XP Modifier to 99999")
+			.click(function(){
+				xpModifier = 99999
+			});
+		$("#devTools2").append(devTool)
+		
+		var devTool = $("<button/>")
+			.html("Set XP Modifier to 150")
+			.click(function(){
+				xpModifier = 150
+			});
+		$("#devTools2").append(devTool)
+		
+		
 	}
 	}
 	</script>	
