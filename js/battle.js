@@ -130,10 +130,6 @@ function LoadBattle(playerMonster, enemyMonster){
 				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){//can't get any higher than level 100
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)//if xp has reached the max then level up
 
-				currentMonsters[currentMonsterIndex].xp += 150*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)//add xp based on the level difference between the 2 monsters
-				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){//if xp has reached the max then level up
-					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)
-
 					currentMonsters[currentMonsterIndex].xp = 0//reset xp
 				}
 				monsterFound = false
@@ -250,7 +246,8 @@ function LoadBattle(playerMonster, enemyMonster){
 						outsideLocation = maps[outsideIndex].spawnPoint//set the spawn point to outside the gym
 					}
 					else{
-						outsideLocation = currentLevel.spawnPoint
+						outsideLocation[0] = currentLevel.spawnPoint[1]
+						outsideLocation[1] = currentLevel.spawnPoint[0]
 					}
 					currentLevel = maps[3]//go to the hospital
 					levelIndex = 3
