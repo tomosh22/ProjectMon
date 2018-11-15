@@ -1,445 +1,563 @@
 currentBattleMenu = "main"
-function LoadLevel(x,y){
-		if(!x || !y){
-			playerCol = currentLevel.spawnPoint[0];
-			playerRow = currentLevel.spawnPoint[1];
-			playerXTile = playerRow
-			playerYTile = playerCol
-			playerXPos = playerCol * 16
-			playerYPos = playerRow * 16
-			
-		}
-		else{
-			playerXTile = x
-			playerYTile = y
-			playerXPos = playerXTile * 16
-			playerYPos = playerYTile * 16
-		}
-		currentLevelCols = currentLevel.tiles[0].length;
-		currentLevelRows = currentLevel.tiles.length
-		canvas.height = currentLevelRows*16//adjusts canvas to fit the map
-		canvas.width = currentLevelCols*16	
+
+function LoadLevel(x, y) {
+	if (!x || !y) {
+		playerCol = currentLevel.spawnPoint[0];
+		playerRow = currentLevel.spawnPoint[1];
+		playerXTile = playerRow
+		playerYTile = playerCol
+		playerXPos = playerCol * 16
+		playerYPos = playerRow * 16
+
+	} else {
+		playerXTile = x
+		playerYTile = y
+		playerXPos = playerXTile * 16
+		playerYPos = playerYTile * 16
 	}
-function eventMessage(one,two,three){
+	currentLevelCols = currentLevel.tiles[0].length;
+	currentLevelRows = currentLevel.tiles.length
+
+	//adjusts canvas to fit the map
+	canvas.height = currentLevelRows * 16
+	canvas.width = currentLevelCols * 16
+}
+
+function eventMessage(one, two, three) {
+	//PARAMETERS
+	//one is the first line of the message
+	//two is the second line of the message
+	//three is the third line of the message
 	context.fillStyle = "#FFFFFF"
 	context.fillRect(0, canvas.height - 40, canvas.width, 40)
-	if(one){
-	context.fillStyle = "#000000"
-	context.fillText(one,5, canvas.height - 30)
+	if (one) {
+		context.fillStyle = "#000000"
+		context.fillText(one, 5, canvas.height - 30)
 	}
-	if(two){
-	context.fillStyle = "#000000"
-	context.fillText(two,5, canvas.height - 20)
+	if (two) {
+		context.fillStyle = "#000000"
+		context.fillText(two, 5, canvas.height - 20)
 	}
-	if(three){
-	context.fillStyle = "#000000"
-	context.fillText(three,5, canvas.height - 10)
+	if (three) {
+		context.fillStyle = "#000000"
+		context.fillText(three, 5, canvas.height - 10)
 	}
 	context.rect(0, canvas.height - 40, canvas.width, 40);
+
 	context.stroke();
 }
-class event{
-	constructor(){
-		this.ready = false// FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
+class event {
+	constructor() {
+		this.ready = true // FALSE SO THAT EVENTS DONT RUN FOR DEVELOPMENT
 		this.running = false
 		this.done = []
 	}
 }
 finalBoss = new event()
-finalBoss.ready = false //TRUE FOR DEVELEOPMENT
+finalBoss.ready = false //TRUE FOR DEVELOPMENT
 firstBattle = new event()
 firstCapture = new event()
 outsideGym = new event()
 gym0Event = new event()
 gym0Event.ready = false
-
-
 gym1Event = new event()
 gym1Event.ready = false
 gymsBeaten = 0
 numberOfGyms = 2
-healing = {"running":false}
-shopping = {"running":false}
+healing = {
+	"running": false
+}
+shopping = {
+	"running": false
+}
 canCapture = false
+
+//used in the items menu of the battle ui
 itemIndex = 0
+
+//used in the switch menu of the battle ui
 switchIndex = 0
+
 currentMonsterIndex = 0
 enemyMonsterIndex = 0
+
+//if the tutorial needs to be run
 tutorial = false
 tutorialCapture = false
-function distanceTo(y1,y2,x1,x2){
-	return Math.sqrt(Math.pow(x2 - x1,2) + Math.pow(y2 - y1,2))
+
+//Pythagoras to determine the distance between 2 points
+function distanceTo(y1, y2, x1, x2) {
+	return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
 }
-function attackIsStrong(defend,attack){//checks type matchups
-	switch (defend){
+
+//checks type matchups
+function attackIsStrong(defend, attack) {
+	switch (defend) {
 		case type.fire:
-			return [type.ground,type.rock,type.water].includes(attack)
+			return [type.ground, type.rock, type.water].includes(attack)
 			break;
 		case type.water:
-			return [type.grass,type.electric].includes(attack)
+			return [type.grass, type.electric].includes(attack)
 			break;
 		case type.rock:
-			return [type.fighting,type.ground,type.steel,type.water,type.grass].includes(attack)
+			return [type.fighting, type.ground, type.steel, type.water, type.grass].includes(attack)
 			break;
 		case type.fighting:
-			return [type.flying,type.psychic].includes(attack)
+			return [type.flying, type.psychic].includes(attack)
 			break;
 		case type.ground:
-			return [type.water,type.grass,type.ice].includes(attack)
+			return [type.water, type.grass, type.ice].includes(attack)
 			break;
 		case type.ice:
-			return [type.fighting,type.rock,type.steel,type.fire].includes(attack)
+			return [type.fighting, type.rock, type.steel, type.fire].includes(attack)
 			break;
 		case type.bug:
-			return [type.flying,type.rock,type.fire].includes(attack)
+			return [type.flying, type.rock, type.fire].includes(attack)
 			break;
 		case type.ghost:
 			return [type.ghost].includes(attack)
 			break;
 		case type.steel:
-			return [type.fighting,type.ground,type.fire].includes(attack)
+			return [type.fighting, type.ground, type.fire].includes(attack)
 			break;
 		case type.normal:
 			return [type.fighting].includes(attack)
 			break;
 		case type.poison:
-			return [type.ground,type.psychic].includes(attack)
+			return [type.ground, type.psychic].includes(attack)
 			break;
 		case type.dragon:
-			return [type.ice,type.dragon].includes(attack)
+			return [type.ice, type.dragon].includes(attack)
 			break;
 		case type.electric:
 			return [type.ground].includes(attack)
 			break;
 		case type.dark:
-			return [type.fighting,type.bug].includes(attack)
+			return [type.fighting, type.bug].includes(attack)
 			break;
 		case type.psychic:
-			return [type.bug,type.ghost,type.dark].includes(attack)
+			return [type.bug, type.ghost, type.dark].includes(attack)
 			break;
 		case type.flying:
-			return [type.rock,type.electric,type.ice].includes(attack)
+			return [type.rock, type.electric, type.ice].includes(attack)
 			break;
 		case type.grass:
-			return [type.flying,type.poison,type.bug,type.fire,type.ice].includes(attack)
+			return [type.flying, type.poison, type.bug, type.fire, type.ice].includes(attack)
 			break;
 	}
 }
-function defenceIsStrong(defend,attack){//checks type matchups
-	switch(defend){
+
+//checks type matchups
+function defenceIsStrong(defend, attack) {
+	switch (defend) {
 		case type.fire:
-			return [type.bug,type.steel,type.fire,type.grass,type.ice].includes(attack)
+			return [type.bug, type.steel, type.fire, type.grass, type.ice].includes(attack)
 			break;
 		case type.water:
-			return [type.steel,type.fire,type.ice,type.water].includes(attack)
+			return [type.steel, type.fire, type.ice, type.water].includes(attack)
 			break;
 		case type.rock:
-			return [type.normal,type.flying,type.poison,type.fire].includes(attack)
+			return [type.normal, type.flying, type.poison, type.fire].includes(attack)
 			break;
 		case type.fighting:
-			return [type.rock,type.bug,type.dark].includes(attack)
+			return [type.rock, type.bug, type.dark].includes(attack)
 			break;
 		case type.ground:
-			return [type.poison,type.rock].includes(attack)
+			return [type.poison, type.rock].includes(attack)
 			break;
 		case type.ice:
 			return [type.ice].includes(attack)
 			break;
 		case type.bug:
-			return [type.fighting,type.grass].includes(attack)
+			return [type.fighting, type.grass].includes(attack)
 			break;
 		case type.ghost:
-			return [type.normal,type.fighting,type.poison,type.bug].includes(attack)
+			return [type.normal, type.fighting, type.poison, type.bug].includes(attack)
 			break;
 		case type.steel:
-			return [type.normal,type.flying,type.rock,type.bug,type.steel,type.grass,type.psychic,type.ice,type.dragon,].includes(attack)
+			return [type.normal, type.flying, type.rock, type.bug, type.steel, type.grass, type.psychic, type.ice, type.dragon, ].includes(attack)
 			break;
 		case type.normal:
 			return [type.ghost].includes(attack)
 			break;
 		case type.poison:
-			return [type.fighting,type.poison,type.grass].includes(attack)
+			return [type.fighting, type.poison, type.grass].includes(attack)
 			break;
 		case type.dragon:
-			return [type.fire,type.water,type.grass,type.electric].includes(attack)
+			return [type.fire, type.water, type.grass, type.electric].includes(attack)
 			break;
 		case type.electric:
-			return [type.flying,type.steel,type.electric].includes(attack)
+			return [type.flying, type.steel, type.electric].includes(attack)
 			break;
 		case type.dark:
-			return [type.ghost,type.psychic,type.dark].includes(attack)
+			return [type.ghost, type.psychic, type.dark].includes(attack)
 			break;
 		case type.psychic:
-			return [type.fighting,type.psychic].includes(attack)
+			return [type.fighting, type.psychic].includes(attack)
 			break;
 		case type.flying:
-			return [type.ground,type.bug,type.grass].includes(attack)
+			return [type.ground, type.bug, type.grass].includes(attack)
 			break;
 		case type.grass:
-			return [type.ground,type.water,type.grass,type.electric].includes(attack)
+			return [type.ground, type.water, type.grass, type.electric].includes(attack)
 			break;
 	}
-	
+
 }
-finalBossTeam = [new pikachu,new metang, new dustox]
-for(x=0;x<finalBossTeam.length;x++){
-		finalBossTeam[x].levelUp(25)//levels all the final boss' monsters to 25
-	}
+//final boss' monsters
+finalBossTeam = [new pikachu, new metang, new dustox]
+
+//levels all the final boss' monsters to 25
+for (x = 0; x < finalBossTeam.length; x++) {
+	finalBossTeam[x].levelUp(25)
+}
+
+//if the player is currently battling an npc
 npcBattle = false
-function events(){
-	if (finalBoss.ready && playerYTile == 1 && playerXTile == 6 && currentLevel == finalLevel){
+
+function events() {
+
+	//if the player has beaten all the gyms and is standing next to the final boss
+	if (finalBoss.ready && playerYTile == 1 && playerXTile == 6 && currentLevel == finalLevel) {
 		playerCanMove = false
-		
-		if(!finalBoss.done[0]){
-			eventMessage("Well done, you have beaten every gym.", "Now let's see if you are worthy of the title","of champion.")
-			if (!(zDown || xDown || cDown || vDown)){
+
+		//first stage of the event
+		if (!finalBoss.done[0]) {
+			eventMessage("Well done, you have beaten every gym.", "Now let's see if you are worthy of the title", "of champion.")
+			if (!(zDown || xDown || cDown || vDown)) {
 				menuReady = true
 			}
-			if ((zDown || xDown || cDown || vDown) && menuReady){
+			if ((zDown || xDown || cDown || vDown) && menuReady) {
+
+				//this stage of the event is finished
 				finalBoss.done[0] = true
+
 				menuReady = false
 			}
 		}
-		if (!(zDown||xDown||cDown||vDown)){
+		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
-		if (menuReady && finalBoss.done[0] && !finalBoss.done[1]){
+
+		//second stage of the event
+		if (menuReady && finalBoss.done[0] && !finalBoss.done[1]) {
 			npcBattle = true
 			canCapture = false
 			enemyMonsters = finalBossTeam
-			if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
+			if (!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])) {
+
+				//this stage of the event is finished
 				finalBoss.done[1] = true
 			}
 		}
-		if(finalBoss.done[1]){
-			LoadLevel(playerXTile,playerYTile)
+
+		//final stage of the event
+		if (finalBoss.done[1]) {
+			LoadLevel(playerXTile, playerYTile)
 			eventRender()
+
+			//game over
 			eventMessage("Well done, you have proven yourself to be", "the strongest trainer in the world!")
 		}
 	}
-	if(gymsBeaten == numberOfGyms){
+
+	//final boss can only be triggered once all the gyms have been beaten
+	if (gymsBeaten == numberOfGyms) {
 		finalBoss.ready = true
 	}
-	if (gym0Event.ready){
+
+	//displays a message when the player beats the first gym, increments the gymsBeaten variable and disables the gym
+	if (gym0Event.ready) {
 		eventRender()
+
+		//displays congratulations message
 		eventMessage("Well done, you have beaten the first", "gym! If you beat all the others you", "can become the champion.")
-		
-		if (!(zDown || xDown || cDown || vDown)){
+
+		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
-		if ((zDown || xDown || cDown || vDown) && menuReady){
+		if ((zDown || xDown || cDown || vDown) && menuReady) {
+			//increments gymsBeaten
 			gymsBeaten++
 			menuReady = false
 			playerCanMove = true
+
+			//disables the gym
 			gym0Event.ready = false
 		}
-		
+
 	}
-	if (gym1Event.ready){
+
+	//exactly the same thing for the second gym
+	if (gym1Event.ready) {
 		eventRender()
 		eventMessage("Wow, that's 2 gyms beaten now!")
-		
-		if (!(zDown || xDown || cDown || vDown)){
+
+		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
-		if ((zDown || xDown || cDown || vDown) && menuReady){
+		if ((zDown || xDown || cDown || vDown) && menuReady) {
 			gymsBeaten++
 			menuReady = false
 			playerCanMove = true
 			gym1Event.ready = false
 		}
-		
+
 	}
-	for (i=0;i<=npcs.length - 1;i++){
-		
-			if (npcs[i]["map"] == currentLevel){
-				
-				if((distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7))<23 && npcs[i]["ready"] && !npcBattle){
-					
-					playerCanMove = false
-					
-					displayMessage("NPC battle!", null)
-					
-					if(menuReady && (zDown||xDown||cDown||vDown)){
-						menuReady = false	
-						npcBattle = true
-						
-					}
-				}
-				if (!(zDown||xDown||cDown||vDown)){
-						menuReady = true
-					}
-				if(npcs[i].ready && npcBattle && menuReady && distanceTo(playerYTile * 16 + 7,(npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(npcs[i]["x"]-1)*16 + 7)<23 ){
-					enemyMonsters = npcs[i]["team"]
-					canCapture = false
-					
-					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
-						playerCanMove = true
-						npcBattle = false
-						if (battleWon2 == "player"){
-							npcs[i]["ready"] = false
-						}
-						for(y=0;y<npcs[i]["team"].length;y++){
-							npcs[i]["team"][y].levelUp(npcs[i].level)
-						}
-						canvas.height = currentLevelRows*16
-						canvas.width = currentLevelCols*16
-					}
+
+	//iterates through every npc in the game
+	for (i = 0; i <= npcs.length - 1; i++) {
+
+		//if the player is on the same map as the npc
+		if (npcs[i]["map"] == currentLevel) {
+
+			//if the player is within a 1 tile radius of the npc, the npc hasn't already been beaten and the player isn't currently battling an npc
+			if ((distanceTo(playerYTile * 16 + 7, (npcs[i]["y"] - 1) * 16 + 7, playerXTile * 16 + 7, (npcs[i]["x"] - 1) * 16 + 7)) < 23 && npcs[i]["ready"] && !npcBattle) {
+
+				playerCanMove = false
+
+				displayMessage("NPC battle!", null)
+
+				if (menuReady && (zDown || xDown || cDown || vDown)) {
+					menuReady = false
+					npcBattle = true
+
 				}
 			}
-		
+			if (!(zDown || xDown || cDown || vDown)) {
+				menuReady = true
+			}
+			if (npcs[i].ready && npcBattle && menuReady && distanceTo(playerYTile * 16 + 7, (npcs[i]["y"] - 1) * 16 + 7, playerXTile * 16 + 7, (npcs[i]["x"] - 1) * 16 + 7) < 23) {
+				enemyMonsters = npcs[i]["team"]
+				canCapture = false
+
+				if (!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])) {
+					playerCanMove = true
+					npcBattle = false
+
+					//if the player won the battle
+					if (battleWon2 == "player") {
+
+						//disable the npc
+						npcs[i]["ready"] = false
+					}
+					//reset the npcs monsters for the next battle
+					for (y = 0; y < npcs[i]["team"].length; y++) {
+						npcs[i]["team"][y].levelUp(npcs[i].level)
+					}
+					canvas.height = currentLevelRows * 16
+					canvas.width = currentLevelCols * 16
+				}
+			}
 		}
-	if (outsideGym.ready && currentLevel == maps[2]){
-		if (!outsideGym.running){
+
+	}
+
+	//when the player's friend tells them about the gyms
+	if (outsideGym.ready && currentLevel == maps[2]) {
+		if (!outsideGym.running) {
+
+			//sets the friend coordinates to the door of the gym
 			friendXPos = 8 * 16
 			friendYPos = 6 * 16
+
 			playerCanMove = false
+
+			//event is now running
 			outsideGym.running = true
+
 			menuReady = false
-		}
-		else{
-			if (!outsideGym.done[0]){
+		} else {
+			if (!outsideGym.done[0]) {
 				eventRender()
-		
+
 				context.drawImage(friendSprite, friendXPos, friendYPos);
-		
+
 				eventMessage("Hey, over here!")
-				if (!(zDown || xDown || cDown || vDown)){
+				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
-				if ((zDown || xDown || cDown || vDown) && menuReady){
+				if ((zDown || xDown || cDown || vDown) && menuReady) {
+
+					//this stage of the event is done
 					outsideGym.done[0] = true
+
 					menuReady = false
 				}
 			}
-			if(outsideGym.done[0] && !outsideGym.done[1]){
-				if(Math.floor(friendXPos / 16) != 4){
-				eventRender();
-				context.drawImage(friendSprite, friendXPos, friendYPos);
-				friendXPos--;
-				
+			if (outsideGym.done[0] && !outsideGym.done[1]) {
+				if (Math.floor(friendXPos / 16) != 4) {
+					eventRender();
+					context.drawImage(friendSprite, friendXPos, friendYPos);
+
+					//moves the friend left until they are at x coordinate 4
+					friendXPos--;
+
+				} else {
+
+					//this stage of the event is done
+					outsideGym.done[1] = true
+				}
 			}
-			else{
-				outsideGym.done[1] = true
+
+			//if the previous stage is done and the current stage isn't
+			if (outsideGym.done[1] && !outsideGym.done[2]) {
+				if (Math.floor(friendYPos / 16) != 16) {
+					eventRender();
+					context.drawImage(friendSprite, friendXPos, friendYPos);
+
+					//moves the friend down until they are at y coordinate 16
+					friendYPos++;
+
+				} else {
+					//this stage of the event is done
+					outsideGym.done[2] = true
+				}
 			}
-			}
-			if(outsideGym.done[1] && !outsideGym.done[2]){
-				if(Math.floor(friendYPos / 16) != 16){
-				eventRender();
-				context.drawImage(friendSprite, friendXPos, friendYPos);
-				friendYPos++;
-			
-			}
-			else{
-				outsideGym.done[2] = true
-			}
-			}
-			if (outsideGym.done[2] && !outsideGym.done[3]){
+
+			//if the previous stage is done and the current stage isn't
+			if (outsideGym.done[2] && !outsideGym.done[3]) {
 				eventRender()
 				context.drawImage(friendSprite, friendXPos, friendYPos);
-				eventMessage("I just beat the gym, it wasn't even that hard.","I'm going to beat every gym and become", "the best trainer in the world, just you wait!")
-				if (!(zDown || xDown || cDown || vDown)){
+				eventMessage("I just beat the gym, it wasn't even that hard.", "I'm going to beat every gym and become", "the best trainer in the world, just you wait!")
+				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
-				if ((zDown || xDown || cDown || vDown) && menuReady){
+				if ((zDown || xDown || cDown || vDown) && menuReady) {
+
+					//this stage of the event is done
 					outsideGym.done[3] = true
 					menuReady = false
 				}
 			}
-			if (outsideGym.done[3] && !outsideGym.done[4]){
-				if(Math.floor(friendYPos / 16) != 0){
+
+			//if the previous stage is done and the current stage isn't
+			if (outsideGym.done[3] && !outsideGym.done[4]) {
+				if (Math.floor(friendYPos / 16) != 0) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
+
+					//moves the friend up until they are at y coordinate 0
 					friendYPos--;
-				}
-				else{
+				} else {
+					//event is over
 					playerCanMove = true
 					outsideGym.running = false
 					outsideGym.ready = false
 				}
 			}
 		}
-		
+
 	}
-	if (firstCapture.ready && currentLevel == town0){
-		if (!firstCapture.running){
+	if (firstCapture.ready && currentLevel == town0) {
+		if (!firstCapture.running) {
 			playerCanMove = false
 			eventRender()
+
+			//places the friend just outside the house
 			friendXTile = 4
 			friendYTile = 15
 			friendXPos = friendXTile * 16
 			friendYPos = friendYTile * 16
+
 			context.drawImage(friendSprite, friendXPos, friendYPos);
-			
+
 			firstCapture.running = true;
 			tutorialCapture = true
 		}
-		else{
-			if(Math.floor(friendXPos / 16) != 7){
+
+		//if firstCapture is running
+		else {
+			if (Math.floor(friendXPos / 16) != 7) {
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
+
+				//moves the player right until they are at x coordinate 7
 				friendXPos++;
-			}
-			else{
+			} else {
+				//this stage of the event is done
 				firstCapture.done[0] = true
 			}
-			if(firstCapture.done[0] && !firstCapture.done[1])
-				if(Math.floor(friendYPos / 16) != 7){
-				eventRender();
-				context.drawImage(friendSprite, friendXPos, friendYPos);
-				friendYPos--;
-			}
-			else{
-				firstCapture.done[1] = true
-			}
-			if(firstCapture.done[1] && !firstCapture.done[2]){
-				eventMessage("Here, I'll show you how to","capture monsters.")
-				if (zDown || xDown || cDown || vDown){
-					menuReady = false
-					firstCapture.done[2] = true
-					canCapture = true
-					enemyMonsters = [wildMonsters[levelIndex][0]]
-					enemyMonsters[0].levelUp(levelDifficulty[levelIndex])
-				}
-			}
-			if (firstCapture.done[2] && !firstCapture.done[3]){
-				
-				if(!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])){
-					firstCapture["done"][3] = true
-					menuReady = false
-					canvas.height = currentLevelRows*16
-					canvas.width = currentLevelCols*16
-				}
-			}
-			if(firstCapture.done[3] && !firstCapture.done[4]){
-				eventRender()
-				eventMessage("Well done, it's best to lower a","monster's HP or give it a status ","effect before trying to capture it.")
-				if (!(zDown || xDown || cDown || vDown)){
-					menuReady = true
-				}
-				if ((zDown || xDown || cDown || vDown) && menuReady){
-					firstCapture.done[4] = true
-					menuReady = false
-				}
-			}
-			if(firstCapture.done[4] && !firstCapture.done[5]){
-				eventRender()
-				eventMessage("OK, I'm off to the next town to","challenge the gym.","Here's some capsules to get you started.")
-				context.fillText("",5, canvas.height - 2)
-				if (!(zDown || xDown || cDown || vDown)){
-					menuReady = true
-				}
-				if ((zDown || xDown || cDown || vDown) && menuReady){
-					firstCapture.done[5] = true
-				}
-			}
-			if(firstCapture.done[5] && !firstCapture.done[6]){
-				if(Math.floor(friendYPos / 16) != 0){
+
+			//if the previous stage is done and the current stage isn't
+			if (firstCapture.done[0] && !firstCapture.done[1])
+				if (Math.floor(friendYPos / 16) != 7) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
 					friendYPos--;
 				}
-				else{
+			else {
+				//this stage of the event is done
+				firstCapture.done[1] = true
+			}
+
+			//if the previous stage is done and the current stage isn't
+			if (firstCapture.done[1] && !firstCapture.done[2]) {
+				eventMessage("Here, I'll show you how to", "capture monsters.")
+				if (zDown || xDown || cDown || vDown) {
+					menuReady = false
+
+					//this stage of the event is done
+					firstCapture.done[2] = true
+
+					canCapture = true
+
+					//sets the enemy monster to a goldeen
+					enemyMonsters = [wildMonsters[levelIndex][0]]
+
+					//levels the goldeen up to the correct difficulty for this map
+					enemyMonsters[0].levelUp(levelDifficulty[levelIndex])
+				}
+			}
+
+			//if the previous stage is done and the current stage isn't
+			if (firstCapture.done[2] && !firstCapture.done[3]) {
+				//load battle
+				if (!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])) {
+
+					//this stage of the event is done
+					firstCapture["done"][3] = true
+
+					menuReady = false
+					canvas.height = currentLevelRows * 16
+					canvas.width = currentLevelCols * 16
+				}
+			}
+
+			//if the previous stage is done and the current stage isn't
+			if (firstCapture.done[3] && !firstCapture.done[4]) {
+				eventRender()
+				eventMessage("Well done, it's best to lower a", "monster's HP or give it a status ", "effect before trying to capture it.")
+				if (!(zDown || xDown || cDown || vDown)) {
+					menuReady = true
+				}
+				if ((zDown || xDown || cDown || vDown) && menuReady) {
+
+					//this stage of the event is done
+					firstCapture.done[4] = true
+
+					menuReady = false
+				}
+			}
+
+			//if the previous stage is done and the current stage isn't
+			if (firstCapture.done[4] && !firstCapture.done[5]) {
+				eventRender()
+				eventMessage("OK, I'm off to the next town to", "challenge the gym.", "Here's some capsules to get you started.")
+				context.fillText("", 5, canvas.height - 2)
+				if (!(zDown || xDown || cDown || vDown)) {
+					menuReady = true
+				}
+				if ((zDown || xDown || cDown || vDown) && menuReady) {
+					firstCapture.done[5] = true
+				}
+			}
+			if (firstCapture.done[5] && !firstCapture.done[6]) {
+				if (Math.floor(friendYPos / 16) != 0) {
+					eventRender();
+					context.drawImage(friendSprite, friendXPos, friendYPos);
+					friendYPos--;
+				} else {
 					playerCanMove = true
 					tutorialCapture = false
 					firstCapture.running = false
@@ -448,257 +566,287 @@ function events(){
 			}
 		}
 	}
-	if (firstBattle.ready && currentLevel == house0){	//introduction battle
-		
-		if (!firstBattle.running){
+
+	//tutorial battle
+	if (firstBattle.ready && currentLevel == house0) {
+
+		if (!firstBattle.running) {
 			playerCanMove = false
+
+			//sets the friend's coordinates to the entrance of the house
 			friendXTile = 4
 			friendYTile = 8
 			friendXPos = friendXTile * 16
 			friendYPos = friendYTile * 16
+
 			firstBattle.running = true;
 			tutorial = true
-		}
-		else{
+		} else {
 			friendXTile = Math.round(friendXPos / 16)
 			friendYTile = Math.round(friendYPos / 16)
-			if(Math.floor(friendYPos / 16) != 6 - 1 && !firstBattle.done[0]){
+			if (Math.floor(friendYPos / 16) != 6 - 1 && !firstBattle.done[0]) {
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
+
+				//moves the friend up until they are at y coordinate 5
 				friendYPos -= 1;
-			
-			}
-			else{
+
+			} else {
+
+				//this stage of the event is done
 				firstBattle.done[0] = true
 			}
-			
 
-			if(Math.floor(friendXPos / 16) != 2 - 1 	&& !firstBattle.done[1] && 	firstBattle.done[0]){
+
+			if (Math.floor(friendXPos / 16) != 2 - 1 && !firstBattle.done[1] && firstBattle.done[0]) {
 
 				eventRender();
 				context.drawImage(friendSprite, friendXPos, friendYPos);
+
+				//moves the friend left until their x coordinate is 1
 				friendXPos -= 1;
-			
-			}
-			else{
-				if(firstBattle.done[0]){ 
+
+			} else {
+				if (firstBattle.done[0]) {
 					firstBattle.done[1] = true
 				}
 			}
-			
-			if (firstBattle.done[1] && 	firstBattle.done[0] && !firstBattle.done[2]){
-					eventMessage("Let's see who's stronger")
-					if (zDown || xDown || cDown || vDown){
-						menuReady = false
-						firstBattle.done[2] = true
-					}
+
+			if (firstBattle.done[1] && firstBattle.done[0] && !firstBattle.done[2]) {
+				eventMessage("Let's see who's stronger")
+				if (zDown || xDown || cDown || vDown) {
+					menuReady = false
+					firstBattle.done[2] = true
+				}
 			}
-			if (firstBattle.done[0] && firstBattle.done[1] && firstBattle.done[2] && !firstBattle.done[3]){
+			if (firstBattle.done[0] && firstBattle.done[1] && firstBattle.done[2] && !firstBattle.done[3]) {
 				canCapture = false
-				if(!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])){
+				if (!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])) {
 					firstBattle["done"][3] = true
 					menuReady = false
 				}
 			}
-			if (firstBattle.done[0] && firstBattle.done[1] && firstBattle.done[2] && firstBattle.done[3] && !firstBattle.done[4]){
+			if (firstBattle.done[0] && firstBattle.done[1] && firstBattle.done[2] && firstBattle.done[3] && !firstBattle.done[4]) {
 				LoadLevel()
 				eventRender()
-				eventMessage("Wow you won!","I'm going to improve my team!")
-				if (!(zDown||xDown||cDown||vDown)){
+				eventMessage("Wow you won!", "I'm going to improve my team!")
+				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
-				if ((zDown||xDown||cDown||vDown) && menuReady){
+				if ((zDown || xDown || cDown || vDown) && menuReady) {
 					firstBattle["done"][4] = true
 				}
-				
+
 			}
-			if(firstBattle.done[4] && !firstBattle.done[5]){
-				if(Math.floor(friendXPos / 16) != 4 ){
+			if (firstBattle.done[4] && !firstBattle.done[5]) {
+				if (Math.floor(friendXPos / 16) != 4) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
 					friendXPos++
-				}
-				else{
+				} else {
 					firstBattle.done[5] = true
 				}
 			}
-			if(firstBattle.done[5]){
-				if(Math.floor(friendYPos / 16) != 8 ){
+			if (firstBattle.done[5]) {
+				if (Math.floor(friendYPos / 16) != 8) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
 					friendYPos++
-				}
-				else{
+				} else {
 					firstBattle.ready = false
 					firstBattle.running = false
 					playerCanMove = true
 					tutorial = false
 				}
 			}
-			
-			
+
+
 		}
-		
-		
+
+
 	} //end of introduction battle
-	
-	if(currentLevel == maps[3] && healing["running"] == false){		//hospital
-		
-		
-		if(playerXTile == 5 && playerYTile == 2){
+
+	//hospital
+	if (currentLevel == maps[3] && healing["running"] == false) {
+
+
+		if (playerXTile == 5 && playerYTile == 2) {
 			eventRender()
 			healing["running"] = true
 			menuReady = false
 		}
 	}
-	if(healing["running"]){
+	if (healing["running"]) {
 		playerCanMove = false
-		displayMessage("Let me heal your monsters","for you.", null)
-		currentMonsters.forEach(function(monster){
+		displayMessage("Let me heal your monsters", "for you.", null)
+		currentMonsters.forEach(function(monster) {
 			monster["hp"] = monster.maxhp
 			monster["effect"] = null
 		})
-				
-		if (!(zDown||xDown||cDown||vDown)){
+
+		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
-		if(menuReady && (zDown||xDown||cDown||vDown)){
+		if (menuReady && (zDown || xDown || cDown || vDown)) {
 			playerCanMove = true
 			healing["running"] = false
 			playerYPos = 3 * 16
 			menuReady = true
 		}
-	
 
-	}	//end of hospital
+
+	}
 	
-	if(currentLevel == maps[4] && shopping["running"] == false){		//shop
-		
-		
-		if(playerXTile == 2 && playerYTile == 2){
+	//shop
+	if (currentLevel == maps[4] && shopping["running"] == false) {
+
+		//if the player is standing on the tile by the desk
+		if (playerXTile == 2 && playerYTile == 2) {
 			shopping["running"] = true
 			menuReady = false
 		}
 	}
-	if(shopping["running"]){
+	if (shopping["running"]) {
 		playerCanMove = false
-		if(LoadShop()){
+		if (LoadShop()) {
 			playerCanMove = true
 			LoadLevel()
 			shopping["running"] = false
 		}
-	
 
-	}	//end of shop
+
+	} //end of shop
 }
 currentSelection = 0
-function LoadShop(){
+
+function LoadShop() {
 	canvas.width = 200
 	canvas.height = 300
 	context.strokeStyle = "#000000"
 	context.fillStyle = "#000000"
-	context.rect(0,0,canvas.width,canvas.height)
+	context.rect(0, 0, canvas.width, canvas.height)
 	context.stroke()
-	context.fillText("£"+playerMoney,160,10)
-	x = 0
+	
+	//draws the players money at the top right
+	context.fillText("£" + playerMoney, 160, 10)
+	
+	//first item is drawn at x=10 y=20
 	xOffset = 10
 	yOffset = 20
 	newRow = true
 	
-	for(x=0;x<shopItems.length;x++){
-		if(x==currentSelection){
-			context.fillStyle="#0000FF"
+	for (x = 0; x < shopItems.length; x++) {
+		
+		//draws the currently selected item in blue, the rest in black
+		if (x == currentSelection) {
+			context.fillStyle = "#0000FF"
+		} else {
+			context.fillStyle = "#000000"
 		}
-		else{
-			context.fillStyle="#000000"
-		}
-		context.rect(xOffset,yOffset,80,40)
+		
+		
+		context.rect(xOffset, yOffset, 80, 40)
 		context.stroke()
-		context.fillText(shopItems[x]["name"],xOffset+5,yOffset+10)
-		context.fillText("Strength: "+shopItems[x]["strength"],xOffset+5,yOffset+20)
-		context.fillText("Price: "+"5",xOffset+5,yOffset+30)
+		context.fillText(shopItems[x]["name"], xOffset + 5, yOffset + 10)
+		context.fillText("Strength: " + shopItems[x]["strength"], xOffset + 5, yOffset + 20)
+		context.fillText("Price: " + "5", xOffset + 5, yOffset + 30)
 		xOffset += 100
+		
+		//every other item needs to be drawn on a new line as there are 2 items per line
 		newRow = !newRow
-		if(newRow){
+		if (newRow) {
+			
+			//if a new row is being drawn then x is moved left back to 10 and y is moved down by 50
 			xOffset = 10
 			yOffset += 50
+			
 		}
 	}
-	if((zDown||xDown||cDown||vDown) && menuReady){
-		if (playerMoney >= 5){
+	if ((zDown || xDown || cDown || vDown) && menuReady) {
+		if (playerMoney >= 5) {
 			menuReady = false
-			playerMoney -= 5					//PRICE OF ITEM NEEDS ADDING
+			playerMoney -= 5 //PRICE OF ITEM NEEDS ADDING
+			
+			//adds the bought item to the player's inventory
 			currentItems.push(shopItems[currentSelection])
 		}
 	}
-	if(wDown && menuReady){
+	
+	//changes the selected item based on wasd
+	if (wDown && menuReady) {
 		menuReady = false
 		currentSelection -= 2
-		if(currentSelection < 0){
+		
+		//if the player tries to select an item less than the 1st item
+		//eg the "0th" or "
+		if (currentSelection < 0) {
 			currentSelection = 0
 		}
 	}
-	if(aDown && menuReady){
+	if (aDown && menuReady) {
 		menuReady = false
 		currentSelection -= 1
-		if(currentSelection < 0){
+		if (currentSelection < 0) {
 			currentSelection = 0
 		}
 	}
-	if(sDown && menuReady){
+	if (sDown && menuReady) {
 		menuReady = false
 		currentSelection += 2
-		if(currentSelection > x-1){
-			currentSelection = x-1
+		
+		//if the player tries to go past the x number of items in the shop
+		//e.g. if there are 4 items in the shop and the player tried to select the 5th
+		if (currentSelection > x - 1) {
+			currentSelection = x - 1
 		}
 	}
-	if(dDown && menuReady){
+	if (dDown && menuReady) {
 		menuReady = false
 		currentSelection += 1
-		if(currentSelection > x-1){
-			currentSelection = x-1
+		
+		//if the player tries to go past the x number of items in the shop
+		//e.g. if there are 4 items in the shop and the player tried to select the 5th
+		if (currentSelection > x - 1) {
+			currentSelection = x - 1
 		}
 	}
-	if (!(wDown||aDown||sDown||dDown||zDown||xDown||cDown||vDown)){
-				menuReady = true
-		}
-	if(escDown && menuReady){
+	if (!(wDown || aDown || sDown || dDown || zDown || xDown || cDown || vDown)) {
+		menuReady = true
+	}
+	if (escDown && menuReady) {
 		return true
 	}
 }
 
 function eventRender() {
-			for (y = 0; y < currentLevelRows; y++) {
-				for (x = 0; x < currentLevelCols; x++) {
-						context.drawImage(sprites[currentLevel.background], x*16, y*16)
-				}
+	for (y = 0; y < currentLevelRows; y++) {
+		for (x = 0; x < currentLevelCols; x++) {
+			context.drawImage(sprites[currentLevel.background], x * 16, y * 16)
+		}
+	}
+	for (y = 0; y < currentLevelRows; y++) {
+		for (x = 0; x < currentLevelCols; x++) {
+			if (currentLevel.tiles[y][x].constructor != Array) {
+				context.drawImage(sprites[currentLevel.tiles[y][x]], x * 16, y * 16)
+			} else {
+				context.drawImage(sprites[currentLevel.tiles[y][x][1]], x * 16, y * 16)
+				context.drawImage(sprites[currentLevel.tiles[y][x][0]], x * 16, y * 16)
 			}
-			for (y = 0; y < currentLevelRows; y++) {
-				for (x = 0; x < currentLevelCols; x++) {
-					if (currentLevel.tiles[y][x].constructor != Array){
-						context.drawImage(sprites[currentLevel.tiles[y][x]], x*16, y*16)
-					}
-					else{
-						context.drawImage(sprites[currentLevel.tiles[y][x][1]], x*16, y*16)
-						context.drawImage(sprites[currentLevel.tiles[y][x][0]], x*16, y*16)
-					}
-				}
+		}
+	}
+	if (currentLevel.tiles[playerYTile][playerXTile] == 1) {
+		if (currentGrassSprite == longGrass2Sprite) {
+			if (tickCounter % 7 == 0) {
+				currentGrassSprite = longGrass3Sprite
+				context.drawImage(longGrass3Sprite, Math.round((playerXPos) / 16) * 16, Math.round((playerYPos) / 16) * 16)
 			}
-			if (currentLevel.tiles[playerYTile][playerXTile] == 1){
-					if (currentGrassSprite == longGrass2Sprite){
-						if (tickCounter % 7 == 0){
-							currentGrassSprite = longGrass3Sprite
-							context.drawImage(longGrass3Sprite, Math.round((playerXPos) / 16) * 16, Math.round((playerYPos) / 16) * 16)
-						}
-					}
-					else{
-						if (tickCounter % 7 == 0){
-							currentGrassSprite = longGrass2Sprite
-							context.drawImage(longGrass2Sprite, Math.round((playerXPos) / 16) * 16, Math.round((playerYPos) / 16) * 16)
-						}
-					}
-			}	
-			
-			context.drawImage(playerSprite, playerXPos, playerYPos);
-    }
-	
+		} else {
+			if (tickCounter % 7 == 0) {
+				currentGrassSprite = longGrass2Sprite
+				context.drawImage(longGrass2Sprite, Math.round((playerXPos) / 16) * 16, Math.round((playerYPos) / 16) * 16)
+			}
+		}
+	}
+
+	context.drawImage(playerSprite, playerXPos, playerYPos);
+}

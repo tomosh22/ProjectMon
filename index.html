@@ -29,6 +29,14 @@
 			});
 		$("#devTools2").append(devTool)//adding tool to html div for development tools
 		
+		var devTool = $("<button/>")
+			.html("Go to shop")
+			.click(function(){
+				currentLevel = maps[4]
+				levelIndex = 4
+				LoadLevel()
+			});
+		$("#devTools2").append(devTool)
 		
 		
 		var devTool = $("<button/>")
