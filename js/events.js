@@ -449,6 +449,8 @@ function events() {
 		}
 
 	}
+	
+	//when the friend shows the player how to capture monsters
 	if (firstCapture.ready && currentLevel == town0) {
 		if (!firstCapture.running) {
 			playerCanMove = false
@@ -549,6 +551,8 @@ function events() {
 					menuReady = true
 				}
 				if ((zDown || xDown || cDown || vDown) && menuReady) {
+					
+					//this stage of the event is done
 					firstCapture.done[5] = true
 				}
 			}
@@ -556,8 +560,13 @@ function events() {
 				if (Math.floor(friendYPos / 16) != 0) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
+					
+					//moves the friend up until their y coordinate is 0
 					friendYPos--;
+					
 				} else {
+					
+					//end the event
 					playerCanMove = true
 					tutorialCapture = false
 					firstCapture.running = false
@@ -616,13 +625,18 @@ function events() {
 				eventMessage("Let's see who's stronger")
 				if (zDown || xDown || cDown || vDown) {
 					menuReady = false
+					
+					//this stage of the event is done
 					firstBattle.done[2] = true
 				}
 			}
 			if (firstBattle.done[0] && firstBattle.done[1] && firstBattle.done[2] && !firstBattle.done[3]) {
 				canCapture = false
 				if (!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])) {
+					
+					//this stage of the event is done
 					firstBattle["done"][3] = true
+					
 					menuReady = false
 				}
 			}
@@ -634,6 +648,8 @@ function events() {
 					menuReady = true
 				}
 				if ((zDown || xDown || cDown || vDown) && menuReady) {
+					
+					//this stage of the event is done
 					firstBattle["done"][4] = true
 				}
 
@@ -642,8 +658,12 @@ function events() {
 				if (Math.floor(friendXPos / 16) != 4) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
+					
+					//moves the friend right until their x coordinate is 4
 					friendXPos++
 				} else {
+					
+					//this stage of the event is done
 					firstBattle.done[5] = true
 				}
 			}
@@ -651,8 +671,12 @@ function events() {
 				if (Math.floor(friendYPos / 16) != 8) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
+					
+					//moves the friend down until their y coordinate is 8
 					friendYPos++
 				} else {
+					
+					//end the event
 					firstBattle.ready = false
 					firstBattle.running = false
 					playerCanMove = true
@@ -669,7 +693,7 @@ function events() {
 	//hospital
 	if (currentLevel == maps[3] && healing["running"] == false) {
 
-
+		//if the player is on the healing tile
 		if (playerXTile == 5 && playerYTile == 2) {
 			eventRender()
 			healing["running"] = true
@@ -679,18 +703,25 @@ function events() {
 	if (healing["running"]) {
 		playerCanMove = false
 		displayMessage("Let me heal your monsters", "for you.", null)
+		
+		//heal all monsters to max hp and remove all effects
 		currentMonsters.forEach(function(monster) {
 			monster["hp"] = monster.maxhp
 			monster["effect"] = null
 		})
 
+		//if no controls are being pressed
 		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
+		
 		if (menuReady && (zDown || xDown || cDown || vDown)) {
 			playerCanMove = true
 			healing["running"] = false
+			
+			//move the player off the healing tile to avoid an endless loop
 			playerYPos = 3 * 16
+			
 			menuReady = true
 		}
 
@@ -708,6 +739,7 @@ function events() {
 	}
 	if (shopping["running"]) {
 		playerCanMove = false
+		//LoadShop() returns true when the player wants to exit the shop
 		if (LoadShop()) {
 			playerCanMove = true
 			LoadLevel()
@@ -765,7 +797,7 @@ function LoadShop() {
 	if ((zDown || xDown || cDown || vDown) && menuReady) {
 		if (playerMoney >= 5) {
 			menuReady = false
-			playerMoney -= 5 //PRICE OF ITEM NEEDS ADDING
+			playerMoney -= 5
 			
 			//adds the bought item to the player's inventory
 			currentItems.push(shopItems[currentSelection])
@@ -778,14 +810,19 @@ function LoadShop() {
 		currentSelection -= 2
 		
 		//if the player tries to select an item less than the 1st item
-		//eg the "0th" or "
+		//eg the "0th" or "-1st" item then set the selection back to the 1st item
+		//to avoid an undefined error
 		if (currentSelection < 0) {
 			currentSelection = 0
 		}
 	}
+	
 	if (aDown && menuReady) {
 		menuReady = false
 		currentSelection -= 1
+		//if the player tries to select an item less than the 1st item
+		//eg the "0th" or "-1st" item then set the selection back to the 1st item
+		//to avoid an undefined error
 		if (currentSelection < 0) {
 			currentSelection = 0
 		}
@@ -796,6 +833,7 @@ function LoadShop() {
 		
 		//if the player tries to go past the x number of items in the shop
 		//e.g. if there are 4 items in the shop and the player tried to select the 5th
+		//sets the selection back to the last item in the array to avoid an undefined error
 		if (currentSelection > x - 1) {
 			currentSelection = x - 1
 		}
@@ -806,6 +844,7 @@ function LoadShop() {
 		
 		//if the player tries to go past the x number of items in the shop
 		//e.g. if there are 4 items in the shop and the player tried to select the 5th
+		//sets the selection back to the last item in the array to avoid an undefined error
 		if (currentSelection > x - 1) {
 			currentSelection = x - 1
 		}
@@ -834,8 +873,13 @@ function eventRender() {
 			}
 		}
 	}
+	//animates long grass sprite if the player is standing on one
+	//1 is the index for the long grass sprite
 	if (currentLevel.tiles[playerYTile][playerXTile] == 1) {
+		//alternates between slightly different sprites to appear to be moving
 		if (currentGrassSprite == longGrass2Sprite) {
+			//changes every 7/60 of a second
+			//game is run at 60fps so one tick is 1/60 of a second
 			if (tickCounter % 7 == 0) {
 				currentGrassSprite = longGrass3Sprite
 				context.drawImage(longGrass3Sprite, Math.round((playerXPos) / 16) * 16, Math.round((playerYPos) / 16) * 16)
@@ -847,6 +891,6 @@ function eventRender() {
 			}
 		}
 	}
-
+	//draws the player on top of everything
 	context.drawImage(playerSprite, playerXPos, playerYPos);
 }

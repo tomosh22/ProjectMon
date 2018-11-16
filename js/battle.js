@@ -7,7 +7,9 @@ monsterFound = false
 battleWon2 = null
 canRun = true
 xpModifier = 150
-function Tutorial(){//first battle when the friend comes into the spawn house
+
+//first battle when the friend comes into the spawn house
+function Tutorial(){
 	context.fillStyle = "#FF0000"
 	switch (currentBattleMenu){
 		case "main":
@@ -18,8 +20,12 @@ function Tutorial(){//first battle when the friend comes into the spawn house
 		break;
 	}
 }
-function CaptureTutorial(){//second battle when the friends shows the player how to capture monsters
-	context.fillStyle = "#FF0000"//red text
+
+//second battle when the friends shows the player how to capture monsters
+function CaptureTutorial(){
+	
+	//red text
+	context.fillStyle = "#FF0000"
 	switch (currentBattleMenu){
 		case "main":
 			context.fillText("Press X to use an item", 10, 55)
@@ -42,7 +48,9 @@ function LoadBattle(playerMonster, enemyMonster){
 			drawControls();
 			break;
 		case "attack":
-			if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+		
+			//if no controls are being pressed
+			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
 			//Z1 C2 V3 X4
@@ -65,29 +73,51 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "item":
-			drawItems();//draw controls for using items
+		
+			//draw controls for using items
+			drawItems();
 			if(zDown && menuReady && currentItems[itemIndex]){
 				currentBattleMenu = "message"
 				useItem(currentItems[itemIndex],playerMonster)
-				currentItems.splice(itemIndex,1);//remove the used item from inventory
-				itemIndex = 0//reset the menu
+				
+				//remove the used item from inventory
+				currentItems.splice(itemIndex,1);
+				
+				//reset the menu
+				itemIndex = 0
 			}
 			if(xDown && menuReady && currentItems[itemIndex + 1]){
 				currentBattleMenu = "message"
 				useItem(currentItems[itemIndex + 1],playerMonster)
-				currentItems.splice(itemIndex + 1,1);//remove the used item from inventory
-				itemIndex = 0 //reset the menu
+				
+				//remove the used item from inventory
+				currentItems.splice(itemIndex + 1,1);
+				
+				//reset the menu
+				itemIndex = 0 
 			}
-			if(cDown && menuReady && currentItems.length > itemIndex + 2){	//if there are more items to be shown
+			
+			//if there are more items to be shown
+			if(cDown && menuReady && currentItems.length > itemIndex + 2){	
 				menuReady = false
-				itemIndex += 2//load the next 2 items
-				if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+				
+				//load the next 2 items
+				itemIndex += 2
+				
+				//if no controls are being pressed
+				if (!(zDown||xDown||cDown||vDown)){
 					menuReady = true
 				}
 			}
+			
+			//if there are no more items to be shown
 			else{
-				if(cDown && menuReady){//if there are no more items to be shown
-					currentBattleMenu = "main"//go back to main menu
+				if(cDown && menuReady){
+				
+					//go back to main menu
+					currentBattleMenu = "main"
+					
+					//reset the menu
 					itemIndex = 0
 					menuReady = false
 				}
@@ -95,59 +125,98 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 		case "switch":
-			drawSwitch();//draws the controls for monster switching
+		
+			//draws the controls for monster switching
+			drawSwitch();
+			
 			if(zDown && menuReady){
 				currentBattleMenu = "message"
-				Switch(switchIndex)//switch monster
-				switchIndex = 0//reset the menu
+				
+				//switch monster
+				Switch(switchIndex)
+				
+				//reset the menu
+				switchIndex = 0
 			}
 			if(xDown && menuReady){
 				currentBattleMenu = "message"
-				Switch(switchIndex + 1)//switch monster
-				switchIndex = 0//reset the menu
+				
+				//switch monster
+				Switch(switchIndex + 1)
+				
+				//reset the menu
+				switchIndex = 0
 			}
-			if(cDown && menuReady && currentMonsters.length > switchIndex + 2){//if there are more monsters left to be shown	
+			
+			//if there are more monsters left to be shown
+			if(cDown && menuReady && currentMonsters.length > switchIndex + 2){	
 				menuReady = false
-				switchIndex += 2//loads the next 2 monsters
-				if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+				
+				//loads the next 2 monsters
+				switchIndex += 2
+				
+				//if no controls are being pressed
+				if (!(zDown||xDown||cDown||vDown)){
 					menuReady = true
 				}
 			}
+			
+			//if there are no more monsters to show
 			else{
-				if(cDown && menuReady){//if there are no more monsters go back to main menu
+				
+				//if there are no more monsters go back to main menu
+				if(cDown && menuReady){
 					currentBattleMenu = "main"
-					switchIndex = 0//reset the menu
+					
+					//reset the menu
+					switchIndex = 0
 					menuReady = false
 				}
 			}
 			break;
 		case "message":
 			displayMessage(hit,effect)
-			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){//if an enemy monster has been killed
+			
+			//if an enemy monster has been killed
+			if(enemyMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
 
+				//add xp based on the level difference between the 2 monsters
+				//more xp is awarded if the enemy is a higher level than the player
+				currentMonsters[currentMonsterIndex].xp += xpModifier*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)
 				
-				currentMonsters[currentMonsterIndex].xp += xpModifier*(enemyMonsters[enemyMonsterIndex].level/currentMonsters[currentMonsterIndex].level)//add xp based on the level difference between the 2 monsters
-				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){//can't get any higher than level 100
+				//can't get any higher than level 100
+				if(currentMonsters[currentMonsterIndex].xp >= 100 && currentMonsters[currentMonsterIndex].level < 100){
 					currentMonsters[currentMonsterIndex].levelUp(currentMonsters[currentMonsterIndex].level + 1)//if xp has reached the max then level up
-
-					currentMonsters[currentMonsterIndex].xp = 0//reset xp
+					
+					//reset xp
+					currentMonsters[currentMonsterIndex].xp = 0
 				}
 				monsterFound = false
 				menuReady = true
+				
+				//see if the enemy has any more monsters left to fight
 				for(x=0;x<currentMonsters.length;x++){
-					if (enemyMonsters[x] && enemyMonsters[x]["hp"] >= 1 && !monsterFound){//see if the enemy has any more monsters left to fight
+					if (enemyMonsters[x] && enemyMonsters[x]["hp"] >= 1 && !monsterFound){
 						monsterFound = true
-						enemySwitch(x)//switch in the enemy's monster
+						
+						//switch in the enemy's monster if there is one
+						enemySwitch(x)
 					}
 				}
-				if(!monsterFound){//if there are no more enemy monsters then the player wins
+				
+				//if there are no more enemy monsters then the player wins
+				if(!monsterFound){
 					battleWon = "player"
-					currentBattleMenu = "battleWon"//load battle ending sequence
+					
+					//load battle ending sequence
+					currentBattleMenu = "battleWon"
 					menuReady = false
 					break;
 				}
 			}
-			if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+			
+			//if no controls are being pressed
+			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
 			if ((zDown||xDown||cDown||vDown) && menuReady &&!monsterFound){
@@ -167,16 +236,24 @@ function LoadBattle(playerMonster, enemyMonster){
 		case "enemyMessage":
 			displayMessage(hit,effect)
 			monsterFound = false
-			if(playerMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){//if the players monster has been killed
+			
+			//if the players monster has been killed
+			if(playerMonster["hp"] < 1 && menuReady && (zDown||xDown||cDown||vDown)){
 					effect = playerMonster["name"] + " was killed"
 					monsterFound = false
+					
+					//see if the player has any more monsters to fight
 					for(x=0;x<currentMonsters.length;x++){
-						if (currentMonsters[x] && currentMonsters[x]["hp"] >= 1 && !monsterFound){//see if the player has any more monsters to fight
+						if (currentMonsters[x] && currentMonsters[x]["hp"] >= 1 && !monsterFound){
 							monsterFound = true
-							Switch(x)//switch in the next monster
+							
+							//switch in the next monster if there is one
+							Switch(x)
 						}
 					}
-					if(!monsterFound){//if the player has no more monsters then the enemy wins
+					
+					//if the player has no more monsters then the enemy wins
+					if(!monsterFound){
 						battleWon = "enemy"
 						currentBattleMenu = "battleWon"
 						menuReady = false
@@ -184,7 +261,8 @@ function LoadBattle(playerMonster, enemyMonster){
 					}
 				}
 			
-			if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+			//if no controls are being pressed
+			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
 			if ((zDown||xDown||cDown||vDown) && menuReady && !monsterFound){
@@ -200,7 +278,8 @@ function LoadBattle(playerMonster, enemyMonster){
 		case "enemyTurn":
 			if(!enemyMoved && !enemyDied){
 				
-				attack = Math.ceil(Math.random() * 4)//uses a random attack from their 4
+				//uses a random attack from their 4
+				attack = Math.ceil(Math.random() * 4)
 				useAttack(enemyMonster.attacks[attack], enemyMonster, playerMonster)
 				hit = enemyMonster.name + " used " + enemyMonster.attacks[attack].name
 				enemyMoved = true
@@ -208,7 +287,9 @@ function LoadBattle(playerMonster, enemyMonster){
 				currentBattleMenu = "enemyMessage"
 			}
 			else{
-				if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+				
+				//if no controls are being pressed
+				if (!(zDown||xDown||cDown||vDown)){
 					menuReady = true
 				}	
 			if ((zDown||xDown||cDown||vDown) && menuReady){
@@ -217,7 +298,10 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 				}
 			if(enemyDied){
-				enemyDied = false//reset the enemyDied variable for the next monster
+				
+				//reset the enemyDied variable for the next monster
+				enemyDied = false
+				
 				currentBattleMenu = "main"
 			}
 			break;
@@ -230,28 +314,44 @@ function LoadBattle(playerMonster, enemyMonster){
 				playerMoney-=5
 				
 			}
-			battleWon2 = battleWon//need a variable for the event loop to determine if an npc has been beaten
+			
+			//need a variable for the event loop to determine if an npc has been beaten
+			battleWon2 = battleWon
 			if (battleWon == "captured"){
 				displayMessage(enemyMonsters[enemyMonsterIndex].name + " was captured")
 			}
-			if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+			
+			//if no controls are being pressed
+			if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 			}
 			if ((zDown||xDown||cDown||vDown) && menuReady){
+				
+				//reset battle variables
 				currentBattleMenu = "main"
-				enemyMonsterIndex = 0//reset battle variables
+				enemyMonsterIndex = 0
 				menuReady = false
-				if (battleWon == "enemy"){//player must be sent to the hospital to regain hp
-					if([7,8].includes(levelIndex)){//if the player is in a gym
-						outsideLocation = maps[outsideIndex].spawnPoint//set the spawn point to outside the gym
+				
+				if (battleWon == "enemy"){
+					//player must be sent to the hospital to regain hp
+					
+					//if the player is in a gym
+					if([7,8].includes(levelIndex)){
+						
+						//set the spawn point to outside the gym
+						outsideLocation = maps[outsideIndex].spawnPoint
 					}
 					else{
 						outsideLocation[0] = currentLevel.spawnPoint[1]
 						outsideLocation[1] = currentLevel.spawnPoint[0]
 					}
-					currentLevel = maps[3]//go to the hospital
+					
+					//go to the hospital
+					currentLevel = maps[3]
 					levelIndex = 3
-					LoadLevel(5,2)//places the user on the healing spot in the hospital so they can't go outside without healing
+					
+					//places the user on the healing spot in the hospital so they can't go outside without healing
+					LoadLevel(5,2)
 					battleWon = null
 					
 				}
@@ -261,10 +361,16 @@ function LoadBattle(playerMonster, enemyMonster){
 			break;
 		case "run":
 			if (canCapture){
-				chance = currentMonsters[currentMonsterIndex].speed / enemyMonsters[enemyMonsterIndex].speed //higher chance of escaping if player is faster
-				if (runSuccess(chance) && canRun){//can't run from npc battles
+				
+				//higher chance of escaping if player is faster
+				chance = currentMonsters[currentMonsterIndex].speed / enemyMonsters[enemyMonsterIndex].speed 
+				
+				//can't run from npc battles
+				if (runSuccess(chance) && canRun){
+				
+					//reset battle variables
 					battleWon = null
-					currentBattleMenu = "main"//reset battle variables
+					currentBattleMenu = "main"
 					displayMessage("You ran away")
 					enemyMonsterIndex = 0
 					currentMonsterIndex = 0
@@ -273,7 +379,9 @@ function LoadBattle(playerMonster, enemyMonster){
 				else{
 					displayMessage("You didn't manage to escape")
 					canRun = false
-					if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+					
+					//if no controls are being pressed
+					if (!(zDown||xDown||cDown||vDown)){
 						menuReady = true
 					}
 					if ((zDown||xDown||cDown||vDown) && menuReady){
@@ -286,7 +394,9 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			else{
 				displayMessage("You can't run from this battle")
-				if (!(zDown||xDown||cDown||vDown)){//if no controls are being pressed
+				
+				//if no controls are being pressed
+				if (!(zDown||xDown||cDown||vDown)){
 					menuReady = true
 				}
 				if ((zDown||xDown||cDown||vDown) && menuReady){
@@ -296,7 +406,9 @@ function LoadBattle(playerMonster, enemyMonster){
 			}
 			break;
 	}
-	if (!(zDown||xDown||cDown||vDown)){//workaround for the cross tick button holding problem
+	
+	//workaround for the cross tick button holding problem
+	if (!(zDown||xDown||cDown||vDown)){
 				menuReady = true
 	}
 	if (menuReady){
@@ -322,12 +434,16 @@ function LoadBattle(playerMonster, enemyMonster){
 		}
 	}
 	if (tutorial){
-		Tutorial()//for the introduction battle
+		//for the introduction battle
+		Tutorial()
 	}
 	if(tutorialCapture){
-		CaptureTutorial() //for when the user is shown how to capture monsters
+		//for when the user is shown how to capture monsters
+		CaptureTutorial()
 	}
-	return true//if the battle is to carry on
+	
+	//if the battle is to carry on
+	return true
 }
 function runSuccess(chance){
 	if (chance > 1.2){
@@ -361,9 +477,13 @@ function displayMessage(hit,effect){
 }
 function useAttack(attack, user, target){
 	menuReady = false
-	if (user["effect"] != null){//if the user's monster has a status effect
+	
+	//if the user's monster has a status effect
+	if (user["effect"] != null){
 		if (Math.random() < 0.1){
-			user["effect"] = null//1/10 chance of removing effect
+			
+			//1/10 chance of removing effect
+			user["effect"] = null
 		}
 		if (user["effect"] == "frozen"){
 			console.log("frozen")
@@ -372,19 +492,27 @@ function useAttack(attack, user, target){
 	effect = ""
 	damage = Math.round(attack["damage"] * user["attack"] / target["defense"])
 	if (attackIsStrong(target["type"],attack["type"])){
-		damage *= 2//double damage for a good type matchup
+		
+		//double damage for a good type matchup
+		damage *= 2
 		effect="Attack is strong"
 	}
 	else{
 		if (defenceIsStrong(target["type"],attack["type"])){
-			damage *= 0.5//half damage for a bad type matchup
+			
+			//half damage for a bad type matchup
+			damage *= 0.5
 			effect="Defense is strong"
 		}
 	}
 	hit = ""
 	chance = Math.random()
-	if (chance < attack["accuracy"] / 100) {//accuracy of an attack is its % chance of hitting
-		target["hp"] -= Math.round(damage)//deals damage
+	
+	//accuracy of an attack is its % chance of hitting
+	if (chance < attack["accuracy"] / 100) {
+		
+		//deals damage
+		target["hp"] -= Math.round(damage)
 		hit = "Attack landed"
 	}
 	else{
@@ -393,15 +521,18 @@ function useAttack(attack, user, target){
 	if (target["hp"] <= 0){
 		target["hp"] = 0
 	}
-	if (attack["effect"] != null) {//if the attack has a chance of applying an effect
-		if (Math.random() <= attack["effect"][1] / 100){					
-			target["effect"] = attack["effect"][0]//adds the effect to the target
+	
+	//if the attack has a chance of applying an effect
+	if (attack["effect"] != null) {
+		if (Math.random() <= attack["effect"][1] / 100){
+
+			//adds the effect to the target
+			target["effect"] = attack["effect"][0]
 			effect = "Added effect ," + attack["effect"]
 		}
 		else{effect = "Failed to apply effect"
 		}
 	}
-	//return hit,effect
 }
 function Switch(index){
 	menuReady = false
@@ -422,7 +553,9 @@ function useItem(item,playerMonster){
 	menuReady = false
 	if (item["effect"] == "hpRestore"){
 		playerMonster["hp"] += item["strength"]
-		if(playerMonster["hp"] > playerMonster["maxhp"]){//makes sure hp doesn't go over the maximum
+		
+		//makes sure hp doesn't go over the maximum
+		if(playerMonster["hp"] > playerMonster["maxhp"]){
 			playerMonster["hp"] = playerMonster["maxhp"]	
 		}
 	hit = "Used healing potion"
@@ -430,8 +563,12 @@ function useItem(item,playerMonster){
 	}
 	if (item["effect"] == "capture"){
 		if(canCapture){	//will be false for npc battles
-			currentMonsters.push(enemyMonsters[enemyMonsterIndex])//adds the enemy monster to the user's monsters list
-			currentBattleMenu = "battleWon"//battle is over
+		
+			//adds the enemy monster to the user's monsters list
+			currentMonsters.push(enemyMonsters[enemyMonsterIndex])
+			
+			//battle is over
+			currentBattleMenu = "battleWon"
 			battleWon = "captured"
 		}
 		else{
@@ -506,7 +643,8 @@ function drawSwitch(){
 	context.fillText("HP:",15, canvas.height - 17)
 	context.fillText(currentMonsters[switchIndex]["hp"],30, canvas.height - 7)
 	
-	if (currentMonsters[switchIndex + 1]){//if the monster exists
+	//if the monster exists
+	if (currentMonsters[switchIndex + 1]){
 		context.beginPath();
 		context.lineWidth=1;
 		context.strokeStyle="#000000";
@@ -534,7 +672,9 @@ function drawItems(){
 	context.fillStyle = "#FFFFFF"
 	context.fillRect(0, canvas.height - 40, canvas.width, 39);
 	context.stroke();
-	if(currentItems[itemIndex]){//if the item exists
+	
+	//if the item exists
+	if(currentItems[itemIndex]){
 	context.beginPath();
 	context.lineWidth=1;
 	context.strokeStyle="#000000";
@@ -546,7 +686,8 @@ function drawItems(){
 	context.fillText(currentItems[itemIndex]["strength"],30, canvas.height - 7)
 	}
 	
-	if (currentItems[itemIndex + 1]){//if the item exists
+	//if the item exists
+	if (currentItems[itemIndex + 1]){
 		context.beginPath();
 		context.lineWidth=1;
 		context.strokeStyle="#000000";

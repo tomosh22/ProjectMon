@@ -9,9 +9,11 @@ class gym{
 		this.bossLocation = []
 	}
 }
+
+//array that contains every gym in the game
 gyms = []
 
-
+//initializes gym0
 gym0Object = new gym
 gym0Object.bossLocation = [6,2]
 gym0Object.map = gym0
@@ -26,16 +28,20 @@ for(y=0;y<gym0Object.boss.length;y++){
 	gym0Object.boss[y].levelUp(Math.ceil(gym0Object.difficulty * 1.1))
 }
 gym0Object.npcsRemaining = gym0Object.npcs.length
+
+//levels up all the npcs' monsters to the right level
 for(x=0;x<gym0Object.npcs.length;x++){
 		for(y=0;y<gym0Object.npcs[x]["team"].length;y++){
 			gym0Object.npcs[x]["team"][y].levelUp(gym0Object.difficulty)
 		}
 	}
-gyms.push(gym0Object)//adds gym to array
+	
+//adds gym to array
+gyms.push(gym0Object)
 
 
 
-
+//initializes gym1
 gym1Object = new gym
 gym1Object.bossLocation = [5,2]
 gym1Object.map = gym1
@@ -50,23 +56,31 @@ for(y=0;y<gym1Object.boss.length;y++){
 	gym1Object.boss[y].levelUp(Math.ceil(gym1Object.difficulty * 1.1))
 }
 gym1Object.npcsRemaining = gym1Object.npcs.length
+
+//levels up all the npcs' monsters to the right level
 for(x=0;x<gym1Object.npcs.length;x++){
 		for(y=0;y<gym1Object.npcs[x]["team"].length;y++){
 			gym1Object.npcs[x]["team"][y].levelUp(gym1Object.difficulty)
 		}
 	}
-gyms.push(gym1Object)//adds gym to array
+	
+//adds gym to array
+gyms.push(gym1Object)
 
 
 
 
 
 function gymsLoop(){
-	for (x=0;x<gyms.length;x++){//run through every gym
+	
+	//run through every gym
+	for (x=0;x<gyms.length;x++){
 		gym = gyms[x]
-		if (gym.map == currentLevel){//if the player is currently in this gym
+		
+		//if the player is currently in this gym
+		if (gym.map == currentLevel){
 			for (i=0;i<=gym.npcs.length - 1;i++){
-				// && FALSE SO BATTLES NEVER RUN FOR DEVLOPMENT
+				
 				if((distanceTo(playerYTile * 16 + 7,(gym.npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(gym.npcs[i]["x"]-1)*16 + 7))<23 && gym.npcs[i]["ready"] && !npcBattle){
 					
 					playerCanMove = false
@@ -88,11 +102,15 @@ function gymsLoop(){
 					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
 						playerCanMove = true
 						npcBattle = false
-						gym.npcs[i]["ready"] = false//this npc is done with
+						
+						//this npc is done with
+						gym.npcs[i]["ready"] = false
 						canvas.height = currentLevelRows*16
 						canvas.width = currentLevelCols*16
 						gym.npcsRemaining --
-						if (gym.npcsRemaining == 0){//boss can only be fought after all the other npcs have been beaten
+						
+						//boss can only be fought after all the other npcs have been beaten
+						if (gym.npcsRemaining == 0){
 							gym.bossReady = true
 						}
 					}
@@ -117,14 +135,20 @@ function gymsLoop(){
 				enemyMonsters = gym.boss
 				canCapture = false
 				if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
-					//playerCanMove = true
 					
 					npcBattle = false
-					gym.complete = true//gym = gyms[x] from before
+					
+					//gym = gyms[x] from before
+					gym.complete = true
 					canvas.height = currentLevelRows*16
 					canvas.width = currentLevelCols*16
-					switch (x){//which gym was just beaten? (x is from initial for loop)
+					
+					//which gym was just beaten? (x is from initial for loop)
+					switch (x){
+						
+						//enables the right congratulations event
 						case 0:
+							
 							gym0Event.ready = true
 							break;
 						case 1:

@@ -1,9 +1,16 @@
 class level{
 	constructor(){
-		this.tiles = null//2 dimenional array of tiles, each element corresponds to a sprite
-		this.points = null //points on the map that will take the player to a new map if they stand on it
+		
+		//2 dimensional array of tiles, each element corresponds to a sprite
+		this.tiles = null
+		
+		//points on the map that will take the player to a new map if they stand on it
+		this.points = null
+		
 		this.spawnPoint = null
-		this.background = null //this sprite will be drawn underneath anything else, so will show through any transparency
+		
+		//this sprite will be drawn underneath everything else, so will show through any transparency
+		this.background = null 
 	}
 }
 house0 = new level()

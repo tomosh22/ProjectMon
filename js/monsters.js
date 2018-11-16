@@ -1,4 +1,5 @@
-type = {//type enum
+//type enum
+type = {
 		normal:"normal",
 		fighting:"fighting",
 		flying:"flying",
@@ -17,7 +18,9 @@ type = {//type enum
 		dragon:"dragon",
 		dark:"dark"
 	}
-class monster{//base monster class that all monsters inherit
+	
+//base monster class that all monsters inherit
+class monster{
 	constructor(){
 		this.xp = 0
 		this.level = 1
@@ -32,10 +35,15 @@ class monster{//base monster class that all monsters inherit
 		this.attackslearnt = 0
 		for(var x=100;x>=0;x--){
 			for(var y=0;y<=this.learnattacks.length;y++){
+				
+				//uses the 4 highest level attacks that the monster is
+				//highly leveled enough for
 				if(level >= this.learnattacks[y][0] && this.attackslearnt < 4){
-					this.attacks[this.attackslearnt + 1] = this.learnattacks[y][1]//uses the 4 highest level attacks that the monster is
-					this.attackslearnt++										  //highly leveled enough for
+					this.attacks[this.attackslearnt + 1] = this.learnattacks[y][1]
+					this.attackslearnt++
 				}
+				
+				//stop if the monster has learned 4 attacks on this level up
 				if(this.attackslearnt == 4){
 					break
 				}

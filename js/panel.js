@@ -2,7 +2,11 @@ panelIndex = 0
 space = "----------------"
 space = "&nbsp;".repeat(17)
 panelReady = false
+
+//draws information about the currently selected monster
 function monsterPanel(){
+	
+	//clears the panel
 	$("#monsters").empty()
 	
 	panelMonster = currentMonsters[panelIndex]
@@ -78,13 +82,18 @@ function monsterPanel(){
 		.css("font-size","0.6em");
 	$("#monsters").append(panelItem)
 	
+	//if neither arrow is pressed
 	if(!(leftArrowDown || rightArrowDown)){
 		panelReady = true
 	}
+	
+	//selects the previous monster
 	if (panelReady && leftArrowDown && currentMonsters[panelIndex - 1]){
 		panelIndex--
 		panelReady = false
 	}
+	
+	//selected the next monster
 	if(panelReady && rightArrowDown && currentMonsters[panelIndex + 1]){
 		panelIndex++
 		panelReady = false

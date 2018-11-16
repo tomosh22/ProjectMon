@@ -546,9 +546,8 @@ $(document).ready(function() {
 		}
 	});
 
-
+	//adjusts the game to fit a new map and places the player in the right place if necessary
 	function LoadLevel(x, y) {
-		//adjusts the game to fit a new map and places the player in the right place if necessary
 		//PARAMETERS
 		//x is the x coordinate that the player needs to be placed at
 		//y is the y coordinate that the player needs to be placed at
@@ -577,6 +576,7 @@ $(document).ready(function() {
 		}
 		currentLevelCols = currentLevel.tiles[0].length;
 		currentLevelRows = currentLevel.tiles.length
+		
 		//adjusts canvas to fit the map
 		canvas.height = currentLevelRows * 16
 		canvas.width = currentLevelCols * 16
@@ -586,15 +586,19 @@ $(document).ready(function() {
 	currentGrassSprite = null
 
 	function render() {
+		
 		//only draws if no events are running
 		if (playerCanMove) {
+			
+			//iterates through the current map
 			for (y = 0; y < currentLevelRows; y++) {
-				//iterates through the current map
 				for (x = 0; x < currentLevelCols; x++) {
+					
 					//draws the background of the map as some sprites have transparency
 					context.drawImage(sprites[currentLevel.background], x * 16, y * 16)
 				}
 			}
+			
 			for (y = 0; y < currentLevelRows; y++) {
 				for (x = 0; x < currentLevelCols; x++) {
 					//i used arrays to represent tiles that need their own specific background
@@ -609,9 +613,12 @@ $(document).ready(function() {
 				}
 			}
 			//animates long grass sprite if the player is standing on one
+			//1 is the index for the long grass sprite
 			if (currentLevel.tiles[playerYTile][playerXTile] == 1) {
+				
 				//alternates between slightly different sprites to appear to be moving
 				if (currentGrassSprite == longGrass2Sprite) {
+					
 					//changes every 7/60 of a second
 					//game is run at 60fps so one tick is 1/60 of a second
 					if (tickCounter % 7 == 0) {
@@ -625,6 +632,7 @@ $(document).ready(function() {
 					}
 				}
 			}
+			
 			//draws the player on top of everything
 			context.drawImage(playerSprite, playerXPos, playerYPos);
 		}
@@ -682,8 +690,9 @@ $(document).ready(function() {
 		//draws info about all the player's monsters
 		monsterPanel()
 
-		//property of map variable containing exit locations
+		//property of map variable containing exit locations, iterates through each exit
 		currentLevel.points.forEach(function(point) {
+			
 			//if the player is on an exit point
 			if (playerXTile == point[1] && playerYTile == point[0]) {
 				if (point[2] == "outside") {
