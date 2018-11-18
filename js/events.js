@@ -1,5 +1,6 @@
 currentBattleMenu = "main"
 
+//copied from game.js
 function LoadLevel(x, y) {
 	if (!x || !y) {
 		playerCol = currentLevel.spawnPoint[0];
@@ -18,7 +19,6 @@ function LoadLevel(x, y) {
 	currentLevelCols = currentLevel.tiles[0].length;
 	currentLevelRows = currentLevel.tiles.length
 
-	//adjusts canvas to fit the map
 	canvas.height = currentLevelRows * 16
 	canvas.width = currentLevelCols * 16
 }
@@ -28,20 +28,36 @@ function eventMessage(one, two, three) {
 	//one is the first line of the message
 	//two is the second line of the message
 	//three is the third line of the message
+	
+	//fills in a white rectangle at the bottom of the game
 	context.fillStyle = "#FFFFFF"
 	context.fillRect(0, canvas.height - 40, canvas.width, 40)
+	
+	//if one exists
 	if (one) {
+		
+		//draws the text
 		context.fillStyle = "#000000"
 		context.fillText(one, 5, canvas.height - 30)
 	}
+	
+	//if two exists
 	if (two) {
+		
+		//draws the text
 		context.fillStyle = "#000000"
 		context.fillText(two, 5, canvas.height - 20)
 	}
+	
+	//if three exists
 	if (three) {
+		
+		//draws the text
 		context.fillStyle = "#000000"
 		context.fillText(three, 5, canvas.height - 10)
 	}
+	
+	//draws the black border around the rectangle
 	context.rect(0, canvas.height - 40, canvas.width, 40);
 
 	context.stroke();
@@ -58,18 +74,28 @@ finalBoss.ready = false //TRUE FOR DEVELOPMENT
 firstBattle = new event()
 firstCapture = new event()
 outsideGym = new event()
+
+//these 2 events are the only ones that need certain conditions to be met before they can be run
+//so they aren't ready at the start of the game
 gym0Event = new event()
 gym0Event.ready = false
 gym1Event = new event()
 gym1Event.ready = false
+
+//there are no gyms beaten when the game is loaded
 gymsBeaten = 0
+
 numberOfGyms = 2
+
+//these 2 could actually have been made using the event class
 healing = {
 	"running": false
 }
 shopping = {
 	"running": false
 }
+
+//whether or not the player can capture a monster or run during combat (there will never be a time when the player can run but not capture or vice versa)
 canCapture = false
 
 //used in the items menu of the battle ui
@@ -78,6 +104,7 @@ itemIndex = 0
 //used in the switch menu of the battle ui
 switchIndex = 0
 
+//used to reference the monsters that are currently in a battle
 currentMonsterIndex = 0
 enemyMonsterIndex = 0
 
@@ -85,7 +112,7 @@ enemyMonsterIndex = 0
 tutorial = false
 tutorialCapture = false
 
-//Pythagoras to determine the distance between 2 points
+//pythagoras to determine the distance between 2 points
 function distanceTo(y1, y2, x1, x2) {
 	return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
 }
@@ -215,6 +242,7 @@ for (x = 0; x < finalBossTeam.length; x++) {
 //if the player is currently battling an npc
 npcBattle = false
 
+//run every tick (60 times per second)
 function events() {
 
 	//if the player has beaten all the gyms and is standing next to the final boss
@@ -224,9 +252,13 @@ function events() {
 		//first stage of the event
 		if (!finalBoss.done[0]) {
 			eventMessage("Well done, you have beaten every gym.", "Now let's see if you are worthy of the title", "of champion.")
+			
+			//if no buttons are being pressed
 			if (!(zDown || xDown || cDown || vDown)) {
 				menuReady = true
 			}
+			
+			//if a button is pressed
 			if ((zDown || xDown || cDown || vDown) && menuReady) {
 
 				//this stage of the event is finished
@@ -235,6 +267,8 @@ function events() {
 				menuReady = false
 			}
 		}
+		
+		//if no buttons are being pressed
 		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
@@ -272,17 +306,21 @@ function events() {
 
 		//displays congratulations message
 		eventMessage("Well done, you have beaten the first", "gym! If you beat all the others you", "can become the champion.")
-
+		
+		//if no buttons are being pressed
 		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
+		//if a button is pressed
 		if ((zDown || xDown || cDown || vDown) && menuReady) {
+			
 			//increments gymsBeaten
 			gymsBeaten++
+			
 			menuReady = false
 			playerCanMove = true
 
-			//disables the gym
+			//this event is done with
 			gym0Event.ready = false
 		}
 
@@ -292,14 +330,22 @@ function events() {
 	if (gym1Event.ready) {
 		eventRender()
 		eventMessage("Wow, that's 2 gyms beaten now!")
-
+		
+		//if no buttons are being pressed
 		if (!(zDown || xDown || cDown || vDown)) {
 			menuReady = true
 		}
+		
+		//if a button is pressed
 		if ((zDown || xDown || cDown || vDown) && menuReady) {
+			
+			//increment gymsBeaten
 			gymsBeaten++
+			
 			menuReady = false
 			playerCanMove = true
+			
+			//this event is done with
 			gym1Event.ready = false
 		}
 
@@ -317,21 +363,28 @@ function events() {
 				playerCanMove = false
 
 				displayMessage("NPC battle!", null)
-
+				
+				//if a button is pressed
 				if (menuReady && (zDown || xDown || cDown || vDown)) {
 					menuReady = false
 					npcBattle = true
 
 				}
 			}
+			
+			//if no button is being pressed
 			if (!(zDown || xDown || cDown || vDown)) {
 				menuReady = true
 			}
+			//if player is battling an npc
 			if (npcs[i].ready && npcBattle && menuReady && distanceTo(playerYTile * 16 + 7, (npcs[i]["y"] - 1) * 16 + 7, playerXTile * 16 + 7, (npcs[i]["x"] - 1) * 16 + 7) < 23) {
+				
+				//loads the npc battle
 				enemyMonsters = npcs[i]["team"]
 				canCapture = false
-
 				if (!LoadBattle(currentMonsters[currentMonsterIndex], enemyMonsters[enemyMonsterIndex])) {
+					
+					//battle is over
 					playerCanMove = true
 					npcBattle = false
 
@@ -355,6 +408,8 @@ function events() {
 
 	//when the player's friend tells them about the gyms
 	if (outsideGym.ready && currentLevel == maps[2]) {
+		
+		//initialize the event
 		if (!outsideGym.running) {
 
 			//sets the friend coordinates to the door of the gym
@@ -367,16 +422,25 @@ function events() {
 			outsideGym.running = true
 
 			menuReady = false
+			
+		//if the event is running
 		} else {
 			if (!outsideGym.done[0]) {
+				
+				//draw the map
 				eventRender()
-
+				
+				//draw the friend on top
 				context.drawImage(friendSprite, friendXPos, friendYPos);
 
 				eventMessage("Hey, over here!")
+				
+				//if no button is being pressed
 				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
+				
+				//if a button is being pressed
 				if ((zDown || xDown || cDown || vDown) && menuReady) {
 
 					//this stage of the event is done
@@ -417,12 +481,21 @@ function events() {
 
 			//if the previous stage is done and the current stage isn't
 			if (outsideGym.done[2] && !outsideGym.done[3]) {
+				
+				//draws the map
 				eventRender()
+				
+				//draws the friend on top of the map
 				context.drawImage(friendSprite, friendXPos, friendYPos);
+				
 				eventMessage("I just beat the gym, it wasn't even that hard.", "I'm going to beat every gym and become", "the best trainer in the world, just you wait!")
+				
+				//if no button is being pressed
 				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
+				
+				//if a button is pressed
 				if ((zDown || xDown || cDown || vDown) && menuReady) {
 
 					//this stage of the event is done
@@ -434,11 +507,16 @@ function events() {
 			//if the previous stage is done and the current stage isn't
 			if (outsideGym.done[3] && !outsideGym.done[4]) {
 				if (Math.floor(friendYPos / 16) != 0) {
+					
+					//draws the map
 					eventRender();
+					
+					//draws the friend on top
 					context.drawImage(friendSprite, friendXPos, friendYPos);
 
 					//moves the friend up until they are at y coordinate 0
 					friendYPos--;
+					
 				} else {
 					//event is over
 					playerCanMove = true
@@ -452,8 +530,12 @@ function events() {
 	
 	//when the friend shows the player how to capture monsters
 	if (firstCapture.ready && currentLevel == town0) {
+		
+		//initialize the event
 		if (!firstCapture.running) {
 			playerCanMove = false
+			
+			//draw the map
 			eventRender()
 
 			//places the friend just outside the house
@@ -461,7 +543,8 @@ function events() {
 			friendYTile = 15
 			friendXPos = friendXTile * 16
 			friendYPos = friendYTile * 16
-
+			
+			//draws the friend on top
 			context.drawImage(friendSprite, friendXPos, friendYPos);
 
 			firstCapture.running = true;
@@ -496,6 +579,8 @@ function events() {
 			//if the previous stage is done and the current stage isn't
 			if (firstCapture.done[1] && !firstCapture.done[2]) {
 				eventMessage("Here, I'll show you how to", "capture monsters.")
+				
+				//if a button is pressed
 				if (zDown || xDown || cDown || vDown) {
 					menuReady = false
 

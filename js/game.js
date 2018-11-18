@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	
+	//everything is drawn onto a html canvas
 	canvas = document.getElementById("canvas");
 	context = canvas.getContext("2d");
 
@@ -437,7 +439,7 @@ $(document).ready(function() {
 			ready: true,
 			level: 15,
 			team: [new dustox, new sandslash]
-		}, //every npc in the game besides the gym
+		}, 
 		{
 			map: maps[9],
 			x: 5,
@@ -546,7 +548,7 @@ $(document).ready(function() {
 		}
 	});
 
-	//adjusts the game to fit a new map and places the player in the right place if necessary
+	//adjusts the game to fit a new map and places the player in a custom place if necessary
 	function LoadLevel(x, y) {
 		//PARAMETERS
 		//x is the x coordinate that the player needs to be placed at
@@ -560,20 +562,32 @@ $(document).ready(function() {
 		//playerYPos is the player's y coordinate in terms of the canvas, each tile is 16x16 so playerYTile is * 16
 		//currentLevelCols is the number of columns in the current level, used to iterate through the map later on
 		//currentLevelRows is the number of rows in the current level, used to iterate through the map later on
+		
+		//if no custom spawn coordinates are specified
 		if (!x || !y) {
+			
+			//place the player on the spawn point of the new level
 			playerCol = currentLevel.spawnPoint[0];
 			playerRow = currentLevel.spawnPoint[1];
+			
+			//adjust player position variables accordingly
 			playerXTile = playerRow
 			playerYTile = playerCol
 			playerXPos = playerCol * 16
 			playerYPos = playerRow * 16
-
+	
+		//if custom coordinates are specified
 		} else {
+			//place the player on these custom coordinates
 			playerXTile = x
 			playerYTile = y
+			
+			//adjust player position variables accordingly
 			playerXPos = playerXTile * 16
 			playerYPos = playerYTile * 16
 		}
+		
+		//adjust map size variables
 		currentLevelCols = currentLevel.tiles[0].length;
 		currentLevelRows = currentLevel.tiles.length
 		
@@ -652,10 +666,17 @@ $(document).ready(function() {
 		}
 		//if dev tools need to be drawn
 		if (devMode) {
+			
 			//clears html div
 			$("#devTools").empty()
+			
+			//create new text object with jquery
 			var devTool = $("<p/>")
+			
+				//set the text content
 				.html("playerXTile " + playerXTile);
+				
+			//add to the array of developer tools
 			$("#devTools").append(devTool)
 
 			var devTool = $("<p/>")
@@ -694,17 +715,24 @@ $(document).ready(function() {
 		currentLevel.points.forEach(function(point) {
 			
 			//if the player is on an exit point
+			//index 0 and 1 are the coordinates of the ecit point
 			if (playerXTile == point[1] && playerYTile == point[0]) {
+				
+				//if the player is going outside
+				//index 2 is the new map that needs to load
 				if (point[2] == "outside") {
 
 					//clear the current map
 					context.clearRect(0, 0, canvas.width, canvas.height)
-
+					
+					//set the new map to the last outside map the player was on (outsideIndex is set in the next part of this function)
 					currentLevel = maps[outsideIndex];
 					levelIndex = outsideIndex
 
 					//load the new map
 					LoadLevel(outsideLocation[1], outsideLocation[0]);
+					
+				//if the player is not going outside
 				} else {
 
 					//clear the current map
@@ -713,9 +741,14 @@ $(document).ready(function() {
 					//custom tile for the player to be placed on
 					x = point[3]
 					y = point[4]
-
+					
+					//set the new map to the one specified by the exit point
 					currentLevel = maps[point[2]];
 					levelIndex = point[2]
+					
+					//specifies where the player needs to spawn when they next go outside
+					//set adjacent to the location of the exit point, so for example if the player goes inside through a door,
+					//when they go back outside they will be placed right outside that door
 					outsideLocation = [point[0] + 1, point[1]]
 
 					//if the player is not going inside

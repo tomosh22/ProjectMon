@@ -79,27 +79,40 @@ function gymsLoop(){
 		
 		//if the player is currently in this gym
 		if (gym.map == currentLevel){
+			
+			//loops through all the gym's npcs
 			for (i=0;i<=gym.npcs.length - 1;i++){
 				
+				//if the player is within a 1 tile radius of an npc
 				if((distanceTo(playerYTile * 16 + 7,(gym.npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(gym.npcs[i]["x"]-1)*16 + 7))<23 && gym.npcs[i]["ready"] && !npcBattle){
 					
 					playerCanMove = false
-					
 					displayMessage("Gym battle", null)
 					
+					//when the player presses a button
 					if(menuReady && (zDown||xDown||cDown||vDown)){
-						menuReady = false	
+						menuReady = false
+						
+						//player is now in an npc battle
 						npcBattle = true
 						
 					}
 				}
+				
+				//if the player isn't pressing any buttons
 				if (!(zDown||xDown||cDown||vDown)){
 						menuReady = true
 					}
+					
+				//if the player is in an npc battle, distance check is to make sure the player is battling the npc that they are next to, not just the first one in the npcs array
 				if(gym.npcs[i].ready && npcBattle && menuReady && distanceTo(playerYTile * 16 + 7,(gym.npcs[i]["y"]-1)*16 + 7,playerXTile * 16 + 7,(gym.npcs[i]["x"]-1)*16 + 7)<23 ){
+					
+					//loads the npc battle
 					enemyMonsters = gym.npcs[i]["team"]
 					canCapture = false
 					if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
+						
+						//battle is over
 						playerCanMove = true
 						npcBattle = false
 						
@@ -107,6 +120,8 @@ function gymsLoop(){
 						gym.npcs[i]["ready"] = false
 						canvas.height = currentLevelRows*16
 						canvas.width = currentLevelCols*16
+						
+						//one less npc remaining
 						gym.npcsRemaining --
 						
 						//boss can only be fought after all the other npcs have been beaten
@@ -118,28 +133,44 @@ function gymsLoop(){
 			
 		
 			}
+			
+			//if the player can fight the boss and is within one tile of him
 			if (!npcBattle && !gym.complete && gym.bossReady && distanceTo(playerYTile * 16 + 7, gym.bossLocation[1] * 16, playerXTile * 16, gym.bossLocation[0] * 16) < 23){
 				playerCanMove = false
 					
 					displayMessage("Gym boss battle", null)
 					
+					//when the player presses a button
 					if(menuReady && (zDown||xDown||cDown||vDown)){
-						menuReady = false	
+						menuReady = false
+						
+						//player is now battling the boss
 						npcBattle = true
 					}
 			}
+			
+			//if the player isnt pressing any buttons
 			if (!(zDown||xDown||cDown||vDown)){
 						menuReady = true
 					}
+			
+			//if the player is battling the boss
 			if (npcBattle && menuReady && !gym.complete && distanceTo(playerYTile * 16 + 7, gym.bossLocation[1] * 16, playerXTile * 16, gym.bossLocation[0] * 16) < 23){
+				
+				//loads the boss battle
 				enemyMonsters = gym.boss
 				canCapture = false
 				if(!LoadBattle(currentMonsters[currentMonsterIndex],enemyMonsters[enemyMonsterIndex])){
 					
+					//player is no longer in an npc battle
 					npcBattle = false
 					
-					//gym = gyms[x] from before
+					//playerCanMove is still false as the player still needs to go through the congratulations event
+					
+					//gym = gyms[x] from the start of the for loop
 					gym.complete = true
+					
+					//adjust canvas to fit the map
 					canvas.height = currentLevelRows*16
 					canvas.width = currentLevelCols*16
 					
@@ -148,7 +179,6 @@ function gymsLoop(){
 						
 						//enables the right congratulations event
 						case 0:
-							
 							gym0Event.ready = true
 							break;
 						case 1:

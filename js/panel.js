@@ -1,19 +1,38 @@
+//index of the currently selected monster
 panelIndex = 0
+
+//overwritten on the next line, irrelevant
 space = "----------------"
+
+//17 blank spaces to align text properly
 space = "&nbsp;".repeat(17)
+
+//workaround for holding buttons across ticks, similar to menuReady in every other part of the game
 panelReady = false
 
 //draws information about the currently selected monster
+//was designed to work with a browser zoom of 150%, could be misaligned otherwise
 function monsterPanel(){
 	
 	//clears the panel
 	$("#monsters").empty()
 	
+	//used to gather information about the currently selected monster
 	panelMonster = currentMonsters[panelIndex]
+	
+	//creates a new text element with jquery
 	var panelItem = $("<p/>")
+		
+		//sets text content
 		.html(panelMonster.name + " Level:" + panelMonster.level)
+		
+		//centres the text
 		.prop("align","center")
+		
+		//changes the font size
 		.css("font-size","1.1em");
+		
+	//adds element to the panel
 	$("#monsters").append(panelItem)
 	
 	var panelItem = $("<p/>")

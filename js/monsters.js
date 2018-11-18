@@ -32,14 +32,25 @@ class monster{
 		this.attack = Math.round(this.baseAttack * level)
 		this.defense = Math.round(this.baseDefense * level)
 		this.speed = Math.round(this.baseSpeed * level)
+		
+		//start learning new attacks
 		this.attackslearnt = 0
+		
+		//from max level 100
+		//looking back there is actually no need for this for loop, it just makes the
+		//following code run 100 times when it only needs to run once
 		for(var x=100;x>=0;x--){
+			
+			//loop through all the attacks that the monster can learn
 			for(var y=0;y<=this.learnattacks.length;y++){
 				
 				//uses the 4 highest level attacks that the monster is
 				//highly leveled enough for
+				//index 0 is the minimum level to learn the attack, index 1 is the attack itself
 				if(level >= this.learnattacks[y][0] && this.attackslearnt < 4){
 					this.attacks[this.attackslearnt + 1] = this.learnattacks[y][1]
+					
+					//increment attacks learnt
 					this.attackslearnt++
 				}
 				
@@ -61,7 +72,10 @@ class dustox extends monster{
 		this.baseDefense = 8
 		this.baseSpeed = 6.5
 		this.attacks={1:null,2:null,3:null,4:null}
+		
+		//must be ordered from highest level to lowest level for levelling up to work correctly (i never actually implemented any attacks higher than level 0)
 		this.learnattacks = [[0,airCutter],[0,stinger],[0,confusion],[0,bugBuzz]]
+		
 		this.type = type.bug
 	}
 }
