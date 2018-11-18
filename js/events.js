@@ -275,6 +275,8 @@ function events() {
 
 		//second stage of the event
 		if (menuReady && finalBoss.done[0] && !finalBoss.done[1]) {
+			
+			//load final boss battle
 			npcBattle = true
 			canCapture = false
 			enemyMonsters = finalBossTeam
@@ -569,6 +571,8 @@ function events() {
 				if (Math.floor(friendYPos / 16) != 7) {
 					eventRender();
 					context.drawImage(friendSprite, friendXPos, friendYPos);
+					
+					//moves the friend up until their y coordinate is 7
 					friendYPos--;
 				}
 			else {
@@ -606,6 +610,8 @@ function events() {
 					firstCapture["done"][3] = true
 
 					menuReady = false
+					
+					//make canvas fit the map
 					canvas.height = currentLevelRows * 16
 					canvas.width = currentLevelCols * 16
 				}
@@ -615,9 +621,13 @@ function events() {
 			if (firstCapture.done[3] && !firstCapture.done[4]) {
 				eventRender()
 				eventMessage("Well done, it's best to lower a", "monster's HP or give it a status ", "effect before trying to capture it.")
+				
+				//if no button is being pressed
 				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
+				
+				//if a button is pressed
 				if ((zDown || xDown || cDown || vDown) && menuReady) {
 
 					//this stage of the event is done
@@ -632,9 +642,13 @@ function events() {
 				eventRender()
 				eventMessage("OK, I'm off to the next town to", "challenge the gym.", "Here's some capsules to get you started.")
 				context.fillText("", 5, canvas.height - 2)
+				
+				//if no button is pressed
 				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
+				
+				//if a button is pressed
 				if ((zDown || xDown || cDown || vDown) && menuReady) {
 					
 					//this stage of the event is done
@@ -708,6 +722,8 @@ function events() {
 
 			if (firstBattle.done[1] && firstBattle.done[0] && !firstBattle.done[2]) {
 				eventMessage("Let's see who's stronger")
+				
+				//if a button is pressed
 				if (zDown || xDown || cDown || vDown) {
 					menuReady = false
 					
@@ -729,9 +745,13 @@ function events() {
 				LoadLevel()
 				eventRender()
 				eventMessage("Wow you won!", "I'm going to improve my team!")
+				
+				//if no button is being pressed
 				if (!(zDown || xDown || cDown || vDown)) {
 					menuReady = true
 				}
+				
+				//if a button is pressed
 				if ((zDown || xDown || cDown || vDown) && menuReady) {
 					
 					//this stage of the event is done
@@ -768,8 +788,6 @@ function events() {
 					tutorial = false
 				}
 			}
-
-
 		}
 
 
@@ -800,6 +818,7 @@ function events() {
 			menuReady = true
 		}
 		
+		//if a button is pressed
 		if (menuReady && (zDown || xDown || cDown || vDown)) {
 			playerCanMove = true
 			healing["running"] = false

@@ -36,7 +36,7 @@ function CaptureTutorial(){
 	}
 }
 function LoadBattle(playerMonster, enemyMonster){
-	
+	//sets the canvas to the right size for the battle ui
 	canvas.width = 176
 	canvas.height = 144
 	drawMonsters(playerMonster, enemyMonster);
@@ -56,6 +56,7 @@ function LoadBattle(playerMonster, enemyMonster){
 			//Z1 C2 V3 X4
 			drawAttacks(playerMonster);
 			if(zDown && menuReady){
+				
 				currentBattleMenu = "message"
 				useAttack(playerMonster["attacks"][1],playerMonster, enemyMonster)
 			}
@@ -254,6 +255,8 @@ function LoadBattle(playerMonster, enemyMonster){
 					
 					//if the player has no more monsters then the enemy wins
 					if(!monsterFound){
+						
+						//battle is over
 						battleWon = "enemy"
 						currentBattleMenu = "battleWon"
 						menuReady = false
@@ -292,6 +295,8 @@ function LoadBattle(playerMonster, enemyMonster){
 				if (!(zDown||xDown||cDown||vDown)){
 					menuReady = true
 				}	
+				
+				//if a button is pressed
 			if ((zDown||xDown||cDown||vDown) && menuReady){
 				currentBattleMenu = "main"
 				menuReady = false
@@ -356,6 +361,8 @@ function LoadBattle(playerMonster, enemyMonster){
 					
 				}
 				battleWon = null
+				
+				//end the battle
 				return false
 			}
 			break;
@@ -374,6 +381,8 @@ function LoadBattle(playerMonster, enemyMonster){
 					displayMessage("You ran away")
 					enemyMonsterIndex = 0
 					currentMonsterIndex = 0
+					
+					//end the battle
 					return false
 				}
 				else{
@@ -399,6 +408,8 @@ function LoadBattle(playerMonster, enemyMonster){
 				if (!(zDown||xDown||cDown||vDown)){
 					menuReady = true
 				}
+				
+				//if a button is pressed
 				if ((zDown||xDown||cDown||vDown) && menuReady){
 					currentBattleMenu = "main"
 					menuReady = false
@@ -455,7 +466,6 @@ function runSuccess(chance){
 	if (chance<0.8){
 		random = 0.75
 	}
-	//return false
 	return Math.random() > random
 }
 function displayMessage(hit,effect){
@@ -537,20 +547,31 @@ function useAttack(attack, user, target){
 function Switch(index){
 	menuReady = false
 	hit = currentMonsters[currentMonsterIndex]["name"] + " switched out"
+	
+	//sets the current monster to the one with the specified index
 	currentMonsterIndex = index
+	
 	effect = currentMonsters[currentMonsterIndex]["name"] + " switched in"
+	
+	//reset switch menu
 	switchIndex = 0
 	}
+	
 function enemySwitch(index){
 	menuReady = false
 	hit = enemyMonsters[enemyMonsterIndex]["name"] + " switched out"
+	
+	//sets the enemy monster to the one with the specified index
 	enemyMonsterIndex = index
+	
 	effect = enemyMonsters[enemyMonsterIndex]["name"] + " switched in"
 	switchIndex = 0
 	}
 
 function useItem(item,playerMonster){
 	menuReady = false
+	
+	//health potion
 	if (item["effect"] == "hpRestore"){
 		playerMonster["hp"] += item["strength"]
 		
@@ -561,8 +582,12 @@ function useItem(item,playerMonster){
 	hit = "Used healing potion"
 	effect = "Restored "+ item["strength"]+" health"
 	}
+	
+	//capsule
 	if (item["effect"] == "capture"){
-		if(canCapture){	//will be false for npc battles
+		
+		//false for npc battles
+		if(canCapture){
 		
 			//adds the enemy monster to the user's monsters list
 			currentMonsters.push(enemyMonsters[enemyMonsterIndex])
